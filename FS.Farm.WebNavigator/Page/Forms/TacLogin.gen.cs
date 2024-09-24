@@ -77,15 +77,33 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
 
-            //TODO handle objwf buttons
-
             //TODO handle post of form - good form
 
             //TODO handle post of form - with val errors
 
+            //  handle objwf buttons
             pagePointer = new PagePointer(_pageName, contextCode);
-
+            if (commandText == "SubmitButton")
+                pagePointer = ProcessButtonCommand(
+                    "SubmitButton",
+                    "TacAdd",
+                    "TacCode");
+            if (commandText == "OtherButton")
+                pagePointer = ProcessButtonCommand(
+                    "OtherButton",
+                    "TacRegister",
+                    "TacCode");
             return pagePointer;
+        }
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
         }
 
         public async Task<TacLoginPostResponse> PostResponse(APIClient aPIClient, TacLoginPostModel model, Guid contextCode)

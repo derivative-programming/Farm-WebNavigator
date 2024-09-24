@@ -57,14 +57,21 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
-            //TODO handle report buttons
-
-            //TODO handle report row buttons
-
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
+        }
+
         public async Task<PacUserDateGreaterThanFilterListListModel> PostResponse(APIClient aPIClient, PacUserDateGreaterThanFilterListListRequest model, Guid contextCode)
         {
             string url = $"/pac-user-date-greater-than-filter-list/{contextCode.ToString()}";

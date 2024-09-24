@@ -34,6 +34,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             // handle report buttons
 //endset
+            pageView = HandleButton(pageView, "backButton",
+                "",
+                "",
+                isVisible: false,
+                isEnabled: true,
+                "");
             pageView = HandleButton(pageView, "addButton",
                 "",
                 "",
@@ -74,15 +80,35 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 return pagePointer;
             }
-
-            //TODO handle report buttons
-
             //TODO handle report row buttons
+
+            //  handle report buttons
+            if (commandText == "backButton")
+                pagePointer = ProcessButtonCommand(
+                    "backButton",
+                    "",
+                    "");
+            if (commandText == "addButton")
+                pagePointer = ProcessButtonCommand(
+                    "addButton",
+                    "",
+                    "");
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
+        }
+
         public async Task<TacFarmDashboardListModel> PostResponse(APIClient aPIClient, TacFarmDashboardListRequest model, Guid contextCode)
         {
             string url = $"/tac-farm-dashboard/{contextCode.ToString()}";

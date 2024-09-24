@@ -77,15 +77,34 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
 
-            //TODO handle objwf buttons
-
             //TODO handle post of form - good form
 
             //TODO handle post of form - with val errors
 
+            //  handle objwf buttons
             pagePointer = new PagePointer(_pageName, contextCode);
+            if (commandText == "SubmitButton")
+                pagePointer = ProcessButtonCommand(
+                    "SubmitButton",
+                    "TacAddCustomer",
+                    "TacCode");
+            if (commandText == "CancelButton")
+                pagePointer = ProcessButtonCommand(
+                    "CancelButton",
+                    "TacLogin",
+                    "TacCode");
 
             return pagePointer;
+        }
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
         }
 
         public async Task<TacRegisterPostResponse> PostResponse(APIClient aPIClient, TacRegisterPostModel model, Guid contextCode)
@@ -104,7 +123,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Message { get; set; }
-            //[Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Email { get; set; }
             [Newtonsoft.Json.JsonProperty("uTCOffsetInMinutes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

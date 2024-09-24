@@ -22,6 +22,24 @@ namespace FS.Farm.WebNavigator.Page.Reports
             pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
+            //TODO handle report init
+
+            //TODO handle filter post
+
+            //TODO handle report row buttons
+
+            //TODO handle report rows
+
+            //TODO handle hidden columns
+
+            // handle report buttons
+//endset
+            pageView = HandleButton(pageView, "backButton",
+                "LandPlantList",
+                "LandCode",
+                isVisible: true,
+                isEnabled: true,
+                "Plant List");
 
             return pageView;
         }
@@ -56,15 +74,30 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 return pagePointer;
             }
-
-            //TODO handle report buttons
-
             //TODO handle report row buttons
+
+            //  handle report buttons
+            if (commandText == "backButton")
+                pagePointer = ProcessButtonCommand(
+                    "backButton",
+                    "LandPlantList",
+                    "LandCode");
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
+        }
+
         public async Task<PlantUserDetailsListModel> PostResponse(APIClient aPIClient, PlantUserDetailsListRequest model, Guid contextCode)
         {
             string url = $"/plant-user-details/{contextCode.ToString()}";
