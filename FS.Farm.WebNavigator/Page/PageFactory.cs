@@ -36,7 +36,33 @@ namespace FS.Farm.WebNavigator.Page
                 case "TacFarmDashboard":
                     return new TacFarmDashboard();
                 case "PlantUserDetails":
-                    return new PlantUserDetails();
+                    return new PlantUserDetails(); 
+                //case "PacConfigDynaFlowDFTBuildToDoList":
+                //    return new PacConfigDynaFlowDFTBuildToDoList();
+                //case "PacConfigDynaFlowRetryTaskBuildList":
+                //    return new PacConfigDynaFlowRetryTaskBuildList();
+                //case "PacConfigDynaFlowTaskRetryRunList":
+                //    return new PacConfigDynaFlowTaskRetryRunList();
+                //case "PacConfigDynaFlowTaskRunToDoList":
+                //    return new PacConfigDynaFlowTaskRunToDoList();
+                //case "PacConfigDynaFlowTaskSearch":
+                //    return new PacConfigDynaFlowTaskSearch();
+                case "PacUserDateGreaterThanFilterList":
+                    return new PacUserDateGreaterThanFilterList();
+                //case "PacUserDynaFlowTaskTypeList":
+                //    return new PacUserDynaFlowTaskTypeList();
+                //case "PacUserDynaFlowTypeList":
+                //    return new PacUserDynaFlowTypeList();
+                case "PacUserFlavorList":
+                    return new PacUserFlavorList();
+                case "PacUserLandList":
+                    return new PacUserLandList();
+                case "PacUserRoleList":
+                    return new PacUserRoleList();
+                case "PacUserTacList":
+                    return new PacUserTacList();
+                case "PacUserTriStateFilterList":
+                    return new PacUserTriStateFilterList();
                 //GENTrainingBlock[c2]End
                 //GENLOOPObjectEnd
 
@@ -57,7 +83,8 @@ namespace FS.Farm.WebNavigator.Page
                 case "TacRegister":
                     return new TacRegister();
                 //GENTrainingBlock[a2]End
-                //GENLOOPObjectEnd
+                //GENLOOPObjectEnd 
+
                 default:
                     return new MainMenu();
             }
