@@ -22,8 +22,4 @@
     <ProjectReference Include="..\FS.Common\FS.Common\FS.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="OpenAPIs\openapi.json" ClassName="PageApi" />
-  </ItemGroup>
-
 </Project>

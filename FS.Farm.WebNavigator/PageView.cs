@@ -10,10 +10,16 @@ namespace FS.Farm.WebNavigator
     {
         public PageView()
         {
+            AppTitle = "Simple Api";
             PageTitleText = "";
             PageIntroText = "";
             PageFooterText = "";
+
+            AvailableCommands = new List<AvailableCommand>();
         }
+
+        [Newtonsoft.Json.JsonProperty("appTitle")]
+        public string AppTitle { get; set; }
 
         [Newtonsoft.Json.JsonProperty("pageTitleText")]
         public string PageTitleText { get; set; }

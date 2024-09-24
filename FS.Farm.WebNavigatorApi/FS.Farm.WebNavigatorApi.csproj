@@ -28,12 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="FS.Farm.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="override.dev">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

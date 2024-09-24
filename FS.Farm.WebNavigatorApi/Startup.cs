@@ -23,8 +23,7 @@ namespace FS.Farm.FSFarmAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSignalR();
+        { 
             services.AddCors(options =>
             {
                 //options.AddPolicy("AnyOrigin", builder =>
@@ -72,8 +71,7 @@ namespace FS.Farm.FSFarmAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapHub<FS.Farm.FSFarmAPI.SignalR.AnalyticsHub>("/analytics-hub");
+                endpoints.MapControllers(); 
             });
         }
     }
