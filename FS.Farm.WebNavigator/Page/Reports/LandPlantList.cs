@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FS.Farm.WebNavigator.Page.Reports.Init.LandPlantListInitReport;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -22,6 +23,18 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = AddDefaultAvailableCommands(pageView);
 
+            //TODO handle report init
+
+            //TODO handle filter post
+
+            //TODO handle report buttons
+
+            //TODO handle report row buttons
+
+            //TODO handle report rows
+
+            //TODO handle hidden columns
+
             return pageView;
         }
 
@@ -34,16 +47,24 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
+            //TODO handle report buttons
+
+            //TODO handle report row buttons
+
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
+        } 
+        public async Task<LandPlantListListModel> PostResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
+        {
+            string url = $"/land-add-plant/{contextCode.ToString()}";
+
+            LandPlantListListModel result = await aPIClient.PostAsync<LandPlantListListRequest, LandPlantListListModel>(url, model);
+
+            return result;
         }
 
-
-
-
-        
-        private class LandPlantListListModel
+        public class LandPlantListListModel
         {
             [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public int PageNumber { get; set; }
@@ -81,7 +102,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
         
-        private class LandPlantListListModelItem
+        public class LandPlantListListModelItem
         {
             [Newtonsoft.Json.JsonProperty("plantCode", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -256,7 +277,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
         
-        private class LandPlantListListRequest
+        public class LandPlantListListRequest
         {
             [Newtonsoft.Json.JsonProperty("flavorFilterCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid FlavorFilterCode { get; set; }

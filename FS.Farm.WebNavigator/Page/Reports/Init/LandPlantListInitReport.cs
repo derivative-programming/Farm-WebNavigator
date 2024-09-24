@@ -3,15 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FS.Farm.WebNavigator.Page.Forms.Init.LandAddPlantInitObjWF;
 
 namespace FS.Farm.WebNavigator.Page.Reports.Init
 {
     public class LandPlantListInitReport
     {
         public LandPlantListInitReport()
-        { 
-        } 
-        private class LandPlantListGetInitResponse
+        {
+        }
+
+        public async Task<LandPlantListGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        {
+            string url = $"/land-plant-list/{contextCode.ToString()}/init";
+
+            LandPlantListGetInitResponse result = await aPIClient.GetAsync<LandPlantListGetInitResponse>(url);
+
+            return result;
+        }
+        public class LandPlantListGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }

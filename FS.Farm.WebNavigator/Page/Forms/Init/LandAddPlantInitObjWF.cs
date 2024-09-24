@@ -11,7 +11,17 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
         public LandAddPlantInitObjWF()
         { 
         }  
-        private class LandAddPlantGetInitResponse
+
+        public async Task<LandAddPlantGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        {
+            string url = $"/land-plant-list/{contextCode.ToString()}/init";
+
+            LandAddPlantGetInitResponse result = await aPIClient.GetAsync<LandAddPlantGetInitResponse>(url);
+
+            return result;
+        }
+
+        public class LandAddPlantGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }

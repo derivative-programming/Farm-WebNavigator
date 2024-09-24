@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FS.Farm.WebNavigator.Page.Forms.Init.LandAddPlantInitObjWF;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -22,6 +23,15 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView = AddDefaultAvailableCommands(pageView);
 
+            //TODO handle form init
+
+            //TODO handle objwf buttons
+
+            //TODO handle return of form
+
+
+            //TODO handle hidden controls
+
             return pageView;
         }
 
@@ -34,13 +44,27 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
 
+            //TODO handle objwf buttons
+
+            //TODO handle post of form - good form
+
+            //TODO handle post of form - with val errors
+
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
+        } 
+
+        public async Task<LandAddPlantPostResponse> PostResponse(APIClient aPIClient, LandAddPlantPostModel model, Guid contextCode)
+        {
+            string url = $"/land-add-plant/{contextCode.ToString()}";
+
+            LandAddPlantPostResponse result = await aPIClient.PostAsync<LandAddPlantPostModel, LandAddPlantPostResponse>(url, model);
+
+            return result;
         }
 
-
-        private class LandAddPlantPostResponse
+        public class LandAddPlantPostResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
@@ -110,7 +134,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
         }
          
-        private class LandAddPlantPostModel
+        public class LandAddPlantPostModel
         {
             [Newtonsoft.Json.JsonProperty("requestFlavorCode", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
