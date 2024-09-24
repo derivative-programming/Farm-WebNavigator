@@ -18,8 +18,7 @@ namespace FS.Farm.WebNavigator.Page
             switch (pageName)
             {
                 case "MainMenu":
-                    return new MainMenu();
-//endset 
+                    return new MainMenu(); 
 
                 //GENLOOPObjectStart
                 //GENTrainingBlock[c2]Start
