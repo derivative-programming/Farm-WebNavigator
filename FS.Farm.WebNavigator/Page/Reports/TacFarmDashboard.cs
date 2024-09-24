@@ -16,9 +16,9 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             var pageView = new PageView();
 
-            pageView.PageTitleText = ""; //TODO
-            pageView.PageIntroText = ""; //TODO
-            pageView.PageFooterText = ""; //TODO
+            pageView.PageTitleText = "Farm Dashboard";
+            pageView.PageIntroText = "Farm Dashboard page intro text";
+            pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
 
@@ -38,5 +38,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             return pagePointer;
         }
+
+
     }
 }

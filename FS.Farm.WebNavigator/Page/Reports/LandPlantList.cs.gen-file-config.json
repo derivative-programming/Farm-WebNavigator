@@ -1,0 +1,19 @@
+{
+    "templateType":"report", 
+    "dimension" :{
+        "name":"LandPlantList",
+        "calculatedIsPage":"true"
+    },
+    "ignoreDimensionPropertyList": [ 
+        "reportButton.calculatedIsDestinationContextObjectTheOwnerObject", 
+        "reportButton.calculatedIsDestinationContextObjectNameSet", 
+        "reportButton.isButtonCallToAction",  
+        "reportButton.isEnabled", 
+        "reportButton.isVisible", 
+        "reportButton.calculatedIsButtonBadgePropertyAvailable", 
+        "reportButton.isButtonBadgeVisible",  
+        "reportButton.calculatedIsDestinationBackBtnDataSet",
+        "reportParam.calculatedIsTargetColumnNameAvailable",
+        "reportParam.calculatedIsTargetObjectAvailable" 
+    ]
+}

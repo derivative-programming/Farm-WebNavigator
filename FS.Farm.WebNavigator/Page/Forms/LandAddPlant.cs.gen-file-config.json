@@ -1,0 +1,27 @@
+{
+  "templateType": "objWF",
+  "dimension": {
+    "name": "LandAddPlant",
+    "calculatedIsPage": "true"
+  },
+  "ignoreDimensionPropertyList": [
+    "objectWorkflowParam.calculatedIsSourceObjectAvailable",
+    "objectWorkflowParam.calculatedIsRequiredCSSClassName",
+    "objectWorkflowParam.calculatedIsRegExMatchRequired",
+    "objectWorkflowParam.calculatedIsObjectID",
+    "objectWorkflowParam.isRequired",
+    "objectWorkflowParam.sourceObjectName",
+    "objectWorkflowParam.sourcePropertyName",
+    "objectWorkflowParam.isFKListUnknownOptionRemoved",
+    "objectWorkflowParam.isFKListOptionRecommended",
+    "objectWorkflowParam.isFKListInactiveIncluded",
+    "objectWorkflowParam.isFKListSearchable",
+    "objectWorkflowParam.isVisible",
+    "objectWorkflowButton.isButtonCallToAction",
+    "objectWorkflowButton.isVisible",
+    "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
+    "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet",
+    "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
+    "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet"
+  ]
+} 
