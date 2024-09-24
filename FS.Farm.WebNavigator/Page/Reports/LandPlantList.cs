@@ -36,6 +36,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             // handle report buttons
 //endset
+            pageView = HandleButton(pageView, "backButton",
+                "TacFarmDashboard",
+                "TacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Farm Dashboard");
+
             pageView = HandleButton(pageView, "addButton",
                 "LandAddPlant",
                 "LandCode",
@@ -89,6 +96,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //TODO handle report row buttons 
 
             //  handle report buttons
+            if (commandText == "backButton")
+                pagePointer = ProcessButtonCommand(
+                    "backButton",
+                    "TacFarmDashboard",
+                    "TacCode");
+
             if (commandText == "addButton")
                 pagePointer = ProcessButtonCommand(
                     "addButton",
