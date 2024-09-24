@@ -85,9 +85,21 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
-            //TODO handle report buttons
 
-            //TODO handle report row buttons
+            //TODO handle report row buttons 
+
+            //  handle report buttons
+            if (commandText == "addButton")
+            {
+                pagePointer.PageName = "LandAddPlant";
+                pagePointer.ContextCode = Guid.Empty; //TODO set context code
+            }
+
+            if (commandText == "otherAddButton")
+            {
+                pagePointer.PageName = "LandAddPlant";
+                pagePointer.ContextCode = Guid.Empty; //TODO set context code
+            }
 
             pagePointer = new PagePointer(_pageName, contextCode);
 

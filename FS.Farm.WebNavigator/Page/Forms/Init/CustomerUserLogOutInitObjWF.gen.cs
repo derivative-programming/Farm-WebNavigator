@@ -14,7 +14,7 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
 
         public async Task<CustomerUserLogOutGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
         {
-            string url = $"/customer--list/{contextCode.ToString()}/init";
+            string url = $"/customer-user-log-out/{contextCode.ToString()}/init";
 
             CustomerUserLogOutGetInitResponse result = await aPIClient.GetAsync<CustomerUserLogOutGetInitResponse>(url);
 

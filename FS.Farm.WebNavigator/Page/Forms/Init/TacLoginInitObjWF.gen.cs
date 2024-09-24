@@ -14,7 +14,7 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
 
         public async Task<TacLoginGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
         {
-            string url = $"/tac--list/{contextCode.ToString()}/init";
+            string url = $"/tac-login/{contextCode.ToString()}/init";
 
             TacLoginGetInitResponse result = await aPIClient.GetAsync<TacLoginGetInitResponse>(url);
 

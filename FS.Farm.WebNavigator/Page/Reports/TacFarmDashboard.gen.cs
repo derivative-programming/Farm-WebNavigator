@@ -85,7 +85,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
         public async Task<TacFarmDashboardListModel> PostResponse(APIClient aPIClient, TacFarmDashboardListRequest model, Guid contextCode)
         {
-            string url = $"/tac-add-/{contextCode.ToString()}";
+            string url = $"/tac-farm-dashboard/{contextCode.ToString()}";
 
             TacFarmDashboardListModel result = await aPIClient.PostAsync<TacFarmDashboardListRequest, TacFarmDashboardListModel>(url, model);
 

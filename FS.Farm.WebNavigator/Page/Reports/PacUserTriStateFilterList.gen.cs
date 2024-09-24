@@ -67,7 +67,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
         public async Task<PacUserTriStateFilterListListModel> PostResponse(APIClient aPIClient, PacUserTriStateFilterListListRequest model, Guid contextCode)
         {
-            string url = $"/pac-add-triStateFilter/{contextCode.ToString()}";
+            string url = $"/pac-user-tri-state-filter-list/{contextCode.ToString()}";
 
             PacUserTriStateFilterListListModel result = await aPIClient.PostAsync<PacUserTriStateFilterListListRequest, PacUserTriStateFilterListListModel>(url, model);
 

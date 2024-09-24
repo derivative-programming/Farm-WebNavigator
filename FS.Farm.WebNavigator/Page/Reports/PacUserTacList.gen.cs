@@ -67,7 +67,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
         public async Task<PacUserTacListListModel> PostResponse(APIClient aPIClient, PacUserTacListListRequest model, Guid contextCode)
         {
-            string url = $"/pac-add-tac/{contextCode.ToString()}";
+            string url = $"/pac-user-tac-list/{contextCode.ToString()}";
 
             PacUserTacListListModel result = await aPIClient.PostAsync<PacUserTacListListRequest, PacUserTacListListModel>(url, model);
 

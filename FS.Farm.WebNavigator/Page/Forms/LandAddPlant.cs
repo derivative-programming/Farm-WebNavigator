@@ -90,13 +90,30 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
 
-            //TODO handle objwf buttons
 
             //TODO handle post of form - good form
 
             //TODO handle post of form - with val errors
 
+            //  handle objwf buttons
             pagePointer = new PagePointer(_pageName, contextCode);
+
+            if (commandText == "SubmitButton")
+            {
+                //same page and context code
+            }
+
+            if (commandText == "CancelButton")
+            {
+                pagePointer.PageName = "LandPlantList";
+                pagePointer.ContextCode = Guid.Empty; //TODO set context code
+            }
+
+            if (commandText == "OtherButton")
+            {
+                pagePointer.PageName = "TacFarmDashboard";
+                pagePointer.ContextCode = Guid.Empty; //TODO set context code
+            }
 
             return pagePointer;
         } 

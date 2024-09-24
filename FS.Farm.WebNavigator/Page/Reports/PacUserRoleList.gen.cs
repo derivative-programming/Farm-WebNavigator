@@ -67,7 +67,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
         public async Task<PacUserRoleListListModel> PostResponse(APIClient aPIClient, PacUserRoleListListRequest model, Guid contextCode)
         {
-            string url = $"/pac-add-role/{contextCode.ToString()}";
+            string url = $"/pac-user-role-list/{contextCode.ToString()}";
 
             PacUserRoleListListModel result = await aPIClient.PostAsync<PacUserRoleListListRequest, PacUserRoleListListModel>(url, model);
 

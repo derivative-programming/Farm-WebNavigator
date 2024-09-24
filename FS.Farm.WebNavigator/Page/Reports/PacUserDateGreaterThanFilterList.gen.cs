@@ -67,7 +67,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
         public async Task<PacUserDateGreaterThanFilterListListModel> PostResponse(APIClient aPIClient, PacUserDateGreaterThanFilterListListRequest model, Guid contextCode)
         {
-            string url = $"/pac-add-dateGreaterThanFilter/{contextCode.ToString()}";
+            string url = $"/pac-user-date-greater-than-filter-list/{contextCode.ToString()}";
 
             PacUserDateGreaterThanFilterListListModel result = await aPIClient.PostAsync<PacUserDateGreaterThanFilterListListRequest, PacUserDateGreaterThanFilterListListModel>(url, model);
 

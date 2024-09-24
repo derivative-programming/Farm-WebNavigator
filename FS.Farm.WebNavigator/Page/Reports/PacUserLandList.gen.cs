@@ -67,7 +67,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
         public async Task<PacUserLandListListModel> PostResponse(APIClient aPIClient, PacUserLandListListRequest model, Guid contextCode)
         {
-            string url = $"/pac-add-land/{contextCode.ToString()}";
+            string url = $"/pac-user-land-list/{contextCode.ToString()}";
 
             PacUserLandListListModel result = await aPIClient.PostAsync<PacUserLandListListRequest, PacUserLandListListModel>(url, model);
 
