@@ -99,24 +99,37 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pagePointer = new PagePointer(_pageName, contextCode);
 
             if (commandText == "SubmitButton")
-            {
-                //same page and context code
-            }
+                pagePointer = ProcessButtonCommand(
+                    "SubmitButton",
+                    "LandAddPlant",
+                    "LandCode"); 
 
             if (commandText == "CancelButton")
-            {
-                pagePointer.PageName = "LandPlantList";
-                pagePointer.ContextCode = Guid.Empty; //TODO set context code
-            }
+                pagePointer = ProcessButtonCommand(
+                    "CancelButton",
+                    "LandPlantList",
+                    "LandCode");  
 
             if (commandText == "OtherButton")
-            {
-                pagePointer.PageName = "TacFarmDashboard";
-                pagePointer.ContextCode = Guid.Empty; //TODO set context code
-            }
+                pagePointer = ProcessButtonCommand(
+                    "OtherButton",
+                    "TacFarmDashboard",
+                    "TacCode"); 
 
             return pagePointer;
-        } 
+        }
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
+        }
+
+
 
         public async Task<LandAddPlantPostResponse> PostResponse(APIClient aPIClient, LandAddPlantPostModel model, Guid contextCode)
         {

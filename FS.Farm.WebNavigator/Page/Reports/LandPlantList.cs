@@ -90,21 +90,34 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //  handle report buttons
             if (commandText == "addButton")
-            {
-                pagePointer.PageName = "LandAddPlant";
-                pagePointer.ContextCode = Guid.Empty; //TODO set context code
-            }
+                pagePointer = ProcessButtonCommand(
+                    "addButton",
+                    "LandAddPlant",
+                    "LandCode"); 
 
             if (commandText == "otherAddButton")
-            {
-                pagePointer.PageName = "LandAddPlant";
-                pagePointer.ContextCode = Guid.Empty; //TODO set context code
-            }
+                pagePointer = ProcessButtonCommand(
+                    "otherAddButton",
+                    "LandAddPlant",
+                    "LandCode"); 
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
-        } 
+        }
+
+
+        private PagePointer ProcessButtonCommand(
+            string name,
+            string destinationPageName,
+            string codeName)
+        {
+            var result = new PagePointer(destinationPageName, Guid.Empty);
+
+            return result;
+        }
+
+
         public async Task<LandPlantListListModel> PostResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
         {
             string url = $"/land-plant-list/{contextCode.ToString()}";
