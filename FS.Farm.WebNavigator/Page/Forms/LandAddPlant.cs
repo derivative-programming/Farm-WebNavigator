@@ -25,12 +25,58 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             //TODO handle form init
 
-            //TODO handle objwf buttons
 
             //TODO handle return of form
 
 
             //TODO handle hidden controls
+
+            // handle objwf buttons
+//endset
+            pageView = HandleButton(pageView, "SubmitButton",
+                "LandAddPlant", 
+                "LandCode",
+                isVisible: true,
+                isEnabled: true,
+                "OK Button Text");
+
+            pageView = HandleButton(pageView, "CancelButton",
+                "LandPlantList",
+                "LandCode",
+                isVisible: true,
+                isEnabled: true,
+                "Cancel Button Text");
+
+            pageView = HandleButton(pageView, "OtherButton",
+                "TacFarmDashboard",
+                "TacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Go To Dashboard");
+//endset
+
+
+            return pageView;
+        }
+
+        public PageView HandleButton(
+            PageView pageView,
+            string name,
+            string destinationPageName,
+            string codeName,
+            bool isVisible,
+            bool isEnabled,
+            string buttonText)
+        {
+            if (!isVisible)
+                return pageView;
+
+            if (!isEnabled)
+                return pageView;
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
+                );
 
             return pageView;
         }

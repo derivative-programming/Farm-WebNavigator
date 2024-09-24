@@ -27,13 +27,51 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //TODO handle filter post
 
-            //TODO handle report buttons
 
             //TODO handle report row buttons
 
             //TODO handle report rows
 
             //TODO handle hidden columns
+
+            // handle report buttons
+//endset
+            pageView = HandleButton(pageView, "addButton",
+                "LandAddPlant",
+                "LandCode",
+                isVisible: true,
+                isEnabled: true,
+                "Add A Plant");
+
+            pageView = HandleButton(pageView, "addButton",
+                "LandAddPlant",
+                "LandCode",
+                isVisible: true,
+                isEnabled: true,
+                "Add A Plant");
+//endset
+
+            return pageView;
+        }
+
+        public PageView HandleButton(
+            PageView pageView,
+            string name,
+            string destinationPageName,
+            string codeName,
+            bool isVisible,
+            bool isEnabled,
+            string buttonText)
+        {
+            if(!isVisible)
+                return pageView;
+
+            if(!isEnabled)
+                return pageView;
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
+                );
 
             return pageView;
         }
