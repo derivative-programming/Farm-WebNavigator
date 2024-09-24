@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace FS.Farm.WebNavigator.Page.Reports.Init
 {
@@ -11,7 +11,16 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
         public PacUserRoleListInitReport()
         {
         }
-        private class PacUserRoleListGetInitResponse
+
+        public async Task<PacUserRoleListGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        {
+            string url = $"/pac-user-role-list/{contextCode.ToString()}/init";
+
+            PacUserRoleListGetInitResponse result = await aPIClient.GetAsync<PacUserRoleListGetInitResponse>(url);
+
+            return result;
+        }
+        public class PacUserRoleListGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }

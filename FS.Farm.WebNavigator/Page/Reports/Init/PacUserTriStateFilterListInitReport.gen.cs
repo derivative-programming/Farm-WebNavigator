@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace FS.Farm.WebNavigator.Page.Reports.Init
 {
@@ -11,7 +11,16 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
         public PacUserTriStateFilterListInitReport()
         {
         }
-        private class PacUserTriStateFilterListGetInitResponse
+
+        public async Task<PacUserTriStateFilterListGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        {
+            string url = $"/pac-user-tri-state-filter-list/{contextCode.ToString()}/init";
+
+            PacUserTriStateFilterListGetInitResponse result = await aPIClient.GetAsync<PacUserTriStateFilterListGetInitResponse>(url);
+
+            return result;
+        }
+        public class PacUserTriStateFilterListGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }

@@ -95,7 +95,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         } 
         public async Task<LandPlantListListModel> PostResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
         {
-            string url = $"/land-add-plant/{contextCode.ToString()}";
+            string url = $"/land-plant-list/{contextCode.ToString()}";
 
             LandPlantListListModel result = await aPIClient.PostAsync<LandPlantListListRequest, LandPlantListListModel>(url, model);
 

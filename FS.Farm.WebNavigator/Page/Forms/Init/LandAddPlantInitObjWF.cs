@@ -14,7 +14,7 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
 
         public async Task<LandAddPlantGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
         {
-            string url = $"/land-plant-list/{contextCode.ToString()}/init";
+            string url = $"/land-add-plant/{contextCode.ToString()}/init";
 
             LandAddPlantGetInitResponse result = await aPIClient.GetAsync<LandAddPlantGetInitResponse>(url);
 

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static FS.Farm.WebNavigator.Page.Forms.Init.LandAddPlantInitObjWF;
+using System.Threading.Tasks; 
 
 namespace FS.Farm.WebNavigator.Page.Reports.Init
 {

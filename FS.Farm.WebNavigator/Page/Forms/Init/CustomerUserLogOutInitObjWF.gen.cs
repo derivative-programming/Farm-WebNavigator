@@ -11,7 +11,17 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
         public CustomerUserLogOutInitObjWF()
         {
         }
-        private class CustomerUserLogOutGetInitResponse
+
+        public async Task<CustomerUserLogOutGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        {
+            string url = $"/customer--list/{contextCode.ToString()}/init";
+
+            CustomerUserLogOutGetInitResponse result = await aPIClient.GetAsync<CustomerUserLogOutGetInitResponse>(url);
+
+            return result;
+        }
+
+        public class CustomerUserLogOutGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FS.Farm.WebNavigator.Page.Forms.Init.TacRegisterInitObjWF;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -21,6 +22,48 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
+            //TODO handle form init
+
+            //TODO handle return of form
+
+            //TODO handle hidden controls
+
+            // handle objwf buttons
+//endset
+            pageView = HandleButton(pageView, "SubmitButton",
+                "TacAddCustomer",
+                "TacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Register");
+            pageView = HandleButton(pageView, "CancelButton",
+                "TacLogin",
+                "TacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Back To Log In");
+
+            return pageView;
+        }
+
+        public PageView HandleButton(
+            PageView pageView,
+            string name,
+            string destinationPageName,
+            string codeName,
+            bool isVisible,
+            bool isEnabled,
+            string buttonText)
+        {
+            if (!isVisible)
+                return pageView;
+
+            if (!isEnabled)
+                return pageView;
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
+                );
 
             return pageView;
         }
@@ -34,19 +77,34 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
 
+            //TODO handle objwf buttons
+
+            //TODO handle post of form - good form
+
+            //TODO handle post of form - with val errors
+
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
 
-        private class TacRegisterPostResponse
+        public async Task<TacRegisterPostResponse> PostResponse(APIClient aPIClient, TacRegisterPostModel model, Guid contextCode)
+        {
+            string url = $"/tac-register/{contextCode.ToString()}";
+
+            TacRegisterPostResponse result = await aPIClient.PostAsync<TacRegisterPostModel, TacRegisterPostResponse>(url, model);
+
+            return result;
+        }
+
+        public class TacRegisterPostResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
 
             [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Message { get; set; }
-     //TODO       //[Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            //[Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Email { get; set; }
             [Newtonsoft.Json.JsonProperty("uTCOffsetInMinutes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -58,7 +116,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
         }
 
-        private class TacRegisterPostModel
+        public class TacRegisterPostModel
         {
             [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]

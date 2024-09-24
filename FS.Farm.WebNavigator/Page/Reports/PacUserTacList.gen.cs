@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FS.Farm.WebNavigator.Page.Reports.Init.PacUserTacListInitReport;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -25,6 +26,28 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
+        public PageView HandleButton(
+            PageView pageView,
+            string name,
+            string destinationPageName,
+            string codeName,
+            bool isVisible,
+            bool isEnabled,
+            string buttonText)
+        {
+            if(!isVisible)
+                return pageView;
+
+            if(!isEnabled)
+                return pageView;
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
+                );
+
+            return pageView;
+        }
+
         public PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
@@ -34,12 +57,24 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
+            //TODO handle report buttons
+
+            //TODO handle report row buttons
+
             pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
+        public async Task<PacUserTacListListModel> PostResponse(APIClient aPIClient, PacUserTacListListRequest model, Guid contextCode)
+        {
+            string url = $"/pac-add-tac/{contextCode.ToString()}";
 
-        private class PacUserTacListListModel
+            PacUserTacListListModel result = await aPIClient.PostAsync<PacUserTacListListRequest, PacUserTacListListModel>(url, model);
+
+            return result;
+        }
+
+        public class PacUserTacListListModel
         {
             [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public int PageNumber { get; set; }
@@ -76,7 +111,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         }
 
-        private class PacUserTacListListModelItem
+        public class PacUserTacListListModelItem
         {
             [Newtonsoft.Json.JsonProperty("tacDescription", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -86,7 +121,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         }
 
-        private class PacUserTacListListRequest
+        public class PacUserTacListListRequest
         {
 
             public System.Guid SomeFilterUniqueIdentifier { get; set; }

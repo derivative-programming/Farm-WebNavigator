@@ -11,7 +11,17 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
         public TacRegisterInitObjWF()
         {
         }
-        private class TacRegisterGetInitResponse
+
+        public async Task<TacRegisterGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        {
+            string url = $"/tac--list/{contextCode.ToString()}/init";
+
+            TacRegisterGetInitResponse result = await aPIClient.GetAsync<TacRegisterGetInitResponse>(url);
+
+            return result;
+        }
+
+        public class TacRegisterGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
