@@ -43,12 +43,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 isEnabled: true,
                 "Add A Plant");
 
-            pageView = HandleButton(pageView, "addButton",
+            pageView = HandleButton(pageView, "otherAddButton",
                 "LandAddPlant",
                 "LandCode",
                 isVisible: true,
                 isEnabled: true,
-                "Add A Plant");
+                "Other Add Button");
 //endset
 
             return pageView;
