@@ -9,6 +9,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FS.Farm.WebNavigator", "FS.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FS.Common", "FS.Common\FS.Common\FS.Common.csproj", "{45B4B88D-B47C-4FE8-97D9-85EAC3296D78}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47E22247-242D-4AF9-9A21-B9950C8F33CE}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		gen-config.json = gen-config.json
+		gen-folder-config.json = gen-folder-config.json
+		gen-model.json = gen-model.json
+		LICENSE = LICENSE
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

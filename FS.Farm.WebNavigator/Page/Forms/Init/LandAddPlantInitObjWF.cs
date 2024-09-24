@@ -100,6 +100,15 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
         {
 
         }
-         
+
+        public partial class ValidationError
+        {
+            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public string Property { get; set; }
+
+            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public string Message { get; set; }
+
+        }
     }
 }

@@ -9,8 +9,7 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
     public class LandPlantListInitReport
     {
         public LandPlantListInitReport()
-        {
-            _pageName = "LandAddPlant";
+        { 
         } 
         private class LandPlantListGetInitResponse
         {
@@ -94,6 +93,16 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
 
         private class LandPlantListGetInitModel
         {
+
+        }
+
+        public partial class ValidationError
+        {
+            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public string Property { get; set; }
+
+            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public string Message { get; set; }
 
         }
     }
