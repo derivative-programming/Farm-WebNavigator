@@ -5,11 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Forms.Init;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
     public class LandAddPlant : PageBase, IPage
     {
+        string _contextCodeName = "LandCode";
+
         public LandAddPlant()
         {
             _pageName = "LandAddPlant";
@@ -45,35 +50,35 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             //TODO handle hidden controls
 
-            // handle objwf buttons
-            //endset
-            pageView = HandleButton(pageView, "SubmitButton",
-                "LandAddPlant", 
-                "LandCode",
-                isVisible: true,
-                isEnabled: true,
-                "OK Button Text");
+            // handle objwf buttons 
+            {
+                pageView = BuildAvailableCommand(pageView, "SubmitButton",
+                    "LandAddPlant",
+                    "LandCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "OK Button Text");
 
-            pageView = HandleButton(pageView, "CancelButton",
-                "LandPlantList",
-                "LandCode",
-                isVisible: true,
-                isEnabled: true,
-                "Cancel Button Text");
+                pageView = BuildAvailableCommand(pageView, "CancelButton",
+                    "LandPlantList",
+                    "LandCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Cancel Button Text");
 
-            pageView = HandleButton(pageView, "OtherButton",
-                "TacFarmDashboard",
-                "TacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Go To Dashboard");
-//endset
+                pageView = BuildAvailableCommand(pageView, "OtherButton",
+                    "TacFarmDashboard",
+                    "TacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Go To Dashboard");
+            } 
 
 
             return pageView;
         }
 
-        public PageView HandleButton(
+        public PageView BuildAvailableCommand(
             PageView pageView,
             string name,
             string destinationPageName,
@@ -102,8 +107,22 @@ namespace FS.Farm.WebNavigator.Page.Forms
             if (pagePointer != null)
             {
                 return pagePointer;
-            }
+            } 
 
+            var initObjWFProcessor = new LandAddPlantInitObjWF();
+
+            LandAddPlantInitObjWF.LandAddPlantGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
+             
+            string json = JsonConvert.SerializeObject(apiInitResponse);
+
+            JObject jsonObject = JObject.Parse(json);
+
+            Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>(); 
+
+            if(!navDictionary.ContainsKey("LandCode"))
+            {
+                navDictionary.Add("LandCode", contextCode);
+            }
 
             //TODO handle post of form - good form
 
@@ -113,37 +132,22 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pagePointer = new PagePointer(_pageName, contextCode);
 
             if (commandText == "SubmitButton")
-                pagePointer = ProcessButtonCommand(
-                    "SubmitButton",
+                pagePointer = new PagePointer(
                     "LandAddPlant",
-                    "LandCode"); 
+                    (Guid)navDictionary["LandCode"]);
 
             if (commandText == "CancelButton")
-                pagePointer = ProcessButtonCommand(
-                    "CancelButton",
+                pagePointer = new PagePointer(
                     "LandPlantList",
-                    "LandCode");  
+                    (Guid)navDictionary["LandCode"]); 
 
             if (commandText == "OtherButton")
-                pagePointer = ProcessButtonCommand(
-                    "OtherButton",
+                pagePointer = new PagePointer(
                     "TacFarmDashboard",
-                    "TacCode"); 
+                    (Guid)navDictionary["TacCode"]); 
 
             return pagePointer;
-        }
-
-        private PagePointer ProcessButtonCommand(
-            string name,
-            string destinationPageName,
-            string codeName)
-        {
-            var result = new PagePointer(destinationPageName, Guid.Empty);
-
-            return result;
-        }
-
-
+        }  
 
         public async Task<LandAddPlantPostResponse> PostResponse(APIClient aPIClient, LandAddPlantPostModel model, Guid contextCode)
         {

@@ -1,9 +1,10 @@
+using FS.Farm.WebNavigator.Page.Reports.Init;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FS.Farm.WebNavigator.Page.Forms.Init.TacRegisterInitObjWF;
+using FS.Farm.WebNavigator.Page.Forms.Init;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -22,6 +23,18 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
+
+            var initObjWFProcessor = new TacRegisterInitObjWF();
+
+            TacRegisterInitObjWF.TacRegisterGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
+
+            TacRegisterPostModel apiRequestModel = new TacRegisterPostModel();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
+
+            TacRegisterPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
             //TODO handle form init
 
             //TODO handle return of form
@@ -29,7 +42,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             //TODO handle hidden controls
 
             // handle objwf buttons
-//endset
+            //endset
             pageView = HandleButton(pageView, "SubmitButton",
                 "TacAddCustomer",
                 "TacCode",

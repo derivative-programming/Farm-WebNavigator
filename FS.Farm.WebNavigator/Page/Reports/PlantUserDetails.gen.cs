@@ -25,19 +25,51 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new PlantUserDetailsInitReport();
 
-            PlantUserDetailsInitReport.PlantUserDetailsGetInitResponse initResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
             //TODO handle report init
+            PlantUserDetailsInitReport.PlantUserDetailsGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+
+            PlantUserDetailsListRequest apiRequestModel = new PlantUserDetailsListRequest();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
 
             //TODO handle filter post
+            PlantUserDetailsListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
             //TODO handle report row buttons
+            pageView = HandleReportRowButtons(pageView, apiResponse);
 
             //TODO handle report rows
 
             //TODO handle hidden columns
 
             // handle report buttons
-            //endset
+            pageView = HandleReportButtons(pageView);
+
+            return pageView;
+        }
+        public PageView HandleReportRowButtons(PageView pageView, PlantUserDetailsListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0 ||
+                apiResponse.Items.Count > 1)
+            {
+                return pageView;
+            }
+
+            var rowData = apiResponse.Items.ToArray()[0];
+
+            {
+
+            }
+
+            return pageView;
+        }
+
+        public PageView HandleReportButtons(PageView pageView)
+        {
             pageView = HandleButton(pageView, "backButton",
                 "LandPlantList",
                 "LandCode",
@@ -55,12 +87,16 @@ namespace FS.Farm.WebNavigator.Page.Reports
             string codeName,
             bool isVisible,
             bool isEnabled,
-            string buttonText)
+            string buttonText,
+            bool conditionallyVisible = true)
         {
             if(!isVisible)
                 return pageView;
 
             if(!isEnabled)
+                return pageView;
+
+            if (!conditionallyVisible)
                 return pageView;
 
             pageView.AvailableCommands.Add(

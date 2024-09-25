@@ -25,7 +25,51 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new PacUserDateGreaterThanFilterListInitReport();
 
-            PacUserDateGreaterThanFilterListInitReport.PacUserDateGreaterThanFilterListGetInitResponse initResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            //TODO handle report init
+            PacUserDateGreaterThanFilterListInitReport.PacUserDateGreaterThanFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+
+            PacUserDateGreaterThanFilterListListRequest apiRequestModel = new PacUserDateGreaterThanFilterListListRequest();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
+
+            //TODO handle filter post
+            PacUserDateGreaterThanFilterListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            //TODO handle report row buttons
+            pageView = HandleReportRowButtons(pageView, apiResponse);
+
+            //TODO handle report rows
+
+            //TODO handle hidden columns
+
+            // handle report buttons
+            pageView = HandleReportButtons(pageView);
+
+            return pageView;
+        }
+        public PageView HandleReportRowButtons(PageView pageView, PacUserDateGreaterThanFilterListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0 ||
+                apiResponse.Items.Count > 1)
+            {
+                return pageView;
+            }
+
+            var rowData = apiResponse.Items.ToArray()[0];
+
+            {
+
+            }
+
+            return pageView;
+        }
+
+        public PageView HandleReportButtons(PageView pageView)
+        {
 
             return pageView;
         }
@@ -37,12 +81,16 @@ namespace FS.Farm.WebNavigator.Page.Reports
             string codeName,
             bool isVisible,
             bool isEnabled,
-            string buttonText)
+            string buttonText,
+            bool conditionallyVisible = true)
         {
             if(!isVisible)
                 return pageView;
 
             if(!isEnabled)
+                return pageView;
+
+            if (!conditionallyVisible)
                 return pageView;
 
             pageView.AvailableCommands.Add(

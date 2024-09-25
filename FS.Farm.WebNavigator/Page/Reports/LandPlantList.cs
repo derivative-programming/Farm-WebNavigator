@@ -39,18 +39,18 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
 
             //TODO handle report row buttons
-            pageView = HandleReportRowButtons(pageView, apiResponse);
+            pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
             //TODO handle report rows
 
             //TODO handle hidden columns
 
             // handle report buttons
-            pageView = HandleReportButtons(pageView); 
+            pageView = BuildAvailableCommandsForReportButtons(pageView); 
 
             return pageView;
         }
-        public PageView HandleReportRowButtons(PageView pageView, LandPlantListListModel apiResponse)
+        public PageView BuildAvailableCommandsForReportRowButtons(PageView pageView, LandPlantListListModel apiResponse)
         {
             if (apiResponse == null || 
                 apiResponse.Items == null ||
@@ -61,89 +61,91 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
+             
+            {
+                pageView = BuildAvailableCommandForButton(pageView, "updateLinkPlantCode",
+                    "PlantUserDetails",
+                    "updateLinkPlantCode",
+                    isVisible: false,
+                    isEnabled: true,
+                    "Update");
 
-            pageView = HandleButton(pageView, "updateLinkPlantCode",
-                "PlantUserDetails",
-                "updateLinkPlantCode",
-                isVisible: false,
-                isEnabled: true,
-                "Update");
+                pageView = BuildAvailableCommandForButton(pageView, "deleteAsyncButtonLinkPlantCode",
+                    "PlantUserDetails",
+                    "deleteAsyncButtonLinkPlantCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Delete");
 
-            pageView = HandleButton(pageView, "deleteAsyncButtonLinkPlantCode",
-                "PlantUserDetails",
-                "deleteAsyncButtonLinkPlantCode",
-                isVisible: true,
-                isEnabled: true,
-                "Delete");
+                pageView = BuildAvailableCommandForButton(pageView, "detailsLinkPlantCode",
+                    "LandAddPlant",
+                    "detailsLinkPlantCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Details");
 
-            pageView = HandleButton(pageView, "detailsLinkPlantCode",
-                "LandAddPlant",
-                "detailsLinkPlantCode",
-                isVisible: true,
-                isEnabled: true,
-                "Details");
+                pageView = BuildAvailableCommandForButton(pageView, "testFileDownloadLinkPacCode",
+                    "LandAddPlant",
+                    "testFileDownloadLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test File Download");
 
-            pageView = HandleButton(pageView, "testFileDownloadLinkPacCode",
-                "LandAddPlant",
-                "testFileDownloadLinkPacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Test File Download");
+                pageView = BuildAvailableCommandForButton(pageView, "testConditionalFileDownloadLinkPacCode",
+                    "LandAddPlant",
+                    "testConditionalFileDownloadLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test Conditional File Download",
+                    conditionallyVisible: rowData.IsEditAllowed
+                    );
 
-            pageView = HandleButton(pageView, "testConditionalFileDownloadLinkPacCode",
-                "LandAddPlant",
-                "testConditionalFileDownloadLinkPacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Test Conditional File Download",
-                conditionallyVisible: rowData.IsEditAllowed
+                pageView = BuildAvailableCommandForButton(pageView, "testAsyncFlowReqLinkPacCode",
+                    "LandAddPlant",
+                    "testAsyncFlowReqLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test Async Flow Req");
+
+                pageView = BuildAvailableCommandForButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
+                    "LandPlantList",
+                    "testConditionalAsyncFlowReqLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test Conditional Async Flow Req",
+                    conditionallyVisible: rowData.IsEditAllowed
+                    );
+
+                pageView = BuildAvailableCommandForButton(pageView, "conditionalBtnExampleLinkPlantCode",
+                    "PlantUserDetails",
+                    "conditionalBtnExampleLinkPlantCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Conditional Btn Example",
+                    conditionallyVisible: rowData.IsEditAllowed
                 );
-
-            pageView = HandleButton(pageView, "testAsyncFlowReqLinkPacCode",
-                "LandAddPlant",
-                "testAsyncFlowReqLinkPacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Test Async Flow Req");
-
-            pageView = HandleButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
-                "LandPlantList",
-                "testConditionalAsyncFlowReqLinkPacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Test Conditional Async Flow Req",
-                conditionallyVisible: rowData.IsEditAllowed
-                );
-
-            pageView = HandleButton(pageView, "conditionalBtnExampleLinkPlantCode",
-                "PlantUserDetails",
-                "conditionalBtnExampleLinkPlantCode",
-                isVisible: true,
-                isEnabled: true,
-                "Conditional Btn Example",
-                conditionallyVisible: rowData.IsEditAllowed
-                );
+            } 
 
             return pageView;
         }
 
-        public PageView HandleReportButtons(PageView pageView)
+        public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-            pageView = HandleButton(pageView, "backButton",
+            pageView = BuildAvailableCommandForButton(pageView, "backButton",
                 "TacFarmDashboard",
                 "TacCode",
                 isVisible: true,
                 isEnabled: true,
                 "Farm Dashboard");
 
-            pageView = HandleButton(pageView, "addButton",
+            pageView = BuildAvailableCommandForButton(pageView, "addButton",
                 "LandAddPlant",
                 "LandCode",
                 isVisible: true,
                 isEnabled: true,
                 "Add A Plant");
 
-            pageView = HandleButton(pageView, "otherAddButton",
+            pageView = BuildAvailableCommandForButton(pageView, "otherAddButton",
                 "LandAddPlant",
                 "LandCode",
                 isVisible: true,
@@ -154,7 +156,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
 
-        public PageView HandleButton(
+        public PageView BuildAvailableCommandForButton(
             PageView pageView,
             string name,
             string destinationPageName,
@@ -187,29 +189,96 @@ namespace FS.Farm.WebNavigator.Page.Reports
             if (pagePointer != null)
             {
                 return pagePointer;
-            }
+            } 
 
+            var initReportProcessor = new LandPlantListInitReport();
 
-            //TODO handle report row buttons 
-
+            LandPlantListInitReport.LandPlantListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+             
             //  handle report buttons
+
             if (commandText == "backButton")
-                pagePointer = ProcessButtonCommand(
-                    "backButton",
+                pagePointer = new PagePointer(
                     "TacFarmDashboard",
-                    "TacCode");
+                    apiInitResponse.TacCode); 
 
             if (commandText == "addButton")
-                pagePointer = ProcessButtonCommand(
-                    "addButton",
+                pagePointer = new PagePointer(
                     "LandAddPlant",
-                    "LandCode"); 
+                    apiInitResponse.LandCode); 
 
             if (commandText == "otherAddButton")
-                pagePointer = ProcessButtonCommand(
-                    "otherAddButton",
+                pagePointer = new PagePointer(
                     "LandAddPlant",
-                    "LandCode"); 
+                    apiInitResponse.LandCode); 
+
+            if (pagePointer != null)
+            {
+                return pagePointer;
+            }
+
+            LandPlantListListRequest apiRequestModel = new LandPlantListListRequest();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
+             
+            LandPlantListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0 ||
+                apiResponse.Items.Count > 1)
+            {
+                pagePointer = new PagePointer(_pageName, contextCode);
+
+                return pagePointer;
+            }
+
+            var rowData = apiResponse.Items.ToArray()[0];
+
+
+            //  handle report row buttons 
+
+            if (commandText == "updateLinkPlantCode") 
+                pagePointer = new PagePointer(
+                    "PlantUserDetails",
+                    rowData.UpdateLinkPlantCode);
+
+            if (commandText == "deleteAsyncButtonLinkPlantCode")
+                pagePointer = new PagePointer(  //TODO handle async objwf
+                    "LandPlantList",
+                    contextCode);
+
+            if (commandText == "detailsLinkPlantCode")
+                pagePointer = new PagePointer(
+                    "PlantUserDetails",
+                    rowData.DetailsLinkPlantCode);
+
+            if (commandText == "testFileDownloadLinkPacCode")
+                pagePointer = new PagePointer( //TODO handle async objwf
+                    "LandPlantList",
+                    contextCode);
+
+            if (commandText == "testConditionalFileDownloadLinkPacCode")
+                pagePointer = new PagePointer( //TODO handle async objwf
+                    "LandPlantList",
+                    contextCode);
+
+            if (commandText == "testAsyncFlowReqLinkPacCode")
+                pagePointer = new PagePointer( //TODO handle async objwf
+                    "LandPlantList",
+                    contextCode);
+
+            if (commandText == "testConditionalAsyncFlowReqLinkPacCode")
+                pagePointer = new PagePointer( //TODO handle async objwf
+                    "LandPlantList",
+                    contextCode);
+
+            if (commandText == "conditionalBtnExampleLinkPlantCode")
+                pagePointer = new PagePointer( //TODO handle async objwf
+                    "LandPlantList",
+                    contextCode);
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
