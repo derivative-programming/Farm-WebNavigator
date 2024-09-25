@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Reports.Init;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -25,7 +27,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new PacUserTriStateFilterListInitReport();
 
-            //TODO handle report init
+            //  handle report init
             PacUserTriStateFilterListInitReport.PacUserTriStateFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
 
             PacUserTriStateFilterListListRequest apiRequestModel = new PacUserTriStateFilterListListRequest();
@@ -34,22 +36,26 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
-            //TODO handle filter post
+            //  handle filter post
             PacUserTriStateFilterListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
-            //TODO handle report row buttons
-            pageView = HandleReportRowButtons(pageView, apiResponse);
+            //  handle report row buttons
+            pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
-            //TODO handle report rows
+            //  handle report rows
+
+            string json = JsonConvert.SerializeObject(apiResponse);
+
+            pageView.PageData = json;
 
             //TODO handle hidden columns
 
             // handle report buttons
-            pageView = HandleReportButtons(pageView);
+            pageView = BuildAvailableCommandsForReportButtons(pageView);
 
             return pageView;
         }
-        public PageView HandleReportRowButtons(PageView pageView, PacUserTriStateFilterListListModel apiResponse)
+        public PageView BuildAvailableCommandsForReportRowButtons(PageView pageView, PacUserTriStateFilterListListModel apiResponse)
         {
             if (apiResponse == null ||
                 apiResponse.Items == null ||
@@ -68,13 +74,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public PageView HandleReportButtons(PageView pageView)
+        public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
 
             return pageView;
         }
 
-        public PageView HandleButton(
+        public PageView BuildAvailableCommandForButton(
             PageView pageView,
             string name,
             string destinationPageName,
@@ -108,6 +114,46 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 return pagePointer;
             }
+
+            var initReportProcessor = new PacUserTriStateFilterListInitReport();
+
+            PacUserTriStateFilterListInitReport.PacUserTriStateFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+
+            string json = JsonConvert.SerializeObject(apiInitResponse);
+
+            JObject jsonObject = JObject.Parse(json);
+
+            Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>();
+
+            if (!navDictionary.ContainsKey("PacCode"))
+            {
+                navDictionary.Add("PacCode", contextCode);
+            }
+
+            if (pagePointer != null)
+            {
+                return pagePointer;
+            }
+
+            PacUserTriStateFilterListListRequest apiRequestModel = new PacUserTriStateFilterListListRequest();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
+
+            PacUserTriStateFilterListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0 ||
+                apiResponse.Items.Count > 1)
+            {
+                pagePointer = new PagePointer(_pageName, contextCode);
+
+                return pagePointer;
+            }
+
+            var rowData = apiResponse.Items.ToArray()[0];
 
             pagePointer = new PagePointer(_pageName, contextCode);
 

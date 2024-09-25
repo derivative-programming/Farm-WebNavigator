@@ -30,6 +30,9 @@ namespace FS.Farm.WebNavigator
         [Newtonsoft.Json.JsonProperty("pageFooterText")]
         public string PageFooterText { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("pageData")]
+        public string PageData { get; set; }
+
         [Newtonsoft.Json.JsonProperty("availableCommands")]
         public List<AvailableCommand> AvailableCommands { get; set; }
     }

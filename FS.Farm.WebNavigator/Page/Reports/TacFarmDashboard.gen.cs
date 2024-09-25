@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Reports.Init;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -25,7 +27,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new TacFarmDashboardInitReport();
 
-            //TODO handle report init
+            //  handle report init
             TacFarmDashboardInitReport.TacFarmDashboardGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
 
             TacFarmDashboardListRequest apiRequestModel = new TacFarmDashboardListRequest();
@@ -34,22 +36,26 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
-            //TODO handle filter post
+            //  handle filter post
             TacFarmDashboardListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
-            //TODO handle report row buttons
-            pageView = HandleReportRowButtons(pageView, apiResponse);
+            //  handle report row buttons
+            pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
-            //TODO handle report rows
+            //  handle report rows
+
+            string json = JsonConvert.SerializeObject(apiResponse);
+
+            pageView.PageData = json;
 
             //TODO handle hidden columns
 
             // handle report buttons
-            pageView = HandleReportButtons(pageView);
+            pageView = BuildAvailableCommandsForReportButtons(pageView);
 
             return pageView;
         }
-        public PageView HandleReportRowButtons(PageView pageView, TacFarmDashboardListModel apiResponse)
+        public PageView BuildAvailableCommandsForReportRowButtons(PageView pageView, TacFarmDashboardListModel apiResponse)
         {
             if (apiResponse == null ||
                 apiResponse.Items == null ||
@@ -68,15 +74,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public PageView HandleReportButtons(PageView pageView)
+        public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-            pageView = HandleButton(pageView, "backButton",
+            pageView = BuildAvailableCommandForButton(pageView, "backButton",
                 "",
                 "",
                 isVisible: false,
                 isEnabled: true,
                 "");
-            pageView = HandleButton(pageView, "addButton",
+            pageView = BuildAvailableCommandForButton(pageView, "addButton",
                 "",
                 "",
                 isVisible: false,
@@ -86,7 +92,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public PageView HandleButton(
+        public PageView BuildAvailableCommandForButton(
             PageView pageView,
             string name,
             string destinationPageName,
@@ -120,19 +126,56 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 return pagePointer;
             }
-            //TODO handle report row buttons
 
+            var initReportProcessor = new TacFarmDashboardInitReport();
+
+            TacFarmDashboardInitReport.TacFarmDashboardGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+
+            string json = JsonConvert.SerializeObject(apiInitResponse);
+
+            JObject jsonObject = JObject.Parse(json);
+
+            Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>();
+
+            if (!navDictionary.ContainsKey("TacCode"))
+            {
+                navDictionary.Add("TacCode", contextCode);
+            }
             //  handle report buttons
+
             if (commandText == "backButton")
-                pagePointer = ProcessButtonCommand(
-                    "backButton",
+                pagePointer = new PagePointer(
                     "",
-                    "");
+                    (Guid)navDictionary[""]);
             if (commandText == "addButton")
-                pagePointer = ProcessButtonCommand(
-                    "addButton",
+                pagePointer = new PagePointer(
                     "",
-                    "");
+                    (Guid)navDictionary[""]);
+
+            if (pagePointer != null)
+            {
+                return pagePointer;
+            }
+
+            TacFarmDashboardListRequest apiRequestModel = new TacFarmDashboardListRequest();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
+
+            TacFarmDashboardListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0 ||
+                apiResponse.Items.Count > 1)
+            {
+                pagePointer = new PagePointer(_pageName, contextCode);
+
+                return pagePointer;
+            }
+
+            var rowData = apiResponse.Items.ToArray()[0];
 
             pagePointer = new PagePointer(_pageName, contextCode);
 

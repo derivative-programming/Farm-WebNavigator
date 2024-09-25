@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Reports.Init;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -25,7 +27,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new LandPlantListInitReport();
 
-            //TODO handle report init
+            //  handle report init
             LandPlantListInitReport.LandPlantListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
 
             LandPlantListListRequest apiRequestModel = new LandPlantListListRequest();
@@ -34,14 +36,18 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
-            //TODO handle filter post
+            //  handle filter post
             LandPlantListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
 
-            //TODO handle report row buttons
+            //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
-            //TODO handle report rows
+            //  handle report rows
+
+            string json = JsonConvert.SerializeObject(apiResponse);
+
+            pageView.PageData = json;
 
             //TODO handle hidden columns
 
@@ -194,23 +200,34 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var initReportProcessor = new LandPlantListInitReport();
 
             LandPlantListInitReport.LandPlantListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
-             
+
+            string json = JsonConvert.SerializeObject(apiInitResponse);
+
+            JObject jsonObject = JObject.Parse(json);
+
+            Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>();
+
+            if (!navDictionary.ContainsKey("LandCode"))
+            {
+                navDictionary.Add("LandCode", contextCode);
+            }
+
             //  handle report buttons
 
             if (commandText == "backButton")
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",
-                    apiInitResponse.TacCode); 
+                    (Guid)navDictionary["TacCode"]); 
 
             if (commandText == "addButton")
                 pagePointer = new PagePointer(
                     "LandAddPlant",
-                    apiInitResponse.LandCode); 
+                    (Guid)navDictionary["LandCode"]);
 
             if (commandText == "otherAddButton")
                 pagePointer = new PagePointer(
                     "LandAddPlant",
-                    apiInitResponse.LandCode); 
+                    (Guid)navDictionary["LandCode"]);
 
             if (pagePointer != null)
             {

@@ -42,18 +42,19 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             LandAddPlantPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
-            //TODO handle form init
 
+            //  handle return of form 
 
-            //TODO handle return of form
+            string json = JsonConvert.SerializeObject(apiResponse);
 
+            pageView.PageData = json;
 
             //TODO handle hidden controls
 
             // handle objwf buttons 
             {
                 pageView = BuildAvailableCommand(pageView, "SubmitButton",
-                    "LandAddPlant",
+                    "LandPlantList",
                     "LandCode",
                     isVisible: true,
                     isEnabled: true,
@@ -133,7 +134,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             if (commandText == "SubmitButton")
                 pagePointer = new PagePointer(
-                    "LandAddPlant",
+                    "LandPlantList",
                     (Guid)navDictionary["LandCode"]);
 
             if (commandText == "CancelButton")

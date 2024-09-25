@@ -5,11 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Forms.Init;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
     public class TacRegister : PageBase, IPage
     {
+        string _contextCodeName = "TacCode";
+
         public TacRegister()
         {
             _pageName = "TacRegister";
@@ -35,31 +40,36 @@ namespace FS.Farm.WebNavigator.Page.Forms
             MergeProperties(apiRequestModel, postData);
 
             TacRegisterPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
-            //TODO handle form init
 
-            //TODO handle return of form
+            //  handle return of form
+
+            string json = JsonConvert.SerializeObject(apiResponse);
+
+            pageView.PageData = json;
 
             //TODO handle hidden controls
 
             // handle objwf buttons
-            //endset
-            pageView = HandleButton(pageView, "SubmitButton",
-                "TacAddCustomer",
-                "TacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Register");
-            pageView = HandleButton(pageView, "CancelButton",
-                "TacLogin",
-                "TacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Back To Log In");
+            {
+                pageView = BuildAvailableCommand(pageView, "SubmitButton",
+                    "TacFarmDashboard",
+                    "TacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Register");
+                pageView = BuildAvailableCommand(pageView, "CancelButton",
+                    "TacLogin",
+                    "TacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Back To Log In");
+
+            }
 
             return pageView;
         }
 
-        public PageView HandleButton(
+        public PageView BuildAvailableCommand(
             PageView pageView,
             string name,
             string destinationPageName,
@@ -90,6 +100,21 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
 
+            var initObjWFProcessor = new TacRegisterInitObjWF();
+
+            TacRegisterInitObjWF.TacRegisterGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
+
+            string json = JsonConvert.SerializeObject(apiInitResponse);
+
+            JObject jsonObject = JObject.Parse(json);
+
+            Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>();
+
+            if(!navDictionary.ContainsKey("TacCode"))
+            {
+                navDictionary.Add("TacCode", contextCode);
+            }
+
             //TODO handle post of form - good form
 
             //TODO handle post of form - with val errors
@@ -97,27 +122,15 @@ namespace FS.Farm.WebNavigator.Page.Forms
             //  handle objwf buttons
             pagePointer = new PagePointer(_pageName, contextCode);
             if (commandText == "SubmitButton")
-                pagePointer = ProcessButtonCommand(
-                    "SubmitButton",
-                    "TacAddCustomer",
-                    "TacCode");
+                pagePointer = new PagePointer(
+                    "TacFarmDashboard",
+                    (Guid)navDictionary["TacCode"]);
             if (commandText == "CancelButton")
-                pagePointer = ProcessButtonCommand(
-                    "CancelButton",
+                pagePointer = new PagePointer(
                     "TacLogin",
-                    "TacCode");
+                    (Guid)navDictionary["TacCode"]);
 
             return pagePointer;
-        }
-
-        private PagePointer ProcessButtonCommand(
-            string name,
-            string destinationPageName,
-            string codeName)
-        {
-            var result = new PagePointer(destinationPageName, Guid.Empty);
-
-            return result;
         }
 
         public async Task<TacRegisterPostResponse> PostResponse(APIClient aPIClient, TacRegisterPostModel model, Guid contextCode)
