@@ -21,6 +21,18 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             return result;
         }
 
+        public List<PageHeader> GetPageHeaders(TacLoginGetInitResponse apiResponse)
+        {
+            List<PageHeader> result = new List<PageHeader>();
+            var emailHeaderIsVisible = false;
+            var passwordHeaderIsVisible = false;
+            if(emailHeaderIsVisible) //email
+                result.Add(new PageHeader("Email", apiResponse.Email));
+            if(passwordHeaderIsVisible) //password
+                result.Add(new PageHeader("Password", apiResponse.Password));
+            return result;
+        }
+
         public class TacLoginGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]

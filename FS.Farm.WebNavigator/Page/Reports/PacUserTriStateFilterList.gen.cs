@@ -16,7 +16,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PacUserTriStateFilterList";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -37,8 +37,34 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
+            //default values, can't override
+            apiRequestModel.ForceErrorMessage = "";
+            apiRequestModel.ItemCountPerPage = 5;
+
+            if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                string columnName = commandText.Split(':')[1];
+                if(apiRequestModel.OrderByColumnName.Equals(columnName,StringComparison.OrdinalIgnoreCase))
+                {
+                    apiRequestModel.OrderByDescending = true;
+                }
+                else
+                {
+                    apiRequestModel.OrderByColumnName = commandText.Split(':')[1];
+                    apiRequestModel.OrderByDescending = false;
+                }
+            }
+
             //  handle filter post
             PacUserTriStateFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+
+            pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
+
+            pageView = BuildTableHeaders(pageView);
+
+            pageView = BuildTableData(pageView, apiResponse);
+
+            pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -51,8 +77,134 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //TODO handle hidden columns
 
+            //TODO handle paging
+
+            //TODO handle sorting
+
+            //TODO handle filtering
+
             // handle report buttons
             pageView = BuildAvailableCommandsForReportButtons(pageView);
+
+            return pageView;
+        }
+
+        public PageView BuildPageHeaders(PageView pageView)
+        {
+            return pageView;
+        }
+
+        public PageView BuildTableHeaders(PageView pageView)
+        {
+            {
+                //TriStateFilterCode
+                pageView = BuildTableHeader(pageView, "triStateFilterDescription",
+                    isVisible: true,
+                    "Description");
+                pageView = BuildTableHeader(pageView, "triStateFilterDisplayOrder",
+                    isVisible: true,
+                    "Display Order");
+                pageView = BuildTableHeader(pageView, "triStateFilterIsActive",
+                    isVisible: true,
+                    "Is Active");
+                pageView = BuildTableHeader(pageView, "triStateFilterLookupEnumName",
+                    isVisible: true,
+                    "Lookup Enum Name");
+                pageView = BuildTableHeader(pageView, "triStateFilterName",
+                    isVisible: true,
+                    "Name");
+                pageView = BuildTableHeader(pageView, "triStateFilterStateIntValue",
+                    isVisible: true,
+                    "State Int Value");
+            }
+
+            return pageView;
+        }
+
+        public PageView BuildTableData(PageView pageView, PacUserTriStateFilterListListModel apiResponse)
+        {
+            List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
+
+            foreach(var rowData in apiResponse.Items)
+            {
+                tableData.Add(BuildTableDataRow(rowData));
+            }
+
+            pageView.TableData = tableData;
+
+            return pageView;
+        }
+
+        public Dictionary<string, string> BuildTableDataRow(PacUserTriStateFilterListListModelItem rowData)
+        {
+            Dictionary<string,string> keyValuePairs = new Dictionary<string, string>();
+
+            {
+                //TriStateFilterCode
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "triStateFilterDescription",
+                    isVisible: true,
+                    value: rowData.TriStateFilterDescription.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "triStateFilterDisplayOrder",
+                    isVisible: true,
+                    value: rowData.TriStateFilterDisplayOrder.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "triStateFilterIsActive",
+                    isVisible: true,
+                    value: rowData.TriStateFilterIsActive.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "triStateFilterLookupEnumName",
+                    isVisible: true,
+                    value: rowData.TriStateFilterLookupEnumName.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "triStateFilterName",
+                    isVisible: true,
+                    value: rowData.TriStateFilterName.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "triStateFilterStateIntValue",
+                    isVisible: true,
+                    value: rowData.TriStateFilterStateIntValue.ToString());
+            }
+
+            return keyValuePairs;
+        }
+
+        public PageView BuildAvailableCommandsForReportSort(PageView pageView, PacUserTriStateFilterListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count < 2)
+            {
+                return pageView;
+            }
+
+            {
+                //TriStateFilterCode
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "triStateFilterDescription",
+                    isVisible: true,
+                    "Description");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "triStateFilterDisplayOrder",
+                    isVisible: true,
+                    "Display Order");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "triStateFilterIsActive",
+                    isVisible: true,
+                    "Is Active");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "triStateFilterLookupEnumName",
+                    isVisible: true,
+                    "Lookup Enum Name");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "triStateFilterName",
+                    isVisible: true,
+                    "Name");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "triStateFilterStateIntValue",
+                    isVisible: true,
+                    "State Int Value");
+            }
+
+            return pageView;
+        }
+        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, PacUserTriStateFilterListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0)
+            {
+                return pageView;
+            }
 
             return pageView;
         }
@@ -77,32 +229,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-
-            return pageView;
-        }
-
-        public PageView BuildAvailableCommandForButton(
-            PageView pageView,
-            string name,
-            string destinationPageName,
-            string codeName,
-            bool isVisible,
-            bool isEnabled,
-            string buttonText,
-            bool conditionallyVisible = true)
-        {
-            if(!isVisible)
-                return pageView;
-
-            if(!isEnabled)
-                return pageView;
-
-            if (!conditionallyVisible)
-                return pageView;
-
-            pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
-                );
 
             return pageView;
         }
@@ -137,6 +263,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             pagePointer = new PagePointer(_pageName, contextCode);
+
+            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
 
             PacUserTriStateFilterListListRequest apiRequestModel = new PacUserTriStateFilterListListRequest();
 
@@ -184,24 +315,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PacUserTriStateFilterListListModel result = await aPIClient.GetAsync<PacUserTriStateFilterListListModel>(url);
 
             return result;
-        }
-
-        private string ToQueryString(object obj)
-        {
-            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
-            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
-                NullValueHandling = NullValueHandling.Ignore // Ignore null values
-            });
-
-            // Deserialize the JSON into a dictionary
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            // Convert the dictionary to query string
-            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
-
-            return queryString;
         }
 
         public class PacUserTriStateFilterListListModel
@@ -285,16 +398,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
-
-        }
-
-        public partial class ValidationError
-        {
-            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Property { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
 
         }
 

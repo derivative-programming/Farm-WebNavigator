@@ -12,7 +12,7 @@ namespace FS.Farm.WebNavigator.Page
         {
             this._pageName = "MainMenu";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -20,9 +20,22 @@ namespace FS.Farm.WebNavigator.Page
 
             pageView.AvailableCommands.Add(
                 new AvailableCommand(
-                    "Dashboard",
-                    "Dashboard",
+                    "Dashboard", 
                     "Return to your dashboard"
+                )
+            );
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand(
+                    "Admin",
+                    "Go To Admin Dashboard"
+                )
+            );
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand(
+                    "Config",
+                    "Go To Config Dashboard"
                 )
             );
 
@@ -45,9 +58,21 @@ namespace FS.Farm.WebNavigator.Page
             pagePointer = new PagePointer(this._pageName, contextCode);
             
 
-            if(commandText == "Dashboard")
+            if(commandText.Equals("Dashboard",StringComparison.OrdinalIgnoreCase))
             {
                 pagePointer.PageName = "TacFarmDashboard";
+                pagePointer.ContextCode = Guid.Empty;
+            }
+
+            if (commandText.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                pagePointer.PageName = "CustomerAdminDashboard";
+                pagePointer.ContextCode = Guid.Empty;
+            }
+
+            if (commandText.Equals("Config", StringComparison.OrdinalIgnoreCase))
+            {
+                pagePointer.PageName = "PacConfigDashboard";
                 pagePointer.ContextCode = Guid.Empty;
             }
 

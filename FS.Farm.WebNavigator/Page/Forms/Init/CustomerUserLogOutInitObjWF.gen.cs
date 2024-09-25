@@ -21,6 +21,13 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             return result;
         }
 
+        public List<PageHeader> GetPageHeaders(CustomerUserLogOutGetInitResponse apiResponse)
+        {
+            List<PageHeader> result = new List<PageHeader>();
+
+            return result;
+        }
+
         public class CustomerUserLogOutGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]

@@ -16,7 +16,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PlantUserDetails";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -37,8 +37,24 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
+            //default values, can't override
+            apiRequestModel.ForceErrorMessage = "";
+            apiRequestModel.ItemCountPerPage = 5;
+
+            apiRequestModel.PageNumber = 1;
+            apiRequestModel.OrderByColumnName = "";
+            apiRequestModel.OrderByDescending = false;
+
             //  handle filter post
             PlantUserDetailsListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+
+            pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
+
+            pageView = BuildTableHeaders(pageView);
+
+            pageView = BuildTableData(pageView, apiResponse);
+
+            pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -51,8 +67,302 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //TODO handle hidden columns
 
+            //TODO handle paging
+
+            //TODO handle sorting
+
+            //TODO handle filtering
+
             // handle report buttons
             pageView = BuildAvailableCommandsForReportButtons(pageView);
+
+            return pageView;
+        }
+
+        public PageView BuildPageHeaders(PageView pageView)
+        {
+            return pageView;
+        }
+
+        public PageView BuildTableHeaders(PageView pageView)
+        {
+            {
+                pageView = BuildTableHeader(pageView, "flavorName",
+                    isVisible: true,
+                    "Name");
+                pageView = BuildTableHeader(pageView, "isDeleteAllowed",
+                    isVisible: true,
+                    "Is Delete Allowed");
+                pageView = BuildTableHeader(pageView, "isEditAllowed",
+                    isVisible: true,
+                    "Is Edit Allowed");
+                pageView = BuildTableHeader(pageView, "otherFlavor",
+                    isVisible: true,
+                    "Other Flavor");
+                pageView = BuildTableHeader(pageView, "someBigIntVal",
+                    isVisible: true,
+                    "Some Big Int Val");
+                pageView = BuildTableHeader(pageView, "someBitVal",
+                    isVisible: true,
+                    "Some Bit Val");
+                pageView = BuildTableHeader(pageView, "someDateVal",
+                    isVisible: true,
+                    "Some Date Val");
+                pageView = BuildTableHeader(pageView, "someDecimalVal",
+                    isVisible: true,
+                    "Some Decimal Val");
+                pageView = BuildTableHeader(pageView, "someEmailAddress",
+                    isVisible: true,
+                    "Some Email Address");
+                pageView = BuildTableHeader(pageView, "someFloatVal",
+                    isVisible: true,
+                    "Some Float Val");
+                pageView = BuildTableHeader(pageView, "someIntVal",
+                    isVisible: true,
+                    "Some Int Val");
+                pageView = BuildTableHeader(pageView, "someMoneyVal",
+                    isVisible: true,
+                    "Some Money Val");
+                pageView = BuildTableHeader(pageView, "someNVarCharVal",
+                    isVisible: true,
+                    "Some N Var Char Val");
+                pageView = BuildTableHeader(pageView, "somePhoneNumber",
+                    isVisible: true,
+                    "Some Phone Number");
+                pageView = BuildTableHeader(pageView, "someTextVal",
+                    isVisible: true,
+                    "Some Text Val");
+                //SomeUniqueidentifierVal
+                pageView = BuildTableHeader(pageView, "someUTCDateTimeVal",
+                    isVisible: true,
+                    "Some UTC Date Time Val");
+                pageView = BuildTableHeader(pageView, "someVarCharVal",
+                    isVisible: true,
+                    "Some Var Char Val");
+                pageView = BuildTableHeader(pageView, "phoneNumConditionalOnIsEditable",
+                    isVisible: true,
+                    "Conditional Column");
+                pageView = BuildTableHeader(pageView, "nVarCharAsUrl",
+                    isVisible: true,
+                    "N Var Char As Url");
+                //updateButtonTextLinkPlantCode
+                //randomPropertyUpdatesLinkPlantCode
+                //backToDashboardLinkTacCode
+                //testFileDownloadLinkPacCode
+                //testConditionalAsyncFileDownloadLinkPacCode
+                //testAsyncFlowReqLinkPacCode
+                //testConditionalAsyncFlowReqLinkPacCode
+                //conditionalBtnExampleLinkTacCode
+                pageView = BuildTableHeader(pageView, "someImageUrlVal",
+                    isVisible: true,
+                    "Some Image Url Val");
+                pageView = BuildTableHeader(pageView, "isImageUrlAvailable",
+                    isVisible: true,
+                    "Is Image Url Available");
+                pageView = BuildTableHeader(pageView, "someConditionalImageUrlVal",
+                    isVisible: true,
+                    "Some Conditional Image Url Val");
+            }
+
+            return pageView;
+        }
+
+        public PageView BuildTableData(PageView pageView, PlantUserDetailsListModel apiResponse)
+        {
+            List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
+
+            foreach(var rowData in apiResponse.Items)
+            {
+                tableData.Add(BuildTableDataRow(rowData));
+            }
+
+            pageView.TableData = tableData;
+
+            return pageView;
+        }
+
+        public Dictionary<string, string> BuildTableDataRow(PlantUserDetailsListModelItem rowData)
+        {
+            Dictionary<string,string> keyValuePairs = new Dictionary<string, string>();
+
+            {
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "flavorName",
+                    isVisible: true,
+                    value: rowData.FlavorName.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "isDeleteAllowed",
+                    isVisible: true,
+                    value: rowData.IsDeleteAllowed.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "isEditAllowed",
+                    isVisible: true,
+                    value: rowData.IsEditAllowed.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "otherFlavor",
+                    isVisible: true,
+                    value: rowData.OtherFlavor.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someBigIntVal",
+                    isVisible: true,
+                    value: rowData.SomeBigIntVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someBitVal",
+                    isVisible: true,
+                    value: rowData.SomeBitVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someDateVal",
+                    isVisible: true,
+                    value: rowData.SomeDateVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someDecimalVal",
+                    isVisible: true,
+                    value: rowData.SomeDecimalVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someEmailAddress",
+                    isVisible: true,
+                    value: rowData.SomeEmailAddress.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someFloatVal",
+                    isVisible: true,
+                    value: rowData.SomeFloatVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someIntVal",
+                    isVisible: true,
+                    value: rowData.SomeIntVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someMoneyVal",
+                    isVisible: true,
+                    value: rowData.SomeMoneyVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someNVarCharVal",
+                    isVisible: true,
+                    value: rowData.SomeNVarCharVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "somePhoneNumber",
+                    isVisible: true,
+                    value: rowData.SomePhoneNumber.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someTextVal",
+                    isVisible: true,
+                    value: rowData.SomeTextVal.ToString());
+                //SomeUniqueidentifierVal
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someUTCDateTimeVal",
+                    isVisible: true,
+                    value: rowData.SomeUTCDateTimeVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someVarCharVal",
+                    isVisible: true,
+                    value: rowData.SomeVarCharVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "phoneNumConditionalOnIsEditable",
+                    isVisible: true,
+                    value: rowData.PhoneNumConditionalOnIsEditable.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "nVarCharAsUrl",
+                    isVisible: true,
+                    value: rowData.NVarCharAsUrl.ToString());
+                //updateButtonTextLinkPlantCode
+                //randomPropertyUpdatesLinkPlantCode
+                //backToDashboardLinkTacCode
+                //testFileDownloadLinkPacCode
+                //testConditionalAsyncFileDownloadLinkPacCode
+                //testAsyncFlowReqLinkPacCode
+                //testConditionalAsyncFlowReqLinkPacCode
+                //conditionalBtnExampleLinkTacCode
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someImageUrlVal",
+                    isVisible: true,
+                    value: rowData.SomeImageUrlVal.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "isImageUrlAvailable",
+                    isVisible: true,
+                    value: rowData.IsImageUrlAvailable.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someConditionalImageUrlVal",
+                    isVisible: true,
+                    value: rowData.SomeConditionalImageUrlVal.ToString());
+            }
+
+            return keyValuePairs;
+        }
+
+        public PageView BuildAvailableCommandsForReportSort(PageView pageView, PlantUserDetailsListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count < 2)
+            {
+                return pageView;
+            }
+
+            {
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "flavorName",
+                    isVisible: true,
+                    "Name");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "isDeleteAllowed",
+                    isVisible: true,
+                    "Is Delete Allowed");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "isEditAllowed",
+                    isVisible: true,
+                    "Is Edit Allowed");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "otherFlavor",
+                    isVisible: true,
+                    "Other Flavor");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someBigIntVal",
+                    isVisible: true,
+                    "Some Big Int Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someBitVal",
+                    isVisible: true,
+                    "Some Bit Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someDateVal",
+                    isVisible: true,
+                    "Some Date Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someDecimalVal",
+                    isVisible: true,
+                    "Some Decimal Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someEmailAddress",
+                    isVisible: true,
+                    "Some Email Address");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someFloatVal",
+                    isVisible: true,
+                    "Some Float Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someIntVal",
+                    isVisible: true,
+                    "Some Int Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someMoneyVal",
+                    isVisible: true,
+                    "Some Money Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someNVarCharVal",
+                    isVisible: true,
+                    "Some N Var Char Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "somePhoneNumber",
+                    isVisible: true,
+                    "Some Phone Number");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someTextVal",
+                    isVisible: true,
+                    "Some Text Val");
+                //SomeUniqueidentifierVal
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someUTCDateTimeVal",
+                    isVisible: true,
+                    "Some UTC Date Time Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someVarCharVal",
+                    isVisible: true,
+                    "Some Var Char Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "phoneNumConditionalOnIsEditable",
+                    isVisible: true,
+                    "Conditional Column");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "nVarCharAsUrl",
+                    isVisible: true,
+                    "N Var Char As Url");
+                //updateButtonTextLinkPlantCode
+                //randomPropertyUpdatesLinkPlantCode
+                //backToDashboardLinkTacCode
+                //testFileDownloadLinkPacCode
+                //testConditionalAsyncFileDownloadLinkPacCode
+                //testAsyncFlowReqLinkPacCode
+                //testConditionalAsyncFlowReqLinkPacCode
+                //conditionalBtnExampleLinkTacCode
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someImageUrlVal",
+                    isVisible: true,
+                    "Some Image Url Val");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "isImageUrlAvailable",
+                    isVisible: true,
+                    "Is Image Url Available");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "someConditionalImageUrlVal",
+                    isVisible: true,
+                    "Some Conditional Image Url Val");
+            }
+
+            return pageView;
+        }
+        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, PlantUserDetailsListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0)
+            {
+                return pageView;
+            }
 
             return pageView;
         }
@@ -69,49 +379,49 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var rowData = apiResponse.Items.ToArray()[0];
 
             {
-                pageView = BuildAvailableCommandForButton(pageView, "updateButtonTextLinkPlantCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "updateButtonTextLinkPlantCode",
                     "PlantAddPlant",
                     "updateButtonTextLinkPlantCode",
                     isVisible: false,
                     isEnabled: true,
                     "Update Button Text");
-                pageView = BuildAvailableCommandForButton(pageView, "randomPropertyUpdatesLinkPlantCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "randomPropertyUpdatesLinkPlantCode",
                     "PlantUserDetails",
                     "randomPropertyUpdatesLinkPlantCode",
                     isVisible: true,
                     isEnabled: true,
                     "Random Property Updates");
-                pageView = BuildAvailableCommandForButton(pageView, "backToDashboardLinkTacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "backToDashboardLinkTacCode",
                     "PlantAddTac",
                     "backToDashboardLinkTacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Back To Dashboard");
-                pageView = BuildAvailableCommandForButton(pageView, "testFileDownloadLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testFileDownloadLinkPacCode",
                     "PacUserDetails",
                     "testFileDownloadLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test File Download");
-                pageView = BuildAvailableCommandForButton(pageView, "testConditionalAsyncFileDownloadLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testConditionalAsyncFileDownloadLinkPacCode",
                     "PacUserDetails",
                     "testConditionalAsyncFileDownloadLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test Conditional Async File Download");
-                pageView = BuildAvailableCommandForButton(pageView, "testAsyncFlowReqLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testAsyncFlowReqLinkPacCode",
                     "PacUserDetails",
                     "testAsyncFlowReqLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test Async Flow Req");
-                pageView = BuildAvailableCommandForButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
                     "PacUserDetails",
                     "testConditionalAsyncFlowReqLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test Conditional Async Flow Req");
-                pageView = BuildAvailableCommandForButton(pageView, "conditionalBtnExampleLinkTacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "conditionalBtnExampleLinkTacCode",
                     "PlantAddTac",
                     "conditionalBtnExampleLinkTacCode",
                     isVisible: true,
@@ -124,38 +434,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-            pageView = BuildAvailableCommandForButton(pageView, "backButton",
+            pageView = BuildAvailableCommandForReportButton(pageView, "backButton",
                 "LandPlantList",
                 "LandCode",
                 isVisible: true,
                 isEnabled: true,
                 "Plant List");
-
-            return pageView;
-        }
-
-        public PageView BuildAvailableCommandForButton(
-            PageView pageView,
-            string name,
-            string destinationPageName,
-            string codeName,
-            bool isVisible,
-            bool isEnabled,
-            string buttonText,
-            bool conditionallyVisible = true)
-        {
-            if(!isVisible)
-                return pageView;
-
-            if(!isEnabled)
-                return pageView;
-
-            if (!conditionallyVisible)
-                return pageView;
-
-            pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
-                );
 
             return pageView;
         }
@@ -185,7 +469,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
             //  handle report buttons
 
-            if (commandText == "backButton")
+            if (commandText.Equals("backButton",StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "LandPlantList",
                     Guid.Parse(navDictionary["landCode"].ToString()));
@@ -196,6 +480,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             pagePointer = new PagePointer(_pageName, contextCode);
+
+            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
 
             PlantUserDetailsListRequest apiRequestModel = new PlantUserDetailsListRequest();
 
@@ -216,35 +505,35 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
-            if (commandText == "updateButtonTextLinkPlantCode")
+            if (commandText.Equals("updateButtonTextLinkPlantCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "PlantUserDetails",
                     rowData.UpdateButtonTextLinkPlantCode);
-            if (commandText == "randomPropertyUpdatesLinkPlantCode")
+            if (commandText.Equals("randomPropertyUpdatesLinkPlantCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "PlantPlantList",
                     contextCode);
-            if (commandText == "backToDashboardLinkTacCode")
+            if (commandText.Equals("backToDashboardLinkTacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",
                     rowData.BackToDashboardLinkTacCode);
-            if (commandText == "testFileDownloadLinkPacCode")
+            if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "PlantPacList",
                     contextCode);
-            if (commandText == "testConditionalAsyncFileDownloadLinkPacCode")
+            if (commandText.Equals("testConditionalAsyncFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "PlantPacList",
                     contextCode);
-            if (commandText == "testAsyncFlowReqLinkPacCode")
+            if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "PlantPacList",
                     contextCode);
-            if (commandText == "testConditionalAsyncFlowReqLinkPacCode")
+            if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "PlantPacList",
                     contextCode);
-            if (commandText == "conditionalBtnExampleLinkTacCode")
+            if (commandText.Equals("conditionalBtnExampleLinkTacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",
                     rowData.ConditionalBtnExampleLinkTacCode);
@@ -274,24 +563,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PlantUserDetailsListModel result = await aPIClient.GetAsync<PlantUserDetailsListModel>(url);
 
             return result;
-        }
-
-        private string ToQueryString(object obj)
-        {
-            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
-            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
-                NullValueHandling = NullValueHandling.Ignore // Ignore null values
-            });
-
-            // Deserialize the JSON into a dictionary
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            // Convert the dictionary to query string
-            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
-
-            return queryString;
         }
 
         public class PlantUserDetailsListModel
@@ -444,16 +715,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
-
-        }
-
-        public partial class ValidationError
-        {
-            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Property { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
 
         }
 

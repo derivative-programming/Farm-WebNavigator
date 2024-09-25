@@ -8,6 +8,7 @@ using FS.Farm.WebNavigator.Page.Forms.Init;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using FS.Farm.WebNavigator.Page;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -19,7 +20,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             _pageName = "TacLogin";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -40,6 +41,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
             MergeProperties(apiRequestModel, postData);
 
             //TacLoginPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
             //  handle return of form
 
@@ -65,6 +68,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     "Register");
             }
 
+            pageView.TableHeaders = null;
+
             return pageView;
         }
 
@@ -84,7 +89,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pageView;
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
+                new AvailableCommand { CommandText = name, Description = buttonText }
                 );
 
             return pageView;
@@ -120,11 +125,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             //  handle objwf buttons
             pagePointer = new PagePointer(_pageName, contextCode);
-            if (commandText == "SubmitButton")
+            if (commandText.Equals("SubmitButton",StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",
                     Guid.Parse(navDictionary["tacCode"].ToString()));
-            if (commandText == "OtherButton")
+            if (commandText.Equals("OtherButton", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "TacRegister",
                     Guid.Parse(navDictionary["tacCode"].ToString()));
@@ -178,15 +183,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
         }
 
-        public partial class ValidationError
-        {
-            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Property { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
-
-        }
     }
 }
 

@@ -16,7 +16,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PacUserRoleList";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -37,8 +37,34 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
+            //default values, can't override
+            apiRequestModel.ForceErrorMessage = "";
+            apiRequestModel.ItemCountPerPage = 5;
+
+            if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                string columnName = commandText.Split(':')[1];
+                if(apiRequestModel.OrderByColumnName.Equals(columnName,StringComparison.OrdinalIgnoreCase))
+                {
+                    apiRequestModel.OrderByDescending = true;
+                }
+                else
+                {
+                    apiRequestModel.OrderByColumnName = commandText.Split(':')[1];
+                    apiRequestModel.OrderByDescending = false;
+                }
+            }
+
             //  handle filter post
             PacUserRoleListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+
+            pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
+
+            pageView = BuildTableHeaders(pageView);
+
+            pageView = BuildTableData(pageView, apiResponse);
+
+            pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -51,8 +77,134 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //TODO handle hidden columns
 
+            //TODO handle paging
+
+            //TODO handle sorting
+
+            //TODO handle filtering
+
             // handle report buttons
             pageView = BuildAvailableCommandsForReportButtons(pageView);
+
+            return pageView;
+        }
+
+        public PageView BuildPageHeaders(PageView pageView)
+        {
+            return pageView;
+        }
+
+        public PageView BuildTableHeaders(PageView pageView)
+        {
+            {
+                //RoleCode
+                pageView = BuildTableHeader(pageView, "roleDescription",
+                    isVisible: true,
+                    "Description");
+                pageView = BuildTableHeader(pageView, "roleDisplayOrder",
+                    isVisible: true,
+                    "Display Order");
+                pageView = BuildTableHeader(pageView, "roleIsActive",
+                    isVisible: true,
+                    "Is Active");
+                pageView = BuildTableHeader(pageView, "roleLookupEnumName",
+                    isVisible: true,
+                    "Lookup Enum Name");
+                pageView = BuildTableHeader(pageView, "roleName",
+                    isVisible: true,
+                    "Name");
+                pageView = BuildTableHeader(pageView, "pacName",
+                    isVisible: true,
+                    "Pac Name");
+            }
+
+            return pageView;
+        }
+
+        public PageView BuildTableData(PageView pageView, PacUserRoleListListModel apiResponse)
+        {
+            List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
+
+            foreach(var rowData in apiResponse.Items)
+            {
+                tableData.Add(BuildTableDataRow(rowData));
+            }
+
+            pageView.TableData = tableData;
+
+            return pageView;
+        }
+
+        public Dictionary<string, string> BuildTableDataRow(PacUserRoleListListModelItem rowData)
+        {
+            Dictionary<string,string> keyValuePairs = new Dictionary<string, string>();
+
+            {
+                //RoleCode
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "roleDescription",
+                    isVisible: true,
+                    value: rowData.RoleDescription.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "roleDisplayOrder",
+                    isVisible: true,
+                    value: rowData.RoleDisplayOrder.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "roleIsActive",
+                    isVisible: true,
+                    value: rowData.RoleIsActive.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "roleLookupEnumName",
+                    isVisible: true,
+                    value: rowData.RoleLookupEnumName.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "roleName",
+                    isVisible: true,
+                    value: rowData.RoleName.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "pacName",
+                    isVisible: true,
+                    value: rowData.PacName.ToString());
+            }
+
+            return keyValuePairs;
+        }
+
+        public PageView BuildAvailableCommandsForReportSort(PageView pageView, PacUserRoleListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count < 2)
+            {
+                return pageView;
+            }
+
+            {
+                //RoleCode
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "roleDescription",
+                    isVisible: true,
+                    "Description");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "roleDisplayOrder",
+                    isVisible: true,
+                    "Display Order");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "roleIsActive",
+                    isVisible: true,
+                    "Is Active");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "roleLookupEnumName",
+                    isVisible: true,
+                    "Lookup Enum Name");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "roleName",
+                    isVisible: true,
+                    "Name");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "pacName",
+                    isVisible: true,
+                    "Pac Name");
+            }
+
+            return pageView;
+        }
+        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, PacUserRoleListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0)
+            {
+                return pageView;
+            }
 
             return pageView;
         }
@@ -77,32 +229,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-
-            return pageView;
-        }
-
-        public PageView BuildAvailableCommandForButton(
-            PageView pageView,
-            string name,
-            string destinationPageName,
-            string codeName,
-            bool isVisible,
-            bool isEnabled,
-            string buttonText,
-            bool conditionallyVisible = true)
-        {
-            if(!isVisible)
-                return pageView;
-
-            if(!isEnabled)
-                return pageView;
-
-            if (!conditionallyVisible)
-                return pageView;
-
-            pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
-                );
 
             return pageView;
         }
@@ -137,6 +263,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             pagePointer = new PagePointer(_pageName, contextCode);
+
+            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
 
             PacUserRoleListListRequest apiRequestModel = new PacUserRoleListListRequest();
 
@@ -184,24 +315,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PacUserRoleListListModel result = await aPIClient.GetAsync<PacUserRoleListListModel>(url);
 
             return result;
-        }
-
-        private string ToQueryString(object obj)
-        {
-            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
-            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
-                NullValueHandling = NullValueHandling.Ignore // Ignore null values
-            });
-
-            // Deserialize the JSON into a dictionary
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            // Convert the dictionary to query string
-            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
-
-            return queryString;
         }
 
         public class PacUserRoleListListModel
@@ -286,16 +399,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
-
-        }
-
-        public partial class ValidationError
-        {
-            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Property { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
 
         }
 

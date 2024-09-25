@@ -12,27 +12,21 @@ namespace FS.Farm.WebNavigator
         public AvailableCommand()
         {
             CommandText = "";
-            CommandTitle = "";
-            CommandDescription = "";
+            Description = "";
         }
 
         public AvailableCommand(
-            string commandText = "",
-            string commandTitle = "",
+            string commandText = "", 
             string commandDescription = "")
         {
             CommandText = commandText;
-            CommandTitle = commandTitle;
-            CommandDescription = commandDescription;
+            Description = commandDescription;
         }
 
         [Newtonsoft.Json.JsonProperty("commandText")]
-        public string CommandText { get; set; }
+        public string CommandText { get; set; } 
 
-        [Newtonsoft.Json.JsonProperty("commandTitle")]
-        public string CommandTitle { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("commandDescription")]
-        public string CommandDescription { get; set; }
+        [Newtonsoft.Json.JsonProperty("description")]
+        public string Description { get; set; }
     }
 }

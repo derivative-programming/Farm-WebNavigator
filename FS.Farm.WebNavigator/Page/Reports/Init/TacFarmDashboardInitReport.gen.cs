@@ -20,6 +20,14 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
 
             return result;
         }
+
+        public List<PageHeader> GetPageHeaders(TacFarmDashboardGetInitResponse apiResponse)
+        {
+            List<PageHeader> result = new List<PageHeader>();
+
+            return result;
+        }
+
         public class TacFarmDashboardGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]

@@ -20,6 +20,14 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
 
             return result;
         }
+
+        public List<PageHeader> GetPageHeaders(PacUserRoleListGetInitResponse apiResponse)
+        {
+            List<PageHeader> result = new List<PageHeader>();
+
+            return result;
+        }
+
         public class PacUserRoleListGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]

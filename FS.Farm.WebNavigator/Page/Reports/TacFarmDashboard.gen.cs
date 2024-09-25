@@ -16,7 +16,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "TacFarmDashboard";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -37,8 +37,24 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
+            //default values, can't override
+            apiRequestModel.ForceErrorMessage = "";
+            apiRequestModel.ItemCountPerPage = 5;
+
+            apiRequestModel.PageNumber = 1;
+            apiRequestModel.OrderByColumnName = "";
+            apiRequestModel.OrderByDescending = false;
+
             //  handle filter post
             TacFarmDashboardListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+
+            pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
+
+            pageView = BuildTableHeaders(pageView);
+
+            pageView = BuildTableData(pageView, apiResponse);
+
+            pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -51,8 +67,104 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //TODO handle hidden columns
 
+            //TODO handle paging
+
+            //TODO handle sorting
+
+            //TODO handle filtering
+
             // handle report buttons
             pageView = BuildAvailableCommandsForReportButtons(pageView);
+
+            return pageView;
+        }
+
+        public PageView BuildPageHeaders(PageView pageView)
+        {
+            return pageView;
+        }
+
+        public PageView BuildTableHeaders(PageView pageView)
+        {
+            {
+                //fieldOnePlantListLinkLandCode
+                //conditionalBtnExampleLinkLandCode
+                pageView = BuildTableHeader(pageView, "isConditionalBtnAvailable",
+                    isVisible: false,
+                    "Is Conditional Btn Available");
+                //testFileDownloadLinkPacCode
+                //testConditionalFileDownloadLinkPacCode
+                //testAsyncFlowReqLinkPacCode
+                //testConditionalAsyncFlowReqLinkPacCode
+            }
+
+            return pageView;
+        }
+
+        public PageView BuildTableData(PageView pageView, TacFarmDashboardListModel apiResponse)
+        {
+            List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
+
+            foreach(var rowData in apiResponse.Items)
+            {
+                tableData.Add(BuildTableDataRow(rowData));
+            }
+
+            pageView.TableData = tableData;
+
+            return pageView;
+        }
+
+        public Dictionary<string, string> BuildTableDataRow(TacFarmDashboardListModelItem rowData)
+        {
+            Dictionary<string,string> keyValuePairs = new Dictionary<string, string>();
+
+            {
+                //fieldOnePlantListLinkLandCode
+                //conditionalBtnExampleLinkLandCode
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "isConditionalBtnAvailable",
+                    isVisible: false,
+                    value: rowData.IsConditionalBtnAvailable.ToString());
+                //testFileDownloadLinkPacCode
+                //testConditionalFileDownloadLinkPacCode
+                //testAsyncFlowReqLinkPacCode
+                //testConditionalAsyncFlowReqLinkPacCode
+            }
+
+            return keyValuePairs;
+        }
+
+        public PageView BuildAvailableCommandsForReportSort(PageView pageView, TacFarmDashboardListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count < 2)
+            {
+                return pageView;
+            }
+
+            {
+                //fieldOnePlantListLinkLandCode
+                //conditionalBtnExampleLinkLandCode
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "isConditionalBtnAvailable",
+                    isVisible: false,
+                    "Is Conditional Btn Available");
+                //testFileDownloadLinkPacCode
+                //testConditionalFileDownloadLinkPacCode
+                //testAsyncFlowReqLinkPacCode
+                //testConditionalAsyncFlowReqLinkPacCode
+            }
+
+            return pageView;
+        }
+        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, TacFarmDashboardListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0)
+            {
+                return pageView;
+            }
 
             return pageView;
         }
@@ -69,37 +181,37 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var rowData = apiResponse.Items.ToArray()[0];
 
             {
-                pageView = BuildAvailableCommandForButton(pageView, "fieldOnePlantListLinkLandCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "fieldOnePlantListLinkLandCode",
                     "TacAddLand",
                     "fieldOnePlantListLinkLandCode",
                     isVisible: true,
                     isEnabled: true,
                     "Field One-Plants");
-                pageView = BuildAvailableCommandForButton(pageView, "conditionalBtnExampleLinkLandCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "conditionalBtnExampleLinkLandCode",
                     "TacAddLand",
                     "conditionalBtnExampleLinkLandCode",
                     isVisible: true,
                     isEnabled: true,
                     "Conditional Btn Example");
-                pageView = BuildAvailableCommandForButton(pageView, "testFileDownloadLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testFileDownloadLinkPacCode",
                     "PacDetails",
                     "testFileDownloadLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test File Download");
-                pageView = BuildAvailableCommandForButton(pageView, "testConditionalFileDownloadLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testConditionalFileDownloadLinkPacCode",
                     "PacDetails",
                     "testConditionalFileDownloadLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test Conditional File Download");
-                pageView = BuildAvailableCommandForButton(pageView, "testAsyncFlowReqLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testAsyncFlowReqLinkPacCode",
                     "PacDetails",
                     "testAsyncFlowReqLinkPacCode",
                     isVisible: true,
                     isEnabled: true,
                     "Test Async Flow Req");
-                pageView = BuildAvailableCommandForButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
+                pageView = BuildAvailableCommandForReportButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
                     "PacDetails",
                     "testConditionalAsyncFlowReqLinkPacCode",
                     isVisible: true,
@@ -112,38 +224,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-            pageView = BuildAvailableCommandForButton(pageView, "backButton",
+            pageView = BuildAvailableCommandForReportButton(pageView, "backButton",
                 "",
                 "",
                 isVisible: false,
                 isEnabled: true,
                 "");
-
-            return pageView;
-        }
-
-        public PageView BuildAvailableCommandForButton(
-            PageView pageView,
-            string name,
-            string destinationPageName,
-            string codeName,
-            bool isVisible,
-            bool isEnabled,
-            string buttonText,
-            bool conditionallyVisible = true)
-        {
-            if(!isVisible)
-                return pageView;
-
-            if(!isEnabled)
-                return pageView;
-
-            if (!conditionallyVisible)
-                return pageView;
-
-            pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
-                );
 
             return pageView;
         }
@@ -179,6 +265,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
+            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
             TacFarmDashboardListRequest apiRequestModel = new TacFarmDashboardListRequest();
 
             MergeProperties(apiRequestModel, apiInitResponse);
@@ -198,27 +289,27 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
-            if (commandText == "fieldOnePlantListLinkLandCode")
+            if (commandText.Equals("fieldOnePlantListLinkLandCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "LandPlantList",
                     rowData.FieldOnePlantListLinkLandCode);
-            if (commandText == "conditionalBtnExampleLinkLandCode")
+            if (commandText.Equals("conditionalBtnExampleLinkLandCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "LandPlantList",
                     rowData.ConditionalBtnExampleLinkLandCode);
-            if (commandText == "testFileDownloadLinkPacCode")
+            if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "TacPacList",
                     contextCode);
-            if (commandText == "testConditionalFileDownloadLinkPacCode")
+            if (commandText.Equals("testConditionalFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "TacPacList",
                     contextCode);
-            if (commandText == "testAsyncFlowReqLinkPacCode")
+            if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "TacPacList",
                     contextCode);
-            if (commandText == "testConditionalAsyncFlowReqLinkPacCode")
+            if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(  //TODO handle async objwf
                     "TacPacList",
                     contextCode);
@@ -248,24 +339,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             TacFarmDashboardListModel result = await aPIClient.GetAsync<TacFarmDashboardListModel>(url);
 
             return result;
-        }
-
-        private string ToQueryString(object obj)
-        {
-            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
-            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
-                NullValueHandling = NullValueHandling.Ignore // Ignore null values
-            });
-
-            // Deserialize the JSON into a dictionary
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            // Convert the dictionary to query string
-            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
-
-            return queryString;
         }
 
         public class TacFarmDashboardListModel
@@ -351,16 +424,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
-
-        }
-
-        public partial class ValidationError
-        {
-            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Property { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
 
         }
 

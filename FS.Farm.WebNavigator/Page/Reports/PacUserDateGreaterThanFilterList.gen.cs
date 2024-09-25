@@ -16,7 +16,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PacUserDateGreaterThanFilterList";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -37,8 +37,34 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
+            //default values, can't override
+            apiRequestModel.ForceErrorMessage = "";
+            apiRequestModel.ItemCountPerPage = 5;
+
+            if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                string columnName = commandText.Split(':')[1];
+                if(apiRequestModel.OrderByColumnName.Equals(columnName,StringComparison.OrdinalIgnoreCase))
+                {
+                    apiRequestModel.OrderByDescending = true;
+                }
+                else
+                {
+                    apiRequestModel.OrderByColumnName = commandText.Split(':')[1];
+                    apiRequestModel.OrderByDescending = false;
+                }
+            }
+
             //  handle filter post
             PacUserDateGreaterThanFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+
+            pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
+
+            pageView = BuildTableHeaders(pageView);
+
+            pageView = BuildTableData(pageView, apiResponse);
+
+            pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -51,8 +77,134 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //TODO handle hidden columns
 
+            //TODO handle paging
+
+            //TODO handle sorting
+
+            //TODO handle filtering
+
             // handle report buttons
             pageView = BuildAvailableCommandsForReportButtons(pageView);
+
+            return pageView;
+        }
+
+        public PageView BuildPageHeaders(PageView pageView)
+        {
+            return pageView;
+        }
+
+        public PageView BuildTableHeaders(PageView pageView)
+        {
+            {
+                //DateGreaterThanFilterCode
+                pageView = BuildTableHeader(pageView, "dateGreaterThanFilterDayCount",
+                    isVisible: true,
+                    "Day Count");
+                pageView = BuildTableHeader(pageView, "dateGreaterThanFilterDescription",
+                    isVisible: true,
+                    "Description");
+                pageView = BuildTableHeader(pageView, "dateGreaterThanFilterDisplayOrder",
+                    isVisible: true,
+                    "Display Order");
+                pageView = BuildTableHeader(pageView, "dateGreaterThanFilterIsActive",
+                    isVisible: true,
+                    "Is Active");
+                pageView = BuildTableHeader(pageView, "dateGreaterThanFilterLookupEnumName",
+                    isVisible: true,
+                    "Lookup Enum Name");
+                pageView = BuildTableHeader(pageView, "dateGreaterThanFilterName",
+                    isVisible: true,
+                    "Name");
+            }
+
+            return pageView;
+        }
+
+        public PageView BuildTableData(PageView pageView, PacUserDateGreaterThanFilterListListModel apiResponse)
+        {
+            List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
+
+            foreach(var rowData in apiResponse.Items)
+            {
+                tableData.Add(BuildTableDataRow(rowData));
+            }
+
+            pageView.TableData = tableData;
+
+            return pageView;
+        }
+
+        public Dictionary<string, string> BuildTableDataRow(PacUserDateGreaterThanFilterListListModelItem rowData)
+        {
+            Dictionary<string,string> keyValuePairs = new Dictionary<string, string>();
+
+            {
+                //DateGreaterThanFilterCode
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "dateGreaterThanFilterDayCount",
+                    isVisible: true,
+                    value: rowData.DateGreaterThanFilterDayCount.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "dateGreaterThanFilterDescription",
+                    isVisible: true,
+                    value: rowData.DateGreaterThanFilterDescription.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "dateGreaterThanFilterDisplayOrder",
+                    isVisible: true,
+                    value: rowData.DateGreaterThanFilterDisplayOrder.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "dateGreaterThanFilterIsActive",
+                    isVisible: true,
+                    value: rowData.DateGreaterThanFilterIsActive.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "dateGreaterThanFilterLookupEnumName",
+                    isVisible: true,
+                    value: rowData.DateGreaterThanFilterLookupEnumName.ToString());
+                keyValuePairs = BuildTableDataCellValue(keyValuePairs, "dateGreaterThanFilterName",
+                    isVisible: true,
+                    value: rowData.DateGreaterThanFilterName.ToString());
+            }
+
+            return keyValuePairs;
+        }
+
+        public PageView BuildAvailableCommandsForReportSort(PageView pageView, PacUserDateGreaterThanFilterListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count < 2)
+            {
+                return pageView;
+            }
+
+            {
+                //DateGreaterThanFilterCode
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "dateGreaterThanFilterDayCount",
+                    isVisible: true,
+                    "Day Count");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "dateGreaterThanFilterDescription",
+                    isVisible: true,
+                    "Description");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "dateGreaterThanFilterDisplayOrder",
+                    isVisible: true,
+                    "Display Order");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "dateGreaterThanFilterIsActive",
+                    isVisible: true,
+                    "Is Active");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "dateGreaterThanFilterLookupEnumName",
+                    isVisible: true,
+                    "Lookup Enum Name");
+                pageView = BuildAvailableCommandForSortOnColumn(pageView, "dateGreaterThanFilterName",
+                    isVisible: true,
+                    "Name");
+            }
+
+            return pageView;
+        }
+        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, PacUserDateGreaterThanFilterListListModel apiResponse)
+        {
+            if (apiResponse == null ||
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0)
+            {
+                return pageView;
+            }
 
             return pageView;
         }
@@ -77,32 +229,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-
-            return pageView;
-        }
-
-        public PageView BuildAvailableCommandForButton(
-            PageView pageView,
-            string name,
-            string destinationPageName,
-            string codeName,
-            bool isVisible,
-            bool isEnabled,
-            string buttonText,
-            bool conditionallyVisible = true)
-        {
-            if(!isVisible)
-                return pageView;
-
-            if(!isEnabled)
-                return pageView;
-
-            if (!conditionallyVisible)
-                return pageView;
-
-            pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, CommandTitle = buttonText, CommandDescription = buttonText }
-                );
 
             return pageView;
         }
@@ -137,6 +263,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             pagePointer = new PagePointer(_pageName, contextCode);
+
+            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
 
             PacUserDateGreaterThanFilterListListRequest apiRequestModel = new PacUserDateGreaterThanFilterListListRequest();
 
@@ -184,24 +315,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PacUserDateGreaterThanFilterListListModel result = await aPIClient.GetAsync<PacUserDateGreaterThanFilterListListModel>(url);
 
             return result;
-        }
-
-        private string ToQueryString(object obj)
-        {
-            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
-            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
-                NullValueHandling = NullValueHandling.Ignore // Ignore null values
-            });
-
-            // Deserialize the JSON into a dictionary
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            // Convert the dictionary to query string
-            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
-
-            return queryString;
         }
 
         public class PacUserDateGreaterThanFilterListListModel
@@ -285,16 +398,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
-
-        }
-
-        public partial class ValidationError
-        {
-            [Newtonsoft.Json.JsonProperty("property", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Property { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
 
         }
 

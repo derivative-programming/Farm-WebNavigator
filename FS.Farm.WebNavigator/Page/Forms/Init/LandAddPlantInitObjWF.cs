@@ -21,6 +21,26 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             return result;
         }
 
+        public List<PageHeader> GetPageHeaders(LandAddPlantGetInitResponse apiResponse)
+        {
+            List<PageHeader> result = new List<PageHeader>();
+
+            var landNameHeaderIsVisible = true;
+            var currentDateHeaderValHeaderIsVisible = true;
+            var currentDateTimeHeaderValHeaderIsVisible = true;
+
+            if(landNameHeaderIsVisible) //landName
+                result.Add(new PageHeader("Land Name", apiResponse.LandName));
+
+            if(currentDateHeaderValHeaderIsVisible) //currentDateHeaderVal
+                result.Add(new PageHeader("Current Date", apiResponse.CurrentDateHeaderVal));
+
+            if (currentDateTimeHeaderValHeaderIsVisible) //currentDateTimeHeaderVal
+                result.Add(new PageHeader("Current Date/Time", apiResponse.CurrentDateTimeHeaderVal));
+
+            return result;
+        }
+
         public class LandAddPlantGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]

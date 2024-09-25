@@ -21,6 +21,27 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             return result;
         }
 
+        public List<PageHeader> GetPageHeaders(TacRegisterGetInitResponse apiResponse)
+        {
+            List<PageHeader> result = new List<PageHeader>();
+            var emailHeaderIsVisible = false;
+            var passwordHeaderIsVisible = false;
+            var confirmPasswordHeaderIsVisible = false;
+            var firstNameHeaderIsVisible = false;
+            var lastNameHeaderIsVisible = false;
+            if(emailHeaderIsVisible) //email
+                result.Add(new PageHeader("Email", apiResponse.Email));
+            if(passwordHeaderIsVisible) //password
+                result.Add(new PageHeader("Password", apiResponse.Password));
+            if(confirmPasswordHeaderIsVisible) //confirmPassword
+                result.Add(new PageHeader("Confirm Password", apiResponse.ConfirmPassword));
+            if(firstNameHeaderIsVisible) //firstName
+                result.Add(new PageHeader("First Name", apiResponse.FirstName));
+            if(lastNameHeaderIsVisible) //lastName
+                result.Add(new PageHeader("Last Name", apiResponse.LastName));
+            return result;
+        }
+
         public class TacRegisterGetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
