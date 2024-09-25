@@ -1,4 +1,5 @@
 ﻿using FS.Farm.WebNavigator.Page;
+using System;
 using System.CodeDom.Compiler;
 
 namespace FS.Farm.WebNavigator
@@ -18,6 +19,10 @@ namespace FS.Farm.WebNavigator
             Guid currentContextCode = Guid.Empty;
 
             string destinationPage = "";
+
+            string baseUrl = FS.Common.Configuration.ApplicationSetting.ReadApplicationSetting("baseUrl", "");
+
+            APIClient apiClient = new APIClient(baseUrl, apiKey);
 
             if (requestModel == null)
             {
@@ -57,13 +62,13 @@ namespace FS.Farm.WebNavigator
 
             //if there is a command, make the corresponding request on the current page
             //determine destination page
-            PagePointer destinationPagePointer = currentPageProcessor.ProcessCommand(sessionCode, currentContextCode, commandText, postJsonData);
+            PagePointer destinationPagePointer = await currentPageProcessor.ProcessCommand(apiClient, sessionCode, currentContextCode, commandText, postJsonData);
 
             //request destination page
             IPage destinationPageProcessor = PageFactory.GetPage(destinationPagePointer.PageName);
 
             //create destination page view 
-            result = destinationPageProcessor.BuildPageView(sessionCode, destinationPagePointer.ContextCode);
+            result = await destinationPageProcessor.BuildPageView(apiClient, sessionCode, destinationPagePointer.ContextCode);
 
             //store session data
             await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, destinationPagePointer.PageName + "|" + destinationPagePointer.ContextCode.ToString());

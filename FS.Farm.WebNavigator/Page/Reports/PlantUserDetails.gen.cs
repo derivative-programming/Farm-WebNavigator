@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FS.Farm.WebNavigator.Page.Reports.Init.PlantUserDetailsInitReport;
+using FS.Farm.WebNavigator.Page.Reports.Init;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -13,7 +13,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PlantUserDetails";
         }
-        public PageView BuildPageView(Guid sessionCode, Guid contextCode)
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
         {
             var pageView = new PageView();
 
@@ -22,6 +22,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
             pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
+
+            var initReportProcessor = new PlantUserDetailsInitReport();
+
+            PlantUserDetailsInitReport.PlantUserDetailsGetInitResponse initResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
             //TODO handle report init
 
             //TODO handle filter post
@@ -33,7 +37,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //TODO handle hidden columns
 
             // handle report buttons
-//endset
+            //endset
             pageView = HandleButton(pageView, "backButton",
                 "LandPlantList",
                 "LandCode",
@@ -66,7 +70,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using FS.Farm.WebNavigator.Page.Reports.Init;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FS.Farm.WebNavigator.Page.Forms.Init.LandAddPlantInitObjWF;
+using FS.Farm.WebNavigator.Page.Forms.Init;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -13,7 +14,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             _pageName = "LandAddPlant";
         }
-        public PageView BuildPageView(Guid sessionCode, Guid contextCode)
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
         {
             var pageView = new PageView();
 
@@ -22,6 +23,19 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.PageFooterText = "Add plant form footer text";  
 
             pageView = AddDefaultAvailableCommands(pageView);
+
+
+            var initObjWFProcessor = new LandAddPlantInitObjWF();
+
+            LandAddPlantInitObjWF.LandAddPlantGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
+
+            LandAddPlantPostModel apiRequestModel = new LandAddPlantPostModel();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
+
+            LandAddPlantPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
             //TODO handle form init
 
@@ -32,7 +46,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             //TODO handle hidden controls
 
             // handle objwf buttons
-//endset
+            //endset
             pageView = HandleButton(pageView, "SubmitButton",
                 "LandAddPlant", 
                 "LandCode",
@@ -81,7 +95,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             return pageView;
         }
 
-        public PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 

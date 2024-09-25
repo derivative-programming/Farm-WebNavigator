@@ -8,8 +8,8 @@ namespace FS.Farm.WebNavigator
 {
     public interface IPage
     {
-        PageView BuildPageView(Guid sessionCode, Guid contextCode);
+        Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "");
 
-        PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "");
+         Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "");
     }
 }

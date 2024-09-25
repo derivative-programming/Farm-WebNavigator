@@ -13,7 +13,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             _pageName = "TacRegister";
         }
-        public PageView BuildPageView(Guid sessionCode, Guid contextCode)
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
         {
             var pageView = new PageView();
 
@@ -68,7 +68,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             return pageView;
         }
 
-        public PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 

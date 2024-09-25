@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FS.Farm.WebNavigator.Page.Reports.Init.PacUserDateGreaterThanFilterListInitReport;
+using FS.Farm.WebNavigator.Page.Reports.Init;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -13,7 +13,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PacUserDateGreaterThanFilterList";
         }
-        public PageView BuildPageView(Guid sessionCode, Guid contextCode)
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
         {
             var pageView = new PageView();
 
@@ -22,6 +22,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
             pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
+
+            var initReportProcessor = new PacUserDateGreaterThanFilterListInitReport();
+
+            PacUserDateGreaterThanFilterListInitReport.PacUserDateGreaterThanFilterListGetInitResponse initResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
 
             return pageView;
         }
@@ -48,7 +52,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FS.Farm.WebNavigator.Page.Reports.Init.LandPlantListInitReport;
+using FS.Farm.WebNavigator.Page.Reports.Init;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -13,7 +13,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "LandPlantList";
         }
-        public PageView BuildPageView(Guid sessionCode, Guid contextCode)
+        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string postData = "")
         {
             var pageView = new PageView();
 
@@ -23,19 +23,112 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = AddDefaultAvailableCommands(pageView);
 
+            var initReportProcessor = new LandPlantListInitReport();
+
             //TODO handle report init
+            LandPlantListInitReport.LandPlantListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+
+            LandPlantListListRequest apiRequestModel = new LandPlantListListRequest();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            MergeProperties(apiRequestModel, postData);
 
             //TODO handle filter post
+            LandPlantListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
 
             //TODO handle report row buttons
+            pageView = HandleReportRowButtons(pageView, apiResponse);
 
             //TODO handle report rows
 
             //TODO handle hidden columns
 
             // handle report buttons
-//endset
+            pageView = HandleReportButtons(pageView); 
+
+            return pageView;
+        }
+        public PageView HandleReportRowButtons(PageView pageView, LandPlantListListModel apiResponse)
+        {
+            if (apiResponse == null || 
+                apiResponse.Items == null ||
+                apiResponse.Items.Count == 0 ||
+                apiResponse.Items.Count > 1)
+            {
+                return pageView;
+            }
+
+            var rowData = apiResponse.Items.ToArray()[0];
+
+            pageView = HandleButton(pageView, "updateLinkPlantCode",
+                "PlantUserDetails",
+                "updateLinkPlantCode",
+                isVisible: false,
+                isEnabled: true,
+                "Update");
+
+            pageView = HandleButton(pageView, "deleteAsyncButtonLinkPlantCode",
+                "PlantUserDetails",
+                "deleteAsyncButtonLinkPlantCode",
+                isVisible: true,
+                isEnabled: true,
+                "Delete");
+
+            pageView = HandleButton(pageView, "detailsLinkPlantCode",
+                "LandAddPlant",
+                "detailsLinkPlantCode",
+                isVisible: true,
+                isEnabled: true,
+                "Details");
+
+            pageView = HandleButton(pageView, "testFileDownloadLinkPacCode",
+                "LandAddPlant",
+                "testFileDownloadLinkPacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Test File Download");
+
+            pageView = HandleButton(pageView, "testConditionalFileDownloadLinkPacCode",
+                "LandAddPlant",
+                "testConditionalFileDownloadLinkPacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Test Conditional File Download",
+                conditionallyVisible: rowData.IsEditAllowed
+                );
+
+            pageView = HandleButton(pageView, "testAsyncFlowReqLinkPacCode",
+                "LandAddPlant",
+                "testAsyncFlowReqLinkPacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Test Async Flow Req");
+
+            pageView = HandleButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
+                "LandPlantList",
+                "testConditionalAsyncFlowReqLinkPacCode",
+                isVisible: true,
+                isEnabled: true,
+                "Test Conditional Async Flow Req",
+                conditionallyVisible: rowData.IsEditAllowed
+                );
+
+            pageView = HandleButton(pageView, "conditionalBtnExampleLinkPlantCode",
+                "PlantUserDetails",
+                "conditionalBtnExampleLinkPlantCode",
+                isVisible: true,
+                isEnabled: true,
+                "Conditional Btn Example",
+                conditionallyVisible: rowData.IsEditAllowed
+                );
+
+            return pageView;
+        }
+
+        public PageView HandleReportButtons(PageView pageView)
+        {
             pageView = HandleButton(pageView, "backButton",
                 "TacFarmDashboard",
                 "TacCode",
@@ -56,10 +149,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 isVisible: true,
                 isEnabled: true,
                 "Other Add Button");
-//endset
 
             return pageView;
         }
+
 
         public PageView HandleButton(
             PageView pageView,
@@ -68,12 +161,16 @@ namespace FS.Farm.WebNavigator.Page.Reports
             string codeName,
             bool isVisible,
             bool isEnabled,
-            string buttonText)
+            string buttonText,
+            bool conditionallyVisible = true)
         {
             if(!isVisible)
                 return pageView;
 
             if(!isEnabled)
+                return pageView;
+
+            if (!conditionallyVisible)
                 return pageView;
 
             pageView.AvailableCommands.Add(
@@ -83,7 +180,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public PagePointer ProcessCommand(Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 
