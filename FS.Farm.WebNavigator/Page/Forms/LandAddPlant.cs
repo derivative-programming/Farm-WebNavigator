@@ -20,7 +20,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             _pageName = "LandAddPlant";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -29,7 +29,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.PageFooterText = "Add plant form footer text";  
 
             pageView = AddDefaultAvailableCommands(pageView);
-
 
             var initObjWFProcessor = new LandAddPlantInitObjWF();
 
@@ -45,31 +44,27 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
-            //  handle return of form 
-
-            //string json = JsonConvert.SerializeObject(apiResponse);
-
-            //pageView.PageData = json;
+            //  handle return of form  
 
             //TODO handle hidden controls
 
             // handle objwf buttons 
             {
-                pageView = BuildAvailableCommand(pageView, "SubmitButton",
+                pageView = BuildAvailableCommandForObjWFButton(pageView, "SubmitButton",
                     "LandPlantList",
                     "LandCode",
                     isVisible: true,
                     isEnabled: true,
                     "OK Button Text");
 
-                pageView = BuildAvailableCommand(pageView, "CancelButton",
+                pageView = BuildAvailableCommandForObjWFButton(pageView, "CancelButton",
                     "LandPlantList",
                     "LandCode",
                     isVisible: true,
                     isEnabled: true,
                     "Cancel Button Text");
 
-                pageView = BuildAvailableCommand(pageView, "OtherButton",
+                pageView = BuildAvailableCommandForObjWFButton(pageView, "OtherButton",
                     "TacFarmDashboard",
                     "TacCode",
                     isVisible: true,
@@ -81,30 +76,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             return pageView;
         }
-
-        public PageView BuildAvailableCommand(
-            PageView pageView,
-            string name,
-            string destinationPageName,
-            string codeName,
-            bool isVisible,
-            bool isEnabled,
-            string buttonText)
-        {
-            if (!isVisible)
-                return pageView;
-
-            if (!isEnabled)
-                return pageView;
-
-            pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = name, Description = buttonText }
-                );
-
-            return pageView;
-        }
-
-        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+         
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 

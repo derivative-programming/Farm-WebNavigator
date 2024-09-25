@@ -12,7 +12,7 @@ namespace FS.Farm.WebNavigator.Page
         {
             this._pageName = "MainMenu";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
 
@@ -46,7 +46,7 @@ namespace FS.Farm.WebNavigator.Page
             return pageView;
         }
 
-        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = this.ProcessDefaultCommands(commandText, contextCode);
 

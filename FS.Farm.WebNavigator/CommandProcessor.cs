@@ -1,4 +1,5 @@
 ﻿using FS.Farm.WebNavigator.Page;
+using Newtonsoft.Json;
 using System;
 using System.CodeDom.Compiler;
 
@@ -41,37 +42,47 @@ namespace FS.Farm.WebNavigator
 
             bool isSessionAvailable = await FS.Common.Caches.StringCache.ExistsAsync(cacheKey);
 
+            SessionData sessionData = new SessionData();
+
             if(isSessionAvailable)
             {
-                string sessionData = await FS.Common.Caches.StringCache.GetDataAsync(cacheKey);
+                string sessionDataVal = await FS.Common.Caches.StringCache.GetDataAsync(cacheKey); 
 
-                string[] sessionDataParts = sessionData.Split('|');
-
-                currentPage = sessionDataParts[0];
-
-                currentContextCode = new Guid(sessionDataParts[1]);
+                sessionData = JsonConvert.DeserializeObject<SessionData>(sessionDataVal); 
             }
             else
-            {
-                currentPage = "MainMenu";
+            {  
+                sessionData.PageName = "MainMenu";
 
-                currentContextCode = Guid.Empty;
+                sessionData.PageContextCode = Guid.Empty;
             }
+
+            currentPage = sessionData.PageName;
+
+            currentContextCode = sessionData.PageContextCode;
 
             IPage currentPageProcessor = PageFactory.GetPage(currentPage);
 
             //if there is a command, make the corresponding request on the current page
             //determine destination page
-            PagePointer destinationPagePointer = await currentPageProcessor.ProcessCommand(apiClient, sessionCode, currentContextCode, commandText, postJsonData);
+            PagePointer destinationPagePointer = await currentPageProcessor.ProcessCommand(apiClient, sessionData, currentContextCode, commandText, postJsonData);
 
             //request destination page
-            IPage destinationPageProcessor = PageFactory.GetPage(destinationPagePointer.PageName);
+            IPage destinationPageProcessor = PageFactory.GetPage(destinationPagePointer.PageName); 
 
             //create destination page view 
-            result = await destinationPageProcessor.BuildPageView(apiClient, sessionCode, destinationPagePointer.ContextCode, commandText, postJsonData);
+            result = await destinationPageProcessor.BuildPageView(apiClient, sessionData, destinationPagePointer.ContextCode, commandText, postJsonData);
 
             //store session data
-            await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, destinationPagePointer.PageName + "|" + destinationPagePointer.ContextCode.ToString());
+
+            sessionData.PageName = destinationPagePointer.PageName;
+
+            sessionData.PageContextCode = destinationPagePointer.ContextCode;
+
+
+            string sessionDataJson = JsonConvert.SerializeObject(sessionData);
+
+            await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, sessionDataJson);
              
 
             if (result.PageTitleText != null &&

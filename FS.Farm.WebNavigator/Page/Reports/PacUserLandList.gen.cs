@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using FS.Farm.WebNavigator.Page.Reports.Init;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,9 +17,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PacUserLandList";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
+
+            if(!sessionData.PageName.Equals("PacUserLandList",StringComparison.OrdinalIgnoreCase))
+            {
+                //new page, clear filters
+                sessionData.Filters.Clear();
+            }
 
             pageView.PageTitleText = "Pac User Land List Report";
             pageView.PageIntroText = "";
@@ -35,11 +42,36 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, apiInitResponse);
 
+            if (commandText.StartsWith("ClearFilters", StringComparison.OrdinalIgnoreCase))
+            {
+                sessionData.Filters.Clear();
+            }
+            if (commandText.StartsWith("pageNumber:", StringComparison.OrdinalIgnoreCase))
+            {
+                string pageNumberValue = commandText.Split(':')[1];
+
+                if (sessionData.Filters.ContainsKey("pageNumber"))
+                {
+                    sessionData.Filters["pageNumber"] = pageNumberValue;
+                }
+                else
+                {
+                    sessionData.Filters.Add("pageNumber", pageNumberValue);
+                }
+            }
+
             MergeProperties(apiRequestModel, postData);
 
             //default values, can't override
             apiRequestModel.ForceErrorMessage = "";
             apiRequestModel.ItemCountPerPage = 5;
+
+            apiRequestModel.OrderByColumnName = sessionData.OrderByColumnName;
+
+            if (sessionData.Filters.ContainsKey("pageNumber"))
+            {
+                apiRequestModel.PageNumber = int.Parse(sessionData.Filters["pageNumber"]);
+            }
 
             if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
             {
@@ -53,6 +85,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     apiRequestModel.OrderByColumnName = commandText.Split(':')[1];
                     apiRequestModel.OrderByDescending = false;
                 }
+                sessionData.OrderByColumnName = apiRequestModel.OrderByColumnName;
             }
 
             //  handle filter post
@@ -69,11 +102,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
+            pageView.TableFilters = sessionData.Filters;
+
             //  handle report rows
 
-            string json = JsonConvert.SerializeObject(apiResponse);
+            //string json = JsonConvert.SerializeObject(apiResponse);
 
-            pageView.PageData = json;
+            //pageView.PageData = json;
 
             //TODO handle hidden columns
 
@@ -86,11 +121,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             // handle report buttons
             pageView = BuildAvailableCommandsForReportButtons(pageView);
 
-            return pageView;
-        }
-
-        public PageView BuildPageHeaders(PageView pageView)
-        {
             return pageView;
         }
 
@@ -125,9 +155,17 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
 
+            int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
+
             foreach(var rowData in apiResponse.Items)
             {
-                tableData.Add(BuildTableDataRow(rowData));
+                Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
+
+                rowDict.Add("rowNumber", rowNumber.ToString());
+
+                tableData.Add(rowDict);
+
+                rowNumber++;
             }
 
             pageView.TableData = tableData;
@@ -230,10 +268,22 @@ namespace FS.Farm.WebNavigator.Page.Reports
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
 
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "ClearFilters", Description = "Clear all filters" }
+                );
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "PageNumber:[page number value]", Description = "View a particular page of the report results" }
+                );
+
+            {
+
+            }
+
             return pageView;
         }
 
-        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 
@@ -257,6 +307,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 navDictionary.Add("PacCode", contextCode);
             }
 
+            //  handle report buttons
+            {
+
+            }
+
             if (pagePointer != null)
             {
                 return pagePointer;
@@ -264,7 +319,17 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
-            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+            if (commandText.Equals("ClearFilters", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
+            if (commandText.StartsWith("pageNumber:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
+            if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
             {
                 return pagePointer;
             }

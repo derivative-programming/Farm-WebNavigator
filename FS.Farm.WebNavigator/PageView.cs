@@ -16,7 +16,8 @@ namespace FS.Farm.WebNavigator
             PageIntroText = "";
             PageFooterText = "";
             PageHeaders = new List<PageHeader>();
-            TableHeaders = new Dictionary<string, string>(); 
+            TableHeaders = new Dictionary<string, string>();
+            TableFilters = new Dictionary<string, string>();
             ValidationErrors = new List<ValidationError>();
             AvailableCommands = new List<AvailableCommand>();
         }
@@ -38,6 +39,9 @@ namespace FS.Farm.WebNavigator
 
         [Newtonsoft.Json.JsonProperty("TableData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public List<Dictionary<string, string>> TableData { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("TableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Dictionary<string, string> TableFilters { get; set; }
 
         [Newtonsoft.Json.JsonProperty("pageData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string PageData { get; set; }

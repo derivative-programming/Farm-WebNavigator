@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using FS.Farm.WebNavigator.Page.Reports.Init;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,9 +17,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "LandPlantList";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText = "", string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "", string postData = "")
         {
             var pageView = new PageView();
+
+            if(!sessionData.PageName.Equals("LandPlantList",StringComparison.OrdinalIgnoreCase))
+            {
+                //new page, clear filters
+                sessionData.Filters.Clear();
+            }
 
             pageView.PageTitleText = "Plant List";
             pageView.PageIntroText = "A list of plants on the land";  
@@ -35,11 +42,29 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, apiInitResponse);
 
+            if (commandText.StartsWith("ClearFilters", StringComparison.OrdinalIgnoreCase))
+            {
+                sessionData.Filters.Clear();
+            }
+            if (commandText.StartsWith("pageNumber:", StringComparison.OrdinalIgnoreCase))
+            {
+                string pageNumberValue = commandText.Split(':')[1];
+
+                if (sessionData.Filters.ContainsKey("pageNumber"))
+                {
+                    sessionData.Filters["pageNumber"] = pageNumberValue;
+                }
+                else
+                {
+                    sessionData.Filters.Add("pageNumber", pageNumberValue);
+                }
+            }
+
             MergeProperties(apiRequestModel, postData);
 
             //default values, can't override
             apiRequestModel.ForceErrorMessage = "";
-            apiRequestModel.ItemCountPerPage = 5;
+            apiRequestModel.ItemCountPerPage = 5; 
 
             //GENIF[visualizationType=DetailThreeColumn]Start
             apiRequestModel.PageNumber = 1;
@@ -52,6 +77,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
             apiRequestModel.OrderByDescending = false;
             //GENIF[visualizationType=DetailTwoColumn]End
             //GENIF[visualizationType=Grid]Start
+            apiRequestModel.OrderByColumnName = sessionData.OrderByColumnName;
+
+            if (sessionData.Filters.ContainsKey("pageNumber"))
+            {
+                apiRequestModel.PageNumber = int.Parse(sessionData.Filters["pageNumber"]);
+            }
+
             if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
             {
                 string columnName = commandText.Split(':')[1];
@@ -64,6 +96,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     apiRequestModel.OrderByColumnName = commandText.Split(':')[1];
                     apiRequestModel.OrderByDescending = false;
                 }
+                sessionData.OrderByColumnName = apiRequestModel.OrderByColumnName;
             } 
             //GENIF[visualizationType=Grid]End
 
@@ -81,11 +114,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
+            pageView.TableFilters = sessionData.Filters;
+
             //  handle report rows
 
-            string json = JsonConvert.SerializeObject(apiResponse);
+            //string json = JsonConvert.SerializeObject(apiResponse);
 
-            pageView.PageData = json;
+            //pageView.PageData = json;
 
             //TODO handle hidden columns
 
@@ -99,12 +134,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             pageView = BuildAvailableCommandsForReportButtons(pageView); 
 
             return pageView;
-        }
-
-        public PageView BuildPageHeaders(PageView pageView)
-        {
-            return pageView;
-        }
+        } 
 
         public PageView BuildTableHeaders(PageView pageView)
         {
@@ -281,9 +311,17 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
 
+            int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
+
             foreach(var rowData in apiResponse.Items)
             {
-                tableData.Add(BuildTableDataRow(rowData));
+                Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
+
+                rowDict.Add("rowNumber", rowNumber.ToString());
+
+                tableData.Add(rowDict);
+
+                rowNumber++;
             }
 
             pageView.TableData = tableData;
@@ -747,33 +785,46 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public PageView BuildAvailableCommandsForReportButtons(PageView pageView)
         {
-            pageView = BuildAvailableCommandForReportButton(pageView, "backButton",
-                "TacFarmDashboard",
-                "TacCode",
-                isVisible: true,
-                isEnabled: true,
-                "Farm Dashboard");
 
-            pageView = BuildAvailableCommandForReportButton(pageView, "addButton",
-                "LandAddPlant",
-                "LandCode",
-                isVisible: true,
-                isEnabled: true,
-                "Add A Plant");
+            //GENIF[visualizationType=Grid]Start
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "ClearFilters", Description = "Clear all filters" }
+                );
 
-            pageView = BuildAvailableCommandForReportButton(pageView, "otherAddButton",
-                "LandAddPlant",
-                "LandCode",
-                isVisible: true,
-                isEnabled: true,
-                "Other Add Button");
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "PageNumber:[page number value]", Description = "View a particular page of the report results" }
+                );
+            //GENIF[visualizationType=Grid]End
 
+            {
+                pageView = BuildAvailableCommandForReportButton(pageView, "backButton",
+                    "TacFarmDashboard",
+                    "TacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Farm Dashboard");
+
+                pageView = BuildAvailableCommandForReportButton(pageView, "addButton",
+                    "LandAddPlant",
+                    "LandCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Add A Plant");
+
+                pageView = BuildAvailableCommandForReportButton(pageView, "otherAddButton",
+                    "LandAddPlant",
+                    "LandCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Other Add Button");
+            }
+             
             return pageView;
         }
 
 
 
-        public async Task<PagePointer> ProcessCommand(APIClient apiClient, Guid sessionCode, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText, string postData = "")
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 
@@ -798,21 +849,22 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             //  handle report buttons
+            {
+                if (commandText.Equals("backButton", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "TacFarmDashboard",
+                        Guid.Parse(navDictionary["tacCode"].ToString()));
 
-            if (commandText.Equals("backButton",StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "TacFarmDashboard",
-                    Guid.Parse(navDictionary["tacCode"].ToString())); 
+                if (commandText.Equals("addButton", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "LandAddPlant",
+                        Guid.Parse(navDictionary["landCode"].ToString()));
 
-            if (commandText.Equals("addButton",StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "LandAddPlant",
-                    Guid.Parse(navDictionary["landCode"].ToString()));
-
-            if (commandText.Equals("otherAddButton",StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "LandAddPlant",
-                    Guid.Parse(navDictionary["landCode"].ToString()));
+                if (commandText.Equals("otherAddButton", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "LandAddPlant",
+                        Guid.Parse(navDictionary["landCode"].ToString()));
+            }
 
             if (pagePointer != null)
             {
@@ -821,7 +873,18 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pagePointer = new PagePointer(_pageName, contextCode);
 
-            if(commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
+
+            if (commandText.Equals("ClearFilters", StringComparison.OrdinalIgnoreCase))
+            { 
+                return pagePointer;
+            }
+
+            if (commandText.StartsWith("pageNumber:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
+            if (commandText.StartsWith("sortOnColumn:",StringComparison.OrdinalIgnoreCase))
             {
                 return pagePointer;
             }

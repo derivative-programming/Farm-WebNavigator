@@ -104,6 +104,28 @@ namespace FS.Farm.WebNavigator.Page
             return queryString;
         }
 
+        public PageView BuildAvailableCommandForObjWFButton(
+            PageView pageView,
+            string name,
+            string destinationPageName,
+            string codeName,
+            bool isVisible,
+            bool isEnabled,
+            string buttonText)
+        {
+            if (!isVisible)
+                return pageView;
+
+            if (!isEnabled)
+                return pageView;
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = name, Description = buttonText }
+                );
+
+            return pageView;
+        }
+
         public PageView BuildAvailableCommandForReportButton(
             PageView pageView,
             string name,
