@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Reports.Init;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -37,7 +38,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             MergeProperties(apiRequestModel, postData);
 
             //  handle filter post
-            LandPlantListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            LandPlantListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
 
             //  handle report row buttons
@@ -240,7 +241,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
              
-            LandPlantListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            LandPlantListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
             if (apiResponse == null ||
                 apiResponse.Items == null ||
@@ -314,13 +315,37 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
 
-        public async Task<LandPlantListListModel> PostResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
+        public async Task<LandPlantListListModel> GetResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
         {
             string url = $"/land-plant-list/{contextCode.ToString()}";
 
-            LandPlantListListModel result = await aPIClient.PostAsync<LandPlantListListRequest, LandPlantListListModel>(url, model);
+            // Serialize the model into a query string
+            var queryString = ToQueryString(model);
+
+            // Append the query string to the URL
+            url = $"{url}?{queryString}";
+
+            LandPlantListListModel result = await aPIClient.GetAsync<LandPlantListListModel>(url);
 
             return result;
+        }
+
+        private string ToQueryString(object obj)
+        {
+            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
+            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
+                NullValueHandling = NullValueHandling.Ignore // Ignore null values
+            });
+
+            // Deserialize the JSON into a dictionary
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+            // Convert the dictionary to query string
+            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
+
+            return queryString;
         }
 
         public class LandPlantListListModel
@@ -601,7 +626,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.Always)]
             public bool OrderByDescending { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; } 
 
         }

@@ -37,7 +37,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             MergeProperties(apiRequestModel, postData);
 
             //  handle filter post
-            PacUserLandListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            PacUserLandListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -141,7 +141,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
-            PacUserLandListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            PacUserLandListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
             if (apiResponse == null ||
                 apiResponse.Items == null ||
@@ -170,13 +170,28 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return result;
         }
 
-        public async Task<PacUserLandListListModel> PostResponse(APIClient aPIClient, PacUserLandListListRequest model, Guid contextCode)
+        public async Task<PacUserLandListListModel> GetResponse(APIClient aPIClient, PacUserLandListListRequest model, Guid contextCode)
         {
             string url = $"/pac-user-land-list/{contextCode.ToString()}";
 
-            PacUserLandListListModel result = await aPIClient.PostAsync<PacUserLandListListRequest, PacUserLandListListModel>(url, model);
+            // Serialize the model into a query string
+            var queryString = ToQueryString(model);
+
+            // Append the query string to the URL
+            url = $"{url}?{queryString}";
+
+            PacUserLandListListModel result = await aPIClient.GetAsync<PacUserLandListListModel>(url);
 
             return result;
+        }
+
+        private string ToQueryString(object obj)
+        {
+            var properties = from p in obj.GetType().GetProperties()
+                             where p.GetValue(obj, null) != null
+                             select $"{Uri.EscapeDataString(p.Name)}={Uri.EscapeDataString(p.GetValue(obj, null).ToString())}";
+
+            return string.Join("&", properties);
         }
 
         public class PacUserLandListListModel

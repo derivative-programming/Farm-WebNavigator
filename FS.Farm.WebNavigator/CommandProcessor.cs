@@ -20,9 +20,9 @@ namespace FS.Farm.WebNavigator
 
             string destinationPage = "";
 
-            string baseUrl = FS.Common.Configuration.ApplicationSetting.ReadApplicationSetting("baseUrl", "");
+            string baseUrl = FS.Common.Configuration.ApplicationSetting.ReadApplicationSetting("apiBaseUrl", "");
 
-            APIClient apiClient = new APIClient(baseUrl, apiKey);
+            APIClient apiClient = new APIClient(apiKey, baseUrl);
 
             if (requestModel == null)
             {

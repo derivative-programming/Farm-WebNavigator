@@ -37,7 +37,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             MergeProperties(apiRequestModel, postData);
 
             //  handle filter post
-            PacUserTacListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            PacUserTacListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
@@ -141,7 +141,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, postData);
 
-            PacUserTacListListModel apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            PacUserTacListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
             if (apiResponse == null ||
                 apiResponse.Items == null ||
@@ -170,13 +170,28 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return result;
         }
 
-        public async Task<PacUserTacListListModel> PostResponse(APIClient aPIClient, PacUserTacListListRequest model, Guid contextCode)
+        public async Task<PacUserTacListListModel> GetResponse(APIClient aPIClient, PacUserTacListListRequest model, Guid contextCode)
         {
             string url = $"/pac-user-tac-list/{contextCode.ToString()}";
 
-            PacUserTacListListModel result = await aPIClient.PostAsync<PacUserTacListListRequest, PacUserTacListListModel>(url, model);
+            // Serialize the model into a query string
+            var queryString = ToQueryString(model);
+
+            // Append the query string to the URL
+            url = $"{url}?{queryString}";
+
+            PacUserTacListListModel result = await aPIClient.GetAsync<PacUserTacListListModel>(url);
 
             return result;
+        }
+
+        private string ToQueryString(object obj)
+        {
+            var properties = from p in obj.GetType().GetProperties()
+                             where p.GetValue(obj, null) != null
+                             select $"{Uri.EscapeDataString(p.Name)}={Uri.EscapeDataString(p.GetValue(obj, null).ToString())}";
+
+            return string.Join("&", properties);
         }
 
         public class PacUserTacListListModel
