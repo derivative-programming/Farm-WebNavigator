@@ -40,14 +40,14 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             MergeProperties(apiRequestModel, postData);
 
-            LandAddPlantPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            //LandAddPlantPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
 
             //  handle return of form 
 
-            string json = JsonConvert.SerializeObject(apiResponse);
+            //string json = JsonConvert.SerializeObject(apiResponse);
 
-            pageView.PageData = json;
+            //pageView.PageData = json;
 
             //TODO handle hidden controls
 
@@ -120,9 +120,9 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>(); 
 
-            if(!navDictionary.ContainsKey("LandCode"))
+            if(!navDictionary.ContainsKey("landCode"))
             {
-                navDictionary.Add("LandCode", contextCode);
+                navDictionary.Add("landCode", contextCode);
             }
 
             //TODO handle post of form - good form
@@ -135,17 +135,17 @@ namespace FS.Farm.WebNavigator.Page.Forms
             if (commandText == "SubmitButton")
                 pagePointer = new PagePointer(
                     "LandPlantList",
-                    (Guid)navDictionary["LandCode"]);
+                    Guid.Parse(navDictionary["landCode"].ToString()));
 
             if (commandText == "CancelButton")
                 pagePointer = new PagePointer(
                     "LandPlantList",
-                    (Guid)navDictionary["LandCode"]); 
+                    Guid.Parse(navDictionary["landCode"].ToString())); 
 
             if (commandText == "OtherButton")
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",
-                    (Guid)navDictionary["TacCode"]); 
+                    Guid.Parse(navDictionary["tacCode"].ToString())); 
 
             return pagePointer;
         }  

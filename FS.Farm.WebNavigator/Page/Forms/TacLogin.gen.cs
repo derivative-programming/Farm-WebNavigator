@@ -39,13 +39,13 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             MergeProperties(apiRequestModel, postData);
 
-            TacLoginPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+            //TacLoginPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
             //  handle return of form
 
-            string json = JsonConvert.SerializeObject(apiResponse);
+            //string json = JsonConvert.SerializeObject(apiResponse);
 
-            pageView.PageData = json;
+            //pageView.PageData = json;
 
             //TODO handle hidden controls
 
@@ -109,9 +109,9 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>();
 
-            if(!navDictionary.ContainsKey("TacCode"))
+            if(!navDictionary.ContainsKey("tacCode"))
             {
-                navDictionary.Add("TacCode", contextCode);
+                navDictionary.Add("tacCode", contextCode);
             }
 
             //TODO handle post of form - good form
@@ -123,11 +123,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
             if (commandText == "SubmitButton")
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",
-                    (Guid)navDictionary["TacCode"]);
+                    Guid.Parse(navDictionary["tacCode"].ToString()));
             if (commandText == "OtherButton")
                 pagePointer = new PagePointer(
                     "TacRegister",
-                    (Guid)navDictionary["TacCode"]);
+                    Guid.Parse(navDictionary["tacCode"].ToString()));
             return pagePointer;
         }
 

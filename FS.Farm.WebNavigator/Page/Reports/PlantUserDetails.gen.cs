@@ -188,7 +188,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             if (commandText == "backButton")
                 pagePointer = new PagePointer(
                     "LandPlantList",
-                    (Guid)navDictionary["LandCode"]);
+                    Guid.Parse(navDictionary["landCode"].ToString()));
 
             if (pagePointer != null)
             {
@@ -436,7 +436,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             [Newtonsoft.Json.JsonProperty("itemCountPerPage", Required = Newtonsoft.Json.Required.Always)]
             public int ItemCountPerPage { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("orderByColumnName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("orderByColumnName", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OrderByColumnName { get; set; }
 
             [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.Always)]
