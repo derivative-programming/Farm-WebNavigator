@@ -6,22 +6,25 @@
   },
   "ignoreDimensionPropertyList": [
     "objectWorkflowParam.calculatedIsSourceObjectAvailable",
+    "objectWorkflowParam.calculatedIsDetailsTextAvailable",
     "objectWorkflowParam.calculatedIsRequiredCSSClassName",
+    "objectWorkflowParam.calculatedIsConditionalVisible",
     "objectWorkflowParam.calculatedIsRegExMatchRequired",
     "objectWorkflowParam.calculatedIsObjectID",
-    "objectWorkflowParam.isRequired",
-    "objectWorkflowParam.sourceObjectName",
-    "objectWorkflowParam.sourcePropertyName",
+    "objectWorkflowParam.calculatedIsfKObjectQueryUsed",
     "objectWorkflowParam.isFKListUnknownOptionRemoved",
+    "objectWorkflowParam.calculatedIsCodeAndLookup",
     "objectWorkflowParam.isFKListOptionRecommended",
     "objectWorkflowParam.isFKListInactiveIncluded",
     "objectWorkflowParam.isFKListSearchable",
+    "objectWorkflowParam.isTimeZoneDetermined",
     "objectWorkflowParam.isVisible",
-    "objectWorkflowButton.isButtonCallToAction",
-    "objectWorkflowButton.isVisible",
+    "objectWorkflowParam.isLabelVisible",
+    "objectWorkflowParam.isRequired",
     "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
     "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet",
-    "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
-    "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet"
+    "objectWorkflowOutputVar.calculatedIsSourceObjectAvailable",
+    "objectWorkflowOutputVar.calculatedIsConditionalVisible",
+    "objectWorkflowOutputVar.isAutoRedirectURL"
   ]
-} 
+}

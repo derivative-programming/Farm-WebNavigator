@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Reports.Init;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -135,6 +136,8 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
+            pagePointer = new PagePointer(_pageName, contextCode);
+
             PacUserTriStateFilterListListRequest apiRequestModel = new PacUserTriStateFilterListListRequest();
 
             MergeProperties(apiRequestModel, apiInitResponse);
@@ -154,8 +157,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
-
-            pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
@@ -187,11 +188,20 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         private string ToQueryString(object obj)
         {
-            var properties = from p in obj.GetType().GetProperties()
-                             where p.GetValue(obj, null) != null
-                             select $"{Uri.EscapeDataString(p.Name)}={Uri.EscapeDataString(p.GetValue(obj, null).ToString())}";
+            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
+            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
+                NullValueHandling = NullValueHandling.Ignore // Ignore null values
+            });
 
-            return string.Join("&", properties);
+            // Deserialize the JSON into a dictionary
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+            // Convert the dictionary to query string
+            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
+
+            return queryString;
         }
 
         public class PacUserTriStateFilterListListModel
@@ -233,9 +243,24 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public class PacUserTriStateFilterListListModelItem
         {
+            [Newtonsoft.Json.JsonProperty("triStateFilterCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid TriStateFilterCode { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterDescription", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
             public string TriStateFilterDescription { get; set; }
+            [Newtonsoft.Json.JsonProperty("triStateFilterDisplayOrder", Required = Newtonsoft.Json.Required.Always)]
+            public int TriStateFilterDisplayOrder { get; set; }
+            [Newtonsoft.Json.JsonProperty("triStateFilterIsActive", Required = Newtonsoft.Json.Required.Always)]
+            public bool TriStateFilterIsActive { get; set; }
+            [Newtonsoft.Json.JsonProperty("triStateFilterLookupEnumName", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string TriStateFilterLookupEnumName { get; set; }
+            [Newtonsoft.Json.JsonProperty("triStateFilterName", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string TriStateFilterName { get; set; }
+            [Newtonsoft.Json.JsonProperty("triStateFilterStateIntValue", Required = Newtonsoft.Json.Required.Always)]
+            public int TriStateFilterStateIntValue { get; set; }
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
             public string SomeConditionalImageUrl { get; set; }
 
@@ -258,7 +283,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.Always)]
             public bool OrderByDescending { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
 
         }

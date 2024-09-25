@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FS.Farm.WebNavigator.Page.Reports.Init;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -68,7 +69,54 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var rowData = apiResponse.Items.ToArray()[0];
 
             {
-
+                pageView = BuildAvailableCommandForButton(pageView, "updateButtonTextLinkPlantCode",
+                    "PlantAddPlant",
+                    "updateButtonTextLinkPlantCode",
+                    isVisible: false,
+                    isEnabled: true,
+                    "Update Button Text");
+                pageView = BuildAvailableCommandForButton(pageView, "randomPropertyUpdatesLinkPlantCode",
+                    "PlantUserDetails",
+                    "randomPropertyUpdatesLinkPlantCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Random Property Updates");
+                pageView = BuildAvailableCommandForButton(pageView, "backToDashboardLinkTacCode",
+                    "PlantAddTac",
+                    "backToDashboardLinkTacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Back To Dashboard");
+                pageView = BuildAvailableCommandForButton(pageView, "testFileDownloadLinkPacCode",
+                    "PacUserDetails",
+                    "testFileDownloadLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test File Download");
+                pageView = BuildAvailableCommandForButton(pageView, "testConditionalAsyncFileDownloadLinkPacCode",
+                    "PacUserDetails",
+                    "testConditionalAsyncFileDownloadLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test Conditional Async File Download");
+                pageView = BuildAvailableCommandForButton(pageView, "testAsyncFlowReqLinkPacCode",
+                    "PacUserDetails",
+                    "testAsyncFlowReqLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test Async Flow Req");
+                pageView = BuildAvailableCommandForButton(pageView, "testConditionalAsyncFlowReqLinkPacCode",
+                    "PacUserDetails",
+                    "testConditionalAsyncFlowReqLinkPacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Test Conditional Async Flow Req");
+                pageView = BuildAvailableCommandForButton(pageView, "conditionalBtnExampleLinkTacCode",
+                    "PlantAddTac",
+                    "conditionalBtnExampleLinkTacCode",
+                    isVisible: true,
+                    isEnabled: true,
+                    "Conditional Btn Example");
             }
 
             return pageView;
@@ -147,6 +195,8 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
+            pagePointer = new PagePointer(_pageName, contextCode);
+
             PlantUserDetailsListRequest apiRequestModel = new PlantUserDetailsListRequest();
 
             MergeProperties(apiRequestModel, apiInitResponse);
@@ -166,9 +216,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
-
-            pagePointer = new PagePointer(_pageName, contextCode);
-
+            if (commandText == "updateButtonTextLinkPlantCode")
+                pagePointer = new PagePointer(
+                    "PlantUserDetails",
+                    rowData.UpdateButtonTextLinkPlantCode);
+            if (commandText == "randomPropertyUpdatesLinkPlantCode")
+                pagePointer = new PagePointer(  //TODO handle async objwf
+                    "PlantPlantList",
+                    contextCode);
+            if (commandText == "backToDashboardLinkTacCode")
+                pagePointer = new PagePointer(
+                    "TacFarmDashboard",
+                    rowData.BackToDashboardLinkTacCode);
+            if (commandText == "testFileDownloadLinkPacCode")
+                pagePointer = new PagePointer(  //TODO handle async objwf
+                    "PlantPacList",
+                    contextCode);
+            if (commandText == "testConditionalAsyncFileDownloadLinkPacCode")
+                pagePointer = new PagePointer(  //TODO handle async objwf
+                    "PlantPacList",
+                    contextCode);
+            if (commandText == "testAsyncFlowReqLinkPacCode")
+                pagePointer = new PagePointer(  //TODO handle async objwf
+                    "PlantPacList",
+                    contextCode);
+            if (commandText == "testConditionalAsyncFlowReqLinkPacCode")
+                pagePointer = new PagePointer(  //TODO handle async objwf
+                    "PlantPacList",
+                    contextCode);
+            if (commandText == "conditionalBtnExampleLinkTacCode")
+                pagePointer = new PagePointer(
+                    "TacFarmDashboard",
+                    rowData.ConditionalBtnExampleLinkTacCode);
             return pagePointer;
         }
 
@@ -199,11 +278,20 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         private string ToQueryString(object obj)
         {
-            var properties = from p in obj.GetType().GetProperties()
-                             where p.GetValue(obj, null) != null
-                             select $"{Uri.EscapeDataString(p.Name)}={Uri.EscapeDataString(p.GetValue(obj, null).ToString())}";
+            // Serialize the object to a JSON string with custom settings (camelCase, etc.)
+            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(), // Adjust case here (optional)
+                NullValueHandling = NullValueHandling.Ignore // Ignore null values
+            });
 
-            return string.Join("&", properties);
+            // Deserialize the JSON into a dictionary
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+            // Convert the dictionary to query string
+            var queryString = string.Join("&", dict.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString())}"));
+
+            return queryString;
         }
 
         public class PlantUserDetailsListModel
@@ -245,7 +333,93 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
         public class PlantUserDetailsListModelItem
         {
-
+            [Newtonsoft.Json.JsonProperty("flavorName", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string FlavorName { get; set; }
+            [Newtonsoft.Json.JsonProperty("isDeleteAllowed", Required = Newtonsoft.Json.Required.Always)]
+            public bool IsDeleteAllowed { get; set; }
+            [Newtonsoft.Json.JsonProperty("isEditAllowed", Required = Newtonsoft.Json.Required.Always)]
+            public bool IsEditAllowed { get; set; }
+            [Newtonsoft.Json.JsonProperty("otherFlavor", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string OtherFlavor { get; set; }
+            [Newtonsoft.Json.JsonProperty("someBigIntVal", Required = Newtonsoft.Json.Required.Always)]
+            public long SomeBigIntVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someBitVal", Required = Newtonsoft.Json.Required.Always)]
+            public bool SomeBitVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someDateVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeDateVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someDecimalVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeDecimalVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someEmailAddress", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeEmailAddress { get; set; }
+            [Newtonsoft.Json.JsonProperty("someFloatVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeFloatVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someIntVal", Required = Newtonsoft.Json.Required.Always)]
+            public int SomeIntVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someMoneyVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeMoneyVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someNVarCharVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeNVarCharVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("somePhoneNumber", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomePhoneNumber { get; set; }
+            [Newtonsoft.Json.JsonProperty("someTextVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeTextVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someUniqueidentifierVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid SomeUniqueidentifierVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someUTCDateTimeVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeUTCDateTimeVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("someVarCharVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeVarCharVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("phoneNumConditionalOnIsEditable", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string PhoneNumConditionalOnIsEditable { get; set; }
+            [Newtonsoft.Json.JsonProperty("nVarCharAsUrl", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string NVarCharAsUrl { get; set; }
+            [Newtonsoft.Json.JsonProperty("updateButtonTextLinkPlantCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid UpdateButtonTextLinkPlantCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("randomPropertyUpdatesLinkPlantCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid RandomPropertyUpdatesLinkPlantCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("backToDashboardLinkTacCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid BackToDashboardLinkTacCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("testFileDownloadLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid TestFileDownloadLinkPacCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("testConditionalAsyncFileDownloadLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid TestConditionalAsyncFileDownloadLinkPacCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("testAsyncFlowReqLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid TestAsyncFlowReqLinkPacCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("testConditionalAsyncFlowReqLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid TestConditionalAsyncFlowReqLinkPacCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("conditionalBtnExampleLinkTacCode", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public System.Guid ConditionalBtnExampleLinkTacCode { get; set; }
+            [Newtonsoft.Json.JsonProperty("someImageUrlVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeImageUrlVal { get; set; }
+            [Newtonsoft.Json.JsonProperty("isImageUrlAvailable", Required = Newtonsoft.Json.Required.Always)]
+            public bool IsImageUrlAvailable { get; set; }
+            [Newtonsoft.Json.JsonProperty("someConditionalImageUrlVal", Required = Newtonsoft.Json.Required.Always)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            public string SomeConditionalImageUrlVal { get; set; }
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
             public string SomeConditionalImageUrl { get; set; }
 
@@ -268,7 +442,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.Always)]
             public bool OrderByDescending { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ForceErrorMessage { get; set; }
 
         }

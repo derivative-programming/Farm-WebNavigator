@@ -235,6 +235,8 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
+            pagePointer = new PagePointer(_pageName, contextCode);
+
             LandPlantListListRequest apiRequestModel = new LandPlantListListRequest();
 
             MergeProperties(apiRequestModel, apiInitResponse);
@@ -297,8 +299,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 pagePointer = new PagePointer( //TODO handle async objwf
                     "LandPlantList",
                     contextCode);
-
-            pagePointer = new PagePointer(_pageName, contextCode);
 
             return pagePointer;
         }
