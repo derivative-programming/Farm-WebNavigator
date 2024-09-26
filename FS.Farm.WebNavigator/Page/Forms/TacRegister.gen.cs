@@ -23,7 +23,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             _pageName = "TacRegister";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "", string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {
             var pageView = new PageView();
 
@@ -76,8 +76,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             TacRegisterPostModel apiRequestModel = new TacRegisterPostModel();
 
             MergeProperties(apiRequestModel, apiInitResponse);
-
-            MergeProperties(apiRequestModel, postData);
 
             //TacRegisterPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
 
@@ -260,7 +258,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             return pageView;
         }
 
-        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText)
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 

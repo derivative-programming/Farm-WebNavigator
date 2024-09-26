@@ -11,9 +11,7 @@ namespace FS.Farm.WebNavigator
         {
             PageView result = new PageView();
 
-            string commandText = string.Empty;
-
-            string postJsonData = string.Empty;
+            string commandText = string.Empty; 
 
             string currentPage = "";
 
@@ -32,9 +30,7 @@ namespace FS.Farm.WebNavigator
 
             //TODO throw error if no session code set
 
-            commandText = requestModel.CommandText;
-
-            postJsonData = requestModel.FormData;
+            commandText = requestModel.CommandText; 
 
             //check if session exists.  if so, get current page.  if not, use default page
 
@@ -65,13 +61,13 @@ namespace FS.Farm.WebNavigator
 
             //if there is a command, make the corresponding request on the current page
             //determine destination page
-            PagePointer destinationPagePointer = await currentPageProcessor.ProcessCommand(apiClient, sessionData, currentContextCode, commandText, postJsonData);
+            PagePointer destinationPagePointer = await currentPageProcessor.ProcessCommand(apiClient, sessionData, currentContextCode, commandText);
 
             //request destination page
             IPage destinationPageProcessor = PageFactory.GetPage(destinationPagePointer.PageName); 
 
             //create destination page view 
-            result = await destinationPageProcessor.BuildPageView(apiClient, sessionData, destinationPagePointer.ContextCode, commandText, postJsonData);
+            result = await destinationPageProcessor.BuildPageView(apiClient, sessionData, destinationPagePointer.ContextCode, commandText);
 
             //store session data
 

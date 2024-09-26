@@ -10,14 +10,10 @@ namespace FS.Farm.WebNavigator
     {
         public PagePostModel()
         {
-            CommandText = string.Empty;
-            FormData = string.Empty;
+            CommandText = string.Empty; 
         }
 
         [Newtonsoft.Json.JsonProperty("commandText")]
-        public string CommandText { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("formData")]
-        public string FormData { get; set; }
+        public string CommandText { get; set; } 
     }
 }

@@ -17,7 +17,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "PlantUserDetails";
         }
-        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "", string postData = "")
+        public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {
             var pageView = new PageView();
 
@@ -43,6 +43,29 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PlantUserDetailsListRequest apiRequestModel = new PlantUserDetailsListRequest();
 
             MergeProperties(apiRequestModel, apiInitResponse);
+
+            if (commandText.StartsWith("setFilter:", StringComparison.OrdinalIgnoreCase))
+            {
+                string filterName = commandText.Split(':')[1];
+                string filterValue = commandText.Split(':')[2];
+
+                if (filterName.Trim().Length == 0)
+                {
+                    if (sessionData.Filters.ContainsKey(filterName))
+                        sessionData.Filters.Remove(filterName);
+                }
+                else
+                {
+                    if (sessionData.Filters.ContainsKey(filterName))
+                    {
+                        sessionData.Filters[filterName] = filterValue;
+                    }
+                    else
+                    {
+                        sessionData.Filters.Add(filterName, filterValue);
+                    }
+                }
+            }
 
             if (commandText.StartsWith("ClearFilters", StringComparison.OrdinalIgnoreCase))
             {
@@ -92,7 +115,9 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             }
 
-            MergeProperties(apiRequestModel, postData);
+            string filtersJson = JsonConvert.SerializeObject(sessionData.Filters);
+
+            MergeProperties(apiRequestModel, filtersJson);
 
             //default values, can't override
             apiRequestModel.ForceErrorMessage = "";
@@ -143,7 +168,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = BuildTableData(sessionData, pageView, apiResponse);
 
-            pageView = BuildTableAvailableFilters(pageView);
+            pageView = BuildTableAvailableFilters(pageView, apiResponse);
 
             pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
@@ -352,8 +377,19 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return keyValuePairs;
         }
 
-        public PageView BuildTableAvailableFilters(PageView pageView)
+        public PageView BuildTableAvailableFilters(PageView pageView, PlantUserDetailsListModel apiResponse)
         {
+            //if (apiResponse == null ||
+            //    apiResponse.Items == null ||
+            //    apiResponse.Items.Count < 2)
+            //{
+            //    return pageView;
+            //}
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "setFilter:[available filter name]:[filter value]", Description = "Sort the table on a single column. requesting the same column again will change direction." }
+                );
+
             {
 
             }
@@ -539,7 +575,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return pageView;
         }
 
-        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText, string postData = "")
+        public async Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText)
         {
             PagePointer pagePointer = ProcessDefaultCommands(commandText, contextCode);
 
@@ -599,11 +635,14 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 return pagePointer;
             }
 
+            if (commandText.StartsWith("setFilter:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
             PlantUserDetailsListRequest apiRequestModel = new PlantUserDetailsListRequest();
 
             MergeProperties(apiRequestModel, apiInitResponse);
-
-            MergeProperties(apiRequestModel, postData);
 
             PlantUserDetailsListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
