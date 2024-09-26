@@ -1124,11 +1124,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             [Newtonsoft.Json.JsonProperty("someUTCDateTimeVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeUTCDateTimeVal { get; set; }
+            public DateTime SomeUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someConditionalUTCDateTimeVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeConditionalUTCDateTimeVal { get; set; }
+            public DateTime SomeConditionalUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someDateVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1278,10 +1278,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
             public string SomeFilterDecimalVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someMinUTCDateTimeVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string SomeMinUTCDateTimeVal { get; set; }
+            public DateTime SomeMinUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someMinDateVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string SomeMinDateVal { get; set; }
+            public DateTime SomeMinDateVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someFilterMoneyVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string SomeFilterMoneyVal { get; set; }

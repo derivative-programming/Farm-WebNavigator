@@ -71,10 +71,10 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
             public string SomeFilterDecimalVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someMinUTCDateTimeVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string SomeMinUTCDateTimeVal { get; set; }
+            public DateTime SomeMinUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someMinDateVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string SomeMinDateVal { get; set; }
+            public DateTime SomeMinDateVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("someFilterMoneyVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string SomeFilterMoneyVal { get; set; }

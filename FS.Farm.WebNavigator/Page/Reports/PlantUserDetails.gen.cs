@@ -748,7 +748,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             public System.Guid SomeUniqueidentifierVal { get; set; }
             [Newtonsoft.Json.JsonProperty("someUTCDateTimeVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeUTCDateTimeVal { get; set; }
+            public DateTime SomeUTCDateTimeVal { get; set; }
             [Newtonsoft.Json.JsonProperty("someVarCharVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
             public string SomeVarCharVal { get; set; }

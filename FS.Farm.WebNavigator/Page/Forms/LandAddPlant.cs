@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using FS.Farm.WebNavigator.Page;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Http.Internal;
+using System.Globalization;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -135,6 +136,50 @@ namespace FS.Farm.WebNavigator.Page.Forms
             if ((dataType == "File"))
                 return pageView;
 
+            if(dataType.Equals("date",StringComparison.OrdinalIgnoreCase))
+            {
+                DateTime dateTime = DateTime.UtcNow;
+                if(System.DateTime.TryParse(currentValue,out dateTime))
+                {
+                    currentValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    currentValue = "";
+                }
+                if (System.DateTime.TryParse(proposedValue, out dateTime))
+                {
+                    proposedValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    proposedValue = "";
+                } 
+
+            } 
+
+            if (dataType.Equals("datetime", StringComparison.OrdinalIgnoreCase))
+            {
+                DateTime dateTime = DateTime.UtcNow;
+                if (System.DateTime.TryParse(currentValue, out dateTime))
+                {
+                    currentValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    currentValue = "";
+                }
+                if (System.DateTime.TryParse(proposedValue, out dateTime))
+                {
+                    proposedValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    proposedValue = "";
+                }
+
+            }
+
             if (sessionData.FormFieldProposedValues.ContainsKey(name))
                 proposedValue = sessionData.FormFieldProposedValues[name];
             else
@@ -251,7 +296,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 "DateTime",
                 isVisible: true,
                 isRequired: true,
-                currentValue: apiRequestModel.RequestSomeUTCDateTimeVal.ToString(),
+                currentValue: apiRequestModel.RequestSomeUTCDateTimeVal.ToString("yyyy-MM-ddTHH:mm:ss"),
                 detailText: "Sample Details Text");
 
             pageView = BuildFormField(sessionData, pageView, "requestSomeDateVal",
@@ -259,7 +304,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 "Date",
                 isVisible: true,
                 isRequired: true,
-                currentValue: apiRequestModel.RequestSomeDateVal.ToString(),
+                currentValue: apiRequestModel.RequestSomeDateVal.ToString("yyyy-MM-ddTHH:mm:ss"),
                 detailText: "Sample Details Text");
 
             pageView = BuildFormField(sessionData, pageView, "requestSomeMoneyVal",
@@ -487,10 +532,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
             public string OutputSomeDecimalVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("outputSomeUTCDateTimeVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OutputSomeUTCDateTimeVal { get; set; }
+            public DateTime OutputSomeUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("outputSomeDateVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OutputSomeDateVal { get; set; }
+            public DateTime OutputSomeDateVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("outputSomeMoneyVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeMoneyVal { get; set; }
@@ -555,11 +600,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             [Newtonsoft.Json.JsonProperty("requestSomeUTCDateTimeVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string RequestSomeUTCDateTimeVal { get; set; }
+            public DateTime RequestSomeUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("requestSomeDateVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string RequestSomeDateVal { get; set; }
+            public DateTime RequestSomeDateVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("requestSomeMoneyVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]

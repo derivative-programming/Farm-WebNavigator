@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using FS.Farm.WebNavigator.Page;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Http.Internal;
+using System.Globalization;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -126,6 +127,50 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             if ((dataType == "File"))
                 return pageView;
+
+            if(dataType.Equals("date",StringComparison.OrdinalIgnoreCase))
+            {
+                DateTime dateTime = DateTime.UtcNow;
+                if(System.DateTime.TryParse(currentValue,out dateTime))
+                {
+                    currentValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    currentValue = "";
+                }
+                if (System.DateTime.TryParse(proposedValue, out dateTime))
+                {
+                    proposedValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    proposedValue = "";
+                }
+
+            }
+
+            if (dataType.Equals("datetime", StringComparison.OrdinalIgnoreCase))
+            {
+                DateTime dateTime = DateTime.UtcNow;
+                if (System.DateTime.TryParse(currentValue, out dateTime))
+                {
+                    currentValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    currentValue = "";
+                }
+                if (System.DateTime.TryParse(proposedValue, out dateTime))
+                {
+                    proposedValue = dateTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+                else
+                {
+                    proposedValue = "";
+                }
+
+            }
 
             if (sessionData.FormFieldProposedValues.ContainsKey(name))
                 proposedValue = sessionData.FormFieldProposedValues[name];

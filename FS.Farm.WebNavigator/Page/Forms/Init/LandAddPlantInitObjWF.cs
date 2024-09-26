@@ -77,10 +77,10 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             public string RequestSomeDecimalVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("requestSomeUTCDateTimeVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string RequestSomeUTCDateTimeVal { get; set; }
+            public DateTime RequestSomeUTCDateTimeVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("requestSomeDateVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string RequestSomeDateVal { get; set; }
+            public DateTime RequestSomeDateVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("requestSomeMoneyVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string RequestSomeMoneyVal { get; set; }
