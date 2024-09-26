@@ -50,14 +50,44 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 string pageNumberValue = commandText.Split(':')[1];
 
-                if (sessionData.Filters.ContainsKey("pageNumber"))
+                if(pageNumberValue.Trim().Length == 0)
                 {
-                    sessionData.Filters["pageNumber"] = pageNumberValue;
+                    if (sessionData.Filters.ContainsKey("pageNumber"))
+                        sessionData.Filters.Remove("pageNumber");
                 }
                 else
                 {
-                    sessionData.Filters.Add("pageNumber", pageNumberValue);
+                    if (sessionData.Filters.ContainsKey("pageNumber"))
+                    {
+                        sessionData.Filters["pageNumber"] = pageNumberValue;
+                    }
+                    else
+                    {
+                        sessionData.Filters.Add("pageNumber", pageNumberValue);
+                    }
                 }
+            }
+            if (commandText.StartsWith("rowNumber:", StringComparison.OrdinalIgnoreCase))
+            {
+                string rowNumberValue = commandText.Split(':')[1];
+
+                if (rowNumberValue.Trim().Length == 0)
+                {
+                    if (sessionData.Filters.ContainsKey("rowNumber"))
+                        sessionData.Filters.Remove("rowNumber");
+                }
+                else
+                {
+                    if (sessionData.Filters.ContainsKey("rowNumber"))
+                    {
+                        sessionData.Filters["rowNumber"] = rowNumberValue;
+                    }
+                    else
+                    {
+                        sessionData.Filters.Add("rowNumber", rowNumberValue);
+                    }
+                }
+                    
             }
 
             MergeProperties(apiRequestModel, postData);
@@ -107,7 +137,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = BuildTableHeaders(pageView);
 
-            pageView = BuildTableData(pageView, apiResponse);
+            pageView = BuildTableData(sessionData, pageView, apiResponse);
 
             pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
@@ -307,19 +337,34 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
 
-        public PageView BuildTableData(PageView pageView, LandPlantListListModel apiResponse)
+        public PageView BuildTableData(SessionData sessionData, PageView pageView, LandPlantListListModel apiResponse)
         {
             List<Dictionary<string,string>> tableData = new List<Dictionary<string, string>>();
 
             int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
 
-            foreach(var rowData in apiResponse.Items)
+            int rowNumberToSelect = 0;
+
+            if (sessionData.Filters.ContainsKey("rowNumber"))
+            {
+                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+            }
+
+            foreach (var rowData in apiResponse.Items)
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
                 rowDict.Add("rowNumber", rowNumber.ToString());
 
-                tableData.Add(rowDict);
+                if(rowNumberToSelect > 0)
+                {
+                    if(rowNumber == rowNumberToSelect)
+                    tableData.Add(rowDict);
+                }
+                else
+                {
+                    tableData.Add(rowDict);
+                }
 
                 rowNumber++;
             }
@@ -792,7 +837,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "PageNumber:[page number value]", Description = "View a particular page of the report results" }
+                new AvailableCommand { CommandText = "PageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
+                );
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "RowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands will then be available for that row." }
                 );
             //GENIF[visualizationType=Grid]End
 
@@ -880,6 +929,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             if (commandText.StartsWith("pageNumber:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
+            if (commandText.StartsWith("rowNumber:", StringComparison.OrdinalIgnoreCase))
             {
                 return pagePointer;
             }
