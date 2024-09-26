@@ -143,6 +143,8 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = BuildTableData(sessionData, pageView, apiResponse);
 
+            pageView = BuildTableAvailableFilters(pageView);
+
             pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
@@ -348,6 +350,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             return keyValuePairs;
+        }
+
+        public PageView BuildTableAvailableFilters(PageView pageView)
+        {
+            {
+
+            }
+
+            return pageView;
         }
 
         public PageView BuildAvailableCommandsForReportSort(PageView pageView, PlantUserDetailsListModel apiResponse)
@@ -628,12 +639,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 }
             }
 
+            pagePointer = new PagePointer(_pageName, contextCode);
+
             if (apiResponse == null ||
                 apiResponse.Items == null ||
                 apiResponse.Items.Count == 0 ||
                 apiResponse.Items.Count > 1)
             {
-                pagePointer = new PagePointer(_pageName, contextCode);
 
                 return pagePointer;
             }
