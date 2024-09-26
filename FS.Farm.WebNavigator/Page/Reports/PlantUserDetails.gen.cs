@@ -168,10 +168,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = BuildTableData(sessionData, pageView, apiResponse);
 
-            pageView = BuildTableAvailableFilters(pageView, apiResponse);
-
-            pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
-
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 

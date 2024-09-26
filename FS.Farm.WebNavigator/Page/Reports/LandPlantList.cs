@@ -212,9 +212,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = BuildTableData(sessionData, pageView, apiResponse);
 
+            //GENIF[visualizationType=Grid]Start
             pageView = BuildTableAvailableFilters(pageView, apiResponse);
 
             pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
+            //GENIF[visualizationType=Grid]End
 
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);

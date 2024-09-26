@@ -78,9 +78,49 @@ namespace FS.Farm.WebNavigator.Page
                 {
                     if (targetProp.Name.Equals(sourceProp.Key,StringComparison.OrdinalIgnoreCase) && targetProp.CanWrite)
                     {
-                        // Convert the JsonElement to the target property type and set the value
-                        object? value = sourceProp.Value.Deserialize(targetProp.PropertyType);
-                        targetProp.SetValue(target, value);
+                        if(targetProp.PropertyType.Name.Equals("Int32",StringComparison.OrdinalIgnoreCase))
+                        {
+                            int testVal = 0;
+                            if(int.TryParse(sourceProp.Value.ToString(),out testVal))
+                            {
+                                targetProp.SetValue(target, testVal);
+                            }
+                            else
+                            {
+                                targetProp.SetValue(target, null);
+                            }
+                        }
+                        else if (targetProp.PropertyType.Name.Equals("Boolean", StringComparison.OrdinalIgnoreCase))
+                        {
+                            bool testVal = false;
+                            if (bool.TryParse(sourceProp.Value.ToString(), out testVal))
+                            {
+                                targetProp.SetValue(target, testVal);
+                            }
+                            else
+                            {
+                                targetProp.SetValue(target, null);
+                            }
+                        }
+                        else if (targetProp.PropertyType.Name.Equals("DateTime", StringComparison.OrdinalIgnoreCase))
+                        {
+                            DateTime testVal = DateTime.UtcNow;
+                            if (DateTime.TryParse(sourceProp.Value.ToString(), out testVal))
+                            {
+                                targetProp.SetValue(target, testVal);
+                            }
+                            else
+                            {
+                                targetProp.SetValue(target, null);
+                            }
+                        }
+                        else
+                        {
+                            // Convert the JsonElement to the target property type and set the value
+                            object? value = sourceProp.Value.Deserialize(targetProp.PropertyType);
+                            targetProp.SetValue(target, value);
+
+                        }
                         break;
                     }
                 }
