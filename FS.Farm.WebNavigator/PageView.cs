@@ -15,13 +15,11 @@ namespace FS.Farm.WebNavigator
             PageTitleText = "";
             PageIntroText = "";
             PageFooterText = "";
-            PageHeaders = new List<PageHeader>();
-            TableHeaders = new Dictionary<string, string>();
-            TableFilters = new Dictionary<string, string>();
+            PageHeaders = new List<PageHeader>(); 
             ValidationErrors = new List<ValidationError>();
             AvailableCommands = new List<AvailableCommand>();
             FormFields = new List<FormField>();
-            tableAvailableFilters = new List<TableAvailableFilter>();
+            PageTable = new PageTable();
         }
 
         [Newtonsoft.Json.JsonProperty("appTitle", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -36,20 +34,9 @@ namespace FS.Farm.WebNavigator
         [Newtonsoft.Json.JsonProperty("pageHeaders", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public List<PageHeader> PageHeaders { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("tableHeaders", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Dictionary<string, string> TableHeaders { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("tableData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public List<Dictionary<string, string>> TableData { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("tableAvailableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public List<TableAvailableFilter> tableAvailableFilters { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("tableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Dictionary<string, string> TableFilters { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("tableInfo", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TableInfo TableInfo { get; set; }
+        [Newtonsoft.Json.JsonProperty("pageTable", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public PageTable PageTable { get; set; }
 
 
         [Newtonsoft.Json.JsonProperty("formFields", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

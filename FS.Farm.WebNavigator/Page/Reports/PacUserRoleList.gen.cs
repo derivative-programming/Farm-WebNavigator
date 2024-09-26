@@ -155,7 +155,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             tableInfo.ItemCountPerPage = apiResponse.ItemCountPerPage;
             tableInfo.TotalItemCount = apiResponse.RecordsTotal;
 
-            pageView.TableInfo = tableInfo;
+            pageView.PageTable.TableInfo = tableInfo;
 
             if (sessionData.Filters.ContainsKey("rowNumber"))
             {
@@ -202,7 +202,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
-            pageView.TableFilters = sessionData.Filters;
+            pageView.PageTable.TableFilters = sessionData.Filters;
 
             //  handle report rows
 
@@ -258,7 +258,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 rowNumber++;
             }
 
-            pageView.TableData = tableData;
+            pageView.PageTable.TableData = tableData;
 
             return pageView;
         }

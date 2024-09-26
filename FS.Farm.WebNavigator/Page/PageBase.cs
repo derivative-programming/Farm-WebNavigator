@@ -177,7 +177,7 @@ namespace FS.Farm.WebNavigator.Page
             if (!isVisible)
                 return pageView;
 
-            pageView.TableHeaders.Add(name, headerText);
+            pageView.PageTable.TableHeaders.Add(name, headerText);
 
             return pageView;
         }
@@ -191,7 +191,7 @@ namespace FS.Farm.WebNavigator.Page
             if (!isVisible)
                 return pageView;
 
-            pageView.tableAvailableFilters.Add(
+            pageView.PageTable.tableAvailableFilters.Add(
                 new TableAvailableFilter()
                 {
                     DataType = dataType,

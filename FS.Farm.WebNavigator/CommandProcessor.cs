@@ -80,30 +80,7 @@ namespace FS.Farm.WebNavigator
 
             await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, sessionDataJson);
              
-
-            if (result.PageTitleText != null &&
-                result.PageTitleText == "")
-                result.PageTitleText = null; 
-
-            if (result.PageIntroText != null &&
-                result.PageIntroText == "")
-                result.PageIntroText = null;
-
-            if (result.PageHeaders != null &&
-                result.PageHeaders.Count == 0)
-                result.PageHeaders = null;
-
-            if (result.TableHeaders != null &&
-                result.TableHeaders.Count == 0)
-                result.TableHeaders = null;
-
-            if (result.ValidationErrors != null &&
-                result.ValidationErrors.Count == 0)
-                result.ValidationErrors = null;
-
-            if (result.PageFooterText != null &&
-                result.PageFooterText == "")
-                result.PageFooterText = null;
+             
 
             return result;
         }

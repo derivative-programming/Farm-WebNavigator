@@ -119,7 +119,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     "Go To Dashboard");
             }
 
-            pageView.TableHeaders = null; 
+            pageView.PageTable = null; 
 
             return pageView;
         }

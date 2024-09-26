@@ -110,7 +110,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     "Register");
             }
 
-            pageView.TableHeaders = null;
+            pageView.PageTable = null;
 
             return pageView;
         }

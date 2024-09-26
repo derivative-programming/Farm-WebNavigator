@@ -111,7 +111,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             }
 
-            pageView.TableHeaders = null;
+            pageView.PageTable = null;
 
             return pageView;
         }

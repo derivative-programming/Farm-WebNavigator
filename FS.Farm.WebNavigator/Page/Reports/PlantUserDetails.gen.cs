@@ -175,7 +175,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle report row buttons
             pageView = BuildAvailableCommandsForReportRowButtons(pageView, apiResponse);
 
-            pageView.TableFilters = sessionData.Filters;
+            pageView.PageTable.TableFilters = sessionData.Filters;
 
             //  handle report rows
 
@@ -287,7 +287,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 rowNumber++;
             }
 
-            pageView.TableData = tableData;
+            pageView.PageTable.TableData = tableData;
 
             return pageView;
         }
