@@ -39,8 +39,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.PageFooterText = "Add plant form footer text";  
 
             pageView = AddDefaultAvailableCommands(pageView);
-
-
+             
             if (commandText.StartsWith("setFormFieldProposedValue:", StringComparison.OrdinalIgnoreCase))
             {
                 string formFieldName = commandText.Split(':')[1];
@@ -53,13 +52,13 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 }
                 else
                 {
-                    if (sessionData.Filters.ContainsKey(formFieldName))
+                    if (sessionData.FormFieldProposedValues.ContainsKey(formFieldName))
                     {
-                        sessionData.Filters[formFieldName] = formFieldProposedValue;
+                        sessionData.FormFieldProposedValues[formFieldName] = formFieldProposedValue;
                     }
                     else
                     {
-                        sessionData.Filters.Add(formFieldName, formFieldProposedValue);
+                        sessionData.FormFieldProposedValues.Add(formFieldName, formFieldProposedValue);
                     }
                 }
             }
@@ -84,8 +83,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.AvailableCommands.Add(
                 new AvailableCommand { CommandText = "setFormFieldProposedValue:[field name]:[value (or empty to reset)]", 
                     Description = "Give a particular form field a proposed value." }
-                );
-
+                ); 
 
             // handle objwf buttons 
             {
@@ -384,9 +382,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
             }
 
             if (commandText.Equals("SubmitButton",StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "LandPlantList",
-                    Guid.Parse(navDictionary["landCode"].ToString()));
+                if(await TryFormSubmit(sessionData, apiClient, contextCode, apiInitResponse))
+                    pagePointer = new PagePointer(
+                        "LandPlantList",
+                        Guid.Parse(navDictionary["landCode"].ToString()));
 
             if (commandText.Equals("CancelButton", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
@@ -400,6 +399,48 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             return pagePointer;
         }  
+
+        public async Task<bool> TryFormSubmit(
+            SessionData sessionData,
+            APIClient apiClient,
+            Guid contextCode,
+            LandAddPlantInitObjWF.LandAddPlantGetInitResponse apiInitResponse)
+        {
+            bool result = false;
+
+            LandAddPlantPostModel apiRequestModel = new LandAddPlantPostModel();
+
+            MergeProperties(apiRequestModel, apiInitResponse); 
+
+            string proposedValuesJson = JsonConvert.SerializeObject(sessionData.FormFieldProposedValues);
+
+            MergeProperties(apiRequestModel, proposedValuesJson);
+
+            LandAddPlantPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            sessionData.ValidationErrors.Clear();
+
+            if(apiResponse.ValidationError != null &&
+                apiResponse.ValidationError.Count > 0)
+            {
+                foreach(ValidationError validationError in apiResponse.ValidationError)
+                {
+                    sessionData.ValidationErrors.Add(
+                        new ValidationError()
+                        {
+                            Property = validationError.Property,
+                            Message = validationError.Message
+                        }
+                    );
+                }
+            }
+
+            if (apiInitResponse.Success &&
+                sessionData.ValidationErrors.Count == 0)
+                return true;
+
+            return result;
+        }
 
         public async Task<LandAddPlantPostResponse> PostResponse(APIClient aPIClient, LandAddPlantPostModel model, Guid contextCode)
         {

@@ -52,13 +52,13 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 }
                 else
                 {
-                    if (sessionData.Filters.ContainsKey(formFieldName))
+                    if (sessionData.FormFieldProposedValues.ContainsKey(formFieldName))
                     {
-                        sessionData.Filters[formFieldName] = formFieldProposedValue;
+                        sessionData.FormFieldProposedValues[formFieldName] = formFieldProposedValue;
                     }
                     else
                     {
-                        sessionData.Filters.Add(formFieldName, formFieldProposedValue);
+                        sessionData.FormFieldProposedValues.Add(formFieldName, formFieldProposedValue);
                     }
                 }
             }
@@ -131,6 +131,18 @@ namespace FS.Farm.WebNavigator.Page.Forms
             else
                 proposedValue = currentValue;
 
+            string validationError = string.Empty;
+
+            if(sessionData.ValidationErrors != null)
+            {
+                var validationErrorObj = sessionData.ValidationErrors.Find(x => x.Property.Equals(name,StringComparison.OrdinalIgnoreCase));
+
+                if (validationErrorObj != null)
+                {
+                    validationError += validationErrorObj.Property;
+                }
+            }
+
             FormField formField = new FormField
             {
                 Name = name,
@@ -140,7 +152,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 CurrentValue = currentValue,
                 ProposedValue = proposedValue,
                 isRequiredField = isRequired,
-                ValidationErrorText = ""
+                ValidationErrorText = validationError
             };
 
             pageView.FormFields.Add(formField);
@@ -206,14 +218,57 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
             if (commandText.Equals("SubmitButton",StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "TacFarmDashboard",
-                    Guid.Parse(navDictionary["tacCode"].ToString()));
+                if(await TryFormSubmit(sessionData, apiClient, contextCode, apiInitResponse))
+                    pagePointer = new PagePointer(
+                        "TacFarmDashboard",
+                        Guid.Parse(navDictionary["tacCode"].ToString()));
             if (commandText.Equals("OtherButton", StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "TacRegister",
                     Guid.Parse(navDictionary["tacCode"].ToString()));
             return pagePointer;
+        }
+
+        public async Task<bool> TryFormSubmit(
+            SessionData sessionData,
+            APIClient apiClient,
+            Guid contextCode,
+            TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse)
+        {
+            bool result = false;
+
+            TacLoginPostModel apiRequestModel = new TacLoginPostModel();
+
+            MergeProperties(apiRequestModel, apiInitResponse);
+
+            string proposedValuesJson = JsonConvert.SerializeObject(sessionData.FormFieldProposedValues);
+
+            MergeProperties(apiRequestModel, proposedValuesJson);
+
+            TacLoginPostResponse apiResponse = await PostResponse(apiClient, apiRequestModel, contextCode);
+
+            sessionData.ValidationErrors.Clear();
+
+            if(apiResponse.ValidationError != null &&
+                apiResponse.ValidationError.Count > 0)
+            {
+                foreach(ValidationError validationError in apiResponse.ValidationError)
+                {
+                    sessionData.ValidationErrors.Add(
+                        new ValidationError()
+                        {
+                            Property = validationError.Property,
+                            Message = validationError.Message
+                        }
+                    );
+                }
+            }
+
+            if (apiInitResponse.Success &&
+                sessionData.ValidationErrors.Count == 0)
+                return true;
+
+            return result;
         }
 
         public async Task<TacLoginPostResponse> PostResponse(APIClient aPIClient, TacLoginPostModel model, Guid contextCode)
