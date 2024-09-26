@@ -20,7 +20,8 @@ namespace FS.Farm.WebNavigator
             TableFilters = new Dictionary<string, string>();
             ValidationErrors = new List<ValidationError>();
             AvailableCommands = new List<AvailableCommand>();
-            FormFields = new List<FormField>(); 
+            FormFields = new List<FormField>();
+            tableAvailableFilters = new List<TableAvailableFilter>();
         }
 
         [Newtonsoft.Json.JsonProperty("appTitle", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -40,6 +41,9 @@ namespace FS.Farm.WebNavigator
 
         [Newtonsoft.Json.JsonProperty("tableData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public List<Dictionary<string, string>> TableData { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("tableAvailableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public List<TableAvailableFilter> tableAvailableFilters { get; set; }
 
         [Newtonsoft.Json.JsonProperty("tableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Dictionary<string, string> TableFilters { get; set; }

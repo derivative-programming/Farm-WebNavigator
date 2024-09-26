@@ -181,6 +181,26 @@ namespace FS.Farm.WebNavigator.Page
 
             return pageView;
         }
+        public PageView BuildTableAvailableFilter(
+            PageView pageView,
+            string name,
+            bool isVisible,
+            string labelText,
+            string dataType)
+        {
+            if (!isVisible)
+                return pageView;
+
+            pageView.tableAvailableFilters.Add(
+                new TableAvailableFilter()
+                {
+                    DataType = dataType,
+                    Label = labelText,
+                    Name = name
+                });
+
+            return pageView;
+        }
         public Dictionary<string, string> BuildTableDataCellValue(
             Dictionary<string, string> rowData,
             string name,

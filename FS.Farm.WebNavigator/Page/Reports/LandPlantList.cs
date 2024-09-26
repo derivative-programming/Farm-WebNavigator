@@ -185,6 +185,8 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView = BuildTableData(sessionData, pageView, apiResponse);
 
+            pageView = BuildTableAvailableFilters(pageView);
+
             pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
 
             //  handle report row buttons
@@ -582,6 +584,104 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             return keyValuePairs;
         }
+
+
+        public PageView BuildTableAvailableFilters(PageView pageView)
+        {
+            {
+                //PlantCode
+
+                pageView = BuildTableAvailableFilter(pageView, "flavorFilterCode",
+                    isVisible: true, 
+                    labelText: "Select A Flavor",
+                    dataType:"Guid");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterIntVal",
+                    isVisible: true,
+                    labelText: "Some Int Val",
+                    dataType: "Number");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterBigIntVal",
+                    isVisible: true,
+                    labelText: "Some Big Int Val",
+                    dataType: "Number");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterFloatVal",
+                    isVisible: true,
+                    labelText: "Some Float Val",
+                    dataType: "Number");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterBitVal",
+                    isVisible: true,
+                    labelText: "Some Bit Val",
+                    dataType: "Boolean");
+
+                pageView = BuildTableAvailableFilter(pageView, "isFilterEditAllowed",
+                    isVisible: true,
+                    labelText: "Some Bit Val",
+                    dataType: "Boolean");
+
+                pageView = BuildTableAvailableFilter(pageView, "isFilterDeleteAllowed",
+                    isVisible: true,
+                    labelText: "Is Delete Allowed",
+                    dataType: "Boolean");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterDecimalVal",
+                    isVisible: true,
+                    labelText: "Some Decimal Val",
+                    dataType: "Number");
+
+                pageView = BuildTableAvailableFilter(pageView, "someMinUTCDateTimeVal",
+                    isVisible: true,
+                    labelText: "Some Min UTC Date Time Val",
+                    dataType: "DateTime");
+
+                pageView = BuildTableAvailableFilter(pageView, "someMinDateVal",
+                    isVisible: true,
+                    labelText: "Some Min Date Val",
+                    dataType: "Date");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterMoneyVal",
+                    isVisible: true,
+                    labelText: "Some Money Val",
+                    dataType: "Number");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterNVarCharVal",
+                    isVisible: true,
+                    labelText: "Some N Var Char Val",
+                    dataType: "Text");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterVarCharVal",
+                    isVisible: true,
+                    labelText: "Some Var Char Val",
+                    dataType: "Text");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterTextVal",
+                    isVisible: true,
+                    labelText: "Some Text Val",
+                    dataType: "Text");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterPhoneNumber",
+                    isVisible: true,
+                    labelText: "Some Phone Number",
+                    dataType: "Text");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterEmailAddress",
+                    isVisible: true,
+                    labelText: "Some Email Address",
+                    dataType: "Text");
+
+                pageView = BuildTableAvailableFilter(pageView, "someFilterUniqueIdentifier",
+                    isVisible: true,
+                    labelText: "Some Filter Unique Identifier",
+                    dataType: "Guid");
+
+
+            }
+
+            return pageView;
+        }
+
 
         public PageView BuildAvailableCommandsForReportSort(PageView pageView, LandPlantListListModel apiResponse)
         {
@@ -1001,12 +1101,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 }
             }
 
+            pagePointer = new PagePointer(_pageName, contextCode);
+
             if (apiResponse == null ||
                 apiResponse.Items == null ||
                 apiResponse.Items.Count == 0 ||
                 apiResponse.Items.Count > 1)
             {
-                pagePointer = new PagePointer(_pageName, contextCode);
 
                 return pagePointer;
             }
