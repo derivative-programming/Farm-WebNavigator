@@ -9,6 +9,8 @@ using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using FS.Farm.WebNavigator.Page;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -44,6 +46,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
+            pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);    
+
             //  handle return of form  
 
             //TODO handle hidden controls
@@ -73,6 +77,221 @@ namespace FS.Farm.WebNavigator.Page.Forms
             }
 
             pageView.TableHeaders = null; 
+
+            return pageView;
+        }
+
+        public PageView BuildFormField(
+            SessionData sessionData,
+            PageView pageView,
+            string name,
+            string label,
+            string dataType,
+            bool isVisible = true,
+            bool isRequired = true,
+            string currentValue = "",
+            string proposedValue = "",
+            string detailText = "")
+        {
+            if(!isVisible)
+                return pageView;
+
+            if (dataType == "Password")
+                return pageView;
+
+            if ((dataType == "File"))
+                return pageView;
+
+            if (sessionData.FormFieldProposedValues.ContainsKey(name))
+                proposedValue = sessionData.FormFieldProposedValues[name];
+            else
+                proposedValue = currentValue;
+
+            FormField formField = new FormField
+            {
+                Name = name,
+                Label = label,
+                DataType = dataType,
+                DetailText = detailText,
+                CurrentValue = currentValue,
+                ProposedValue = proposedValue,
+                isRequiredField = isRequired
+            };
+            return pageView;
+        }
+
+        public PageView BuildFormFields(SessionData sessionData, 
+            PageView pageView,
+            LandAddPlantInitObjWF.LandAddPlantGetInitResponse apiInitResponse,
+            LandAddPlantPostModel apiRequestModel)
+        {
+            pageView = BuildFormField(sessionData,pageView, "requestFlavorCode",
+                "Select A Flavor",
+                "Guid",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestFlavorCode.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestOtherFlavor",
+                "Other Flavor",
+                "Text",
+                isVisible: true,
+                isRequired: false,
+                currentValue: apiRequestModel.RequestOtherFlavor,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeIntVal",
+                "Some Int Val",
+                "Number",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeIntVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeBigIntVal",
+                "Some Big Int Val",
+                "Number",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeBigIntVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeBitVal",
+                "Some Bit Val",
+                "Boolean",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeBitVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestIsEditAllowed",
+                "Is Edit Allowed",
+                "Boolean",
+                isVisible: true,
+                isRequired: false,
+                currentValue: apiRequestModel.RequestIsEditAllowed.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestIsDeleteAllowed",
+                "Is Delete Allowed",
+                "Boolean",
+                isVisible: true,
+                isRequired: false,
+                currentValue: apiRequestModel.RequestIsDeleteAllowed.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeFloatVal",
+                "Some Float Val",
+                "Number",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeFloatVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeDecimalVal",
+                "Some Decimal Val",
+                "Number",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeDecimalVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeUTCDateTimeVal",
+                "Some UTC Date Time Val",
+                "DateTime",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeUTCDateTimeVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeDateVal",
+                "Some Date Val",
+                "Date",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeDateVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeMoneyVal",
+                "Some Money Val",
+                "Number",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeMoneyVal.ToString(),
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeNVarCharVal",
+                "Some N Var Char Val",
+                "Text",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeNVarCharVal,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeVarCharVal",
+                "Some Secure Var Char Val",
+                "Password",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeVarCharVal,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeLongVarCharVal",
+                "Some Long Var Char Val",
+                "Text",
+                isVisible: true,
+                isRequired: false,
+                currentValue: apiRequestModel.RequestSomeLongVarCharVal,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeLongNVarCharVal",
+                "Some Long N Var Char Val",
+                "Text",
+                isVisible: true,
+                isRequired: false,
+                currentValue: apiRequestModel.RequestSomeLongNVarCharVal,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeTextVal",
+                "Some Text Val",
+                "Text",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeTextVal,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomePhoneNumber",
+                "Some Phone Number",
+                "Text",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomePhoneNumber,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSomeEmailAddress",
+                "Some Email Address",
+                "Text",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.RequestSomeEmailAddress,
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "requestSampleImageUploadFile",
+                "Sample Image Upload",
+                "File",
+                isVisible: true,
+                isRequired: false,
+                currentValue: "",
+                detailText: "Sample Details Text");
+
+            pageView = BuildFormField(sessionData, pageView, "someImageUrlVal",
+                "Some Image Url",
+                "Text",
+                isVisible: true,
+                isRequired: false,
+                currentValue: apiRequestModel.SomeImageUrlVal,
+                detailText: "Sample Details Text"); 
 
             return pageView;
         }

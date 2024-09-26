@@ -19,6 +19,7 @@ namespace FS.Farm.WebNavigator
             this.OrderByColumnName = string.Empty;
             this.OrderByDescending = false;
             this.PageName = string.Empty;
+            this.FormFieldProposedValues = new Dictionary<string, string>();
         }
 
         [Newtonsoft.Json.JsonProperty("sessionCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -32,10 +33,13 @@ namespace FS.Farm.WebNavigator
         [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool OrderByDescending { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("filters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Dictionary<string,string> Filters { get; set; }
+        [Newtonsoft.Json.JsonProperty("formFieldProposedValues", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Dictionary<string,string> FormFieldProposedValues { get; set; }
 
-          
+        [Newtonsoft.Json.JsonProperty("filters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Dictionary<string, string> Filters { get; set; }
+
+
     }
 }
 
