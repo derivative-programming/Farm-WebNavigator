@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace FS.Farm.WebNavigator.Services
 {
-    public class LandUserPlantMultiSelectToEditable  
+    public class LandUserPlantMultiSelectToNotEditable
     {
-        public LandUserPlantMultiSelectToEditable()
-        { 
-        }  
-
-        public async static Task<LandUserPlantMultiSelectToEditableResponse> GetResponse(APIClient aPIClient, Guid landCode)
+        public LandUserPlantMultiSelectToNotEditable()
         {
-            string url = $"/land-user-plant-multi-select-to-editable/{landCode.ToString()}";
+        }
 
-            LandUserPlantMultiSelectToEditableModel model = new LandUserPlantMultiSelectToEditableModel();
+        public async static Task<LandUserPlantMultiSelectToNotEditableResponse> GetResponse(APIClient aPIClient, Guid landCode)
+        {
+            string url = $"/land-user-plant-multi-select-to-not-editable/{landCode.ToString()}";
 
-            LandUserPlantMultiSelectToEditableResponse result = await aPIClient.PostAsync<LandUserPlantMultiSelectToEditableModel, LandUserPlantMultiSelectToEditableResponse>(url, model);
+            LandUserPlantMultiSelectToNotEditableModel model = new LandUserPlantMultiSelectToNotEditableModel();
+
+            LandUserPlantMultiSelectToNotEditableResponse result = await aPIClient.PostAsync<LandUserPlantMultiSelectToNotEditableModel, LandUserPlantMultiSelectToNotEditableResponse>(url, model);
 
             return result;
-        } 
+        }
 
-        public class LandUserPlantMultiSelectToEditableResponse
+        public class LandUserPlantMultiSelectToNotEditableResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
@@ -36,15 +36,13 @@ namespace FS.Farm.WebNavigator.Services
 
         }
 
-        private class LandUserPlantMultiSelectToEditableModel
+        private class LandUserPlantMultiSelectToNotEditableModel
         {
-
             [Newtonsoft.Json.JsonProperty("plantCodeListCsv", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string PlantCodeListCsv { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("landCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public Guid LandCode { get; set; }
 
-        } 
+        }
     }
 }
+

@@ -1015,50 +1015,55 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
 
             //  handle report row buttons 
+            {
+                if (commandText.Equals("updateLinkPlantCode", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "PlantUserDetails",
+                        rowData.UpdateLinkPlantCode);
 
-            if (commandText.Equals("updateLinkPlantCode", StringComparison.OrdinalIgnoreCase)) 
-                pagePointer = new PagePointer(
-                    "PlantUserDetails",
-                    rowData.UpdateLinkPlantCode);
+                if (commandText.Equals("deleteAsyncButtonLinkPlantCode", StringComparison.OrdinalIgnoreCase))
+                    if((await Services.PlantUserDelete.GetResponse(apiClient,rowData.DeleteAsyncButtonLinkPlantCode)).Success)
+                        pagePointer = new PagePointer(
+                            "LandPlantList",
+                            contextCode);
 
-            if (commandText.Equals("deleteAsyncButtonLinkPlantCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(  //TODO handle async objwf
-                    "LandPlantList",
-                    contextCode);
+                if (commandText.Equals("detailsLinkPlantCode", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "PlantUserDetails",
+                        rowData.DetailsLinkPlantCode);
 
-            if (commandText.Equals("detailsLinkPlantCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "PlantUserDetails",
-                    rowData.DetailsLinkPlantCode);
+                if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if ((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient, rowData.TestFileDownloadLinkPacCode)).Success)
+                        pagePointer = new PagePointer( 
+                            "LandPlantList",
+                            contextCode);
 
-            if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer( //TODO handle async objwf
-                    "LandPlantList",
-                    contextCode);
+                if (commandText.Equals("testConditionalFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if ((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient, rowData.TestConditionalFileDownloadLinkPacCode)).Success)
+                        pagePointer = new PagePointer( 
+                            "LandPlantList",
+                            contextCode);
 
-            if (commandText.Equals("testConditionalFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer( //TODO handle async objwf
-                    "LandPlantList",
-                    contextCode);
+                if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if ((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient, rowData.TestAsyncFlowReqLinkPacCode)).Success)
+                        pagePointer = new PagePointer( 
+                            "LandPlantList",
+                            contextCode);
 
-            if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer( //TODO handle async objwf
-                    "LandPlantList",
-                    contextCode);
+                if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if ((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient, rowData.TestConditionalAsyncFlowReqLinkPacCode)).Success)
+                        pagePointer = new PagePointer(  
+                            "LandPlantList",
+                            contextCode);
 
-            if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer( //TODO handle async objwf
-                    "LandPlantList",
-                    contextCode);
-
-            if (commandText.Equals("conditionalBtnExampleLinkPlantCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer( //TODO handle async objwf
-                    "LandPlantList",
-                    contextCode);
+                if (commandText.Equals("conditionalBtnExampleLinkPlantCode", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "PlantUserDetails",
+                        rowData.ConditionalBtnExampleLinkPlantCode);
+            }
 
             return pagePointer;
         }
-
 
         private PagePointer ProcessButtonCommand(
             string name,

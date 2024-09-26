@@ -123,6 +123,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle filter post
             PacUserDateGreaterThanFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
+            TableInfo tableInfo = new TableInfo();
+            tableInfo.OrderByColumnName = apiResponse.OrderByColumnName;
+            tableInfo.PageNumber = apiResponse.PageNumber;
+            tableInfo.OrderByDescending = apiResponse.OrderByDescending;
+            tableInfo.ItemCountPerPage = apiResponse.ItemCountPerPage;
+            tableInfo.TotalItemCount = apiResponse.RecordsTotal;
+
+            pageView.TableInfo = tableInfo;
+
             if (sessionData.Filters.ContainsKey("rowNumber"))
             {
                 int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
@@ -444,6 +453,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
+
+            //  handle report row buttons
+            {
+
+            }
 
             return pagePointer;
         }

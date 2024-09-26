@@ -639,38 +639,48 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             var rowData = apiResponse.Items.ToArray()[0];
-            if (commandText.Equals("updateButtonTextLinkPlantCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "PlantUserDetails",
-                    rowData.UpdateButtonTextLinkPlantCode);
-            if (commandText.Equals("randomPropertyUpdatesLinkPlantCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(  //TODO handle async objwf
-                    "PlantPlantList",
-                    contextCode);
-            if (commandText.Equals("backToDashboardLinkTacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "TacFarmDashboard",
-                    rowData.BackToDashboardLinkTacCode);
-            if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(  //TODO handle async objwf
-                    "PlantPacList",
-                    contextCode);
-            if (commandText.Equals("testConditionalAsyncFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(  //TODO handle async objwf
-                    "PlantPacList",
-                    contextCode);
-            if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(  //TODO handle async objwf
-                    "PlantPacList",
-                    contextCode);
-            if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(  //TODO handle async objwf
-                    "PlantPacList",
-                    contextCode);
-            if (commandText.Equals("conditionalBtnExampleLinkTacCode", StringComparison.OrdinalIgnoreCase))
-                pagePointer = new PagePointer(
-                    "TacFarmDashboard",
-                    rowData.ConditionalBtnExampleLinkTacCode);
+
+            //  handle report row buttons
+            {
+                if (commandText.Equals("updateButtonTextLinkPlantCode", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "PlantUserDetails",
+                        rowData.UpdateButtonTextLinkPlantCode);
+                if (commandText.Equals("randomPropertyUpdatesLinkPlantCode", StringComparison.OrdinalIgnoreCase))
+                    if((await Services.PlantUserPropertyRandomUpdate.GetResponse(apiClient,rowData.RandomPropertyUpdatesLinkPlantCode)).Success)
+                        pagePointer = new PagePointer(
+                            "PlantPlantList",
+                            contextCode);
+                if (commandText.Equals("backToDashboardLinkTacCode", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "TacFarmDashboard",
+                        rowData.BackToDashboardLinkTacCode);
+                if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient,rowData.TestFileDownloadLinkPacCode)).Success)
+                        pagePointer = new PagePointer(
+                            "PlantPacList",
+                            contextCode);
+                if (commandText.Equals("testConditionalAsyncFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient,rowData.TestConditionalAsyncFileDownloadLinkPacCode)).Success)
+                        pagePointer = new PagePointer(
+                            "PlantPacList",
+                            contextCode);
+                if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient,rowData.TestAsyncFlowReqLinkPacCode)).Success)
+                        pagePointer = new PagePointer(
+                            "PlantPacList",
+                            contextCode);
+                if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
+                    if((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient,rowData.TestConditionalAsyncFlowReqLinkPacCode)).Success)
+                        pagePointer = new PagePointer(
+                            "PlantPacList",
+                            contextCode);
+                if (commandText.Equals("conditionalBtnExampleLinkTacCode", StringComparison.OrdinalIgnoreCase))
+                    pagePointer = new PagePointer(
+                        "TacFarmDashboard",
+                        rowData.ConditionalBtnExampleLinkTacCode);
+            }
+
             return pagePointer;
         }
 
