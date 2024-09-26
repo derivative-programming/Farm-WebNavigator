@@ -135,6 +135,16 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle filter post
             LandPlantListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
+            //GENIF[visualizationType=Grid]Start
+            TableInfo tableInfo = new TableInfo();
+            tableInfo.OrderByColumnName = apiResponse.OrderByColumnName;
+            tableInfo.PageNumber = apiResponse.PageNumber;
+            tableInfo.OrderByDescending = apiResponse.OrderByDescending;
+            tableInfo.ItemCountPerPage = apiResponse.ItemCountPerPage;
+            tableInfo.TotalItemCount = apiResponse.RecordsTotal;
+
+            pageView.TableInfo = tableInfo;
+            //GENIF[visualizationType=Grid]End
 
 
             if (sessionData.Filters.ContainsKey("rowNumber"))
@@ -182,17 +192,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             pageView.TableFilters = sessionData.Filters;
 
-            //  handle report rows
-
-            //string json = JsonConvert.SerializeObject(apiResponse);
-
-            //pageView.PageData = json;
-
-            //TODO handle hidden columns
-
-            //TODO handle paging
-
-            //TODO handle sorting
+            //  handle report rows  
 
             //TODO handle filtering
 
@@ -591,6 +591,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 return pageView;
             }
+                    
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "sortOnColumn:[table header name]", Description = "Sort the table on a single column. requesting the same column again will change direction." }
+                );
+
+            return pageView;
 
             {
                 //PlantCode

@@ -64,6 +64,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 }
             }
 
+            if (commandText.StartsWith("ClearProposedValues", StringComparison.OrdinalIgnoreCase))
+            {
+                sessionData.FormFieldProposedValues.Clear();
+            }
+
             var initObjWFProcessor = new TacLoginInitObjWF();
 
             TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
@@ -85,6 +90,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pageView.AvailableCommands.Add(
                 new AvailableCommand { CommandText = "setFormFieldProposedValue:[field name]:[value (or empty to reset)]",
                     Description = "Give a particular form field a proposed value." }
+                );
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "ClearProposedValues", Description = "Clear all proposed values" }
                 );
 
             // handle objwf buttons
@@ -261,6 +270,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
             pagePointer = new PagePointer(_pageName, contextCode);
 
             if (commandText.StartsWith("setFormFieldProposedValue:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
+
+            if (commandText.Equals("ClearProposedValues", StringComparison.OrdinalIgnoreCase))
             {
                 return pagePointer;
             }

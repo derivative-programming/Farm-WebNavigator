@@ -35,20 +35,21 @@ namespace FS.Farm.WebNavigator
         [Newtonsoft.Json.JsonProperty("pageHeaders", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public List<PageHeader> PageHeaders { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("TableHeaders", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("tableHeaders", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Dictionary<string, string> TableHeaders { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("TableData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("tableData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public List<Dictionary<string, string>> TableData { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("TableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("tableFilters", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Dictionary<string, string> TableFilters { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("tableInfo", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TableInfo TableInfo { get; set; }
+
 
         [Newtonsoft.Json.JsonProperty("formFields", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public List<FormField> FormFields { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("pageData", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PageData { get; set; }
 
         [Newtonsoft.Json.JsonProperty("pageFooterText", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string PageFooterText { get; set; }

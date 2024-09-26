@@ -152,16 +152,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             //  handle report rows
 
-            //string json = JsonConvert.SerializeObject(apiResponse);
-
-            //pageView.PageData = json;
-
-            //TODO handle hidden columns
-
-            //TODO handle paging
-
-            //TODO handle sorting
-
             //TODO handle filtering
 
             // handle report buttons
@@ -368,6 +358,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 return pageView;
             }
+
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "sortOnColumn:[table header name]", Description = "Sort the table on a single column. requesting the same column again will change direction." }
+                );
+
+            return pageView;
 
             {
                 pageView = BuildAvailableCommandForSortOnColumn(pageView, "flavorName",
