@@ -105,6 +105,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle filter post
             TacFarmDashboardListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
+            if (sessionData.Filters.ContainsKey("rowNumber"))
+            {
+                int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
+
+                int rowNumberToSelect = 0;
+
+                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+
+                TacFarmDashboardListModelItem selectedItem = null;
+
+                foreach (var rowData in apiResponse.Items)
+                {
+
+                    if (rowNumberToSelect > 0)
+                    {
+                        if (rowNumber == rowNumberToSelect)
+                        {
+                            selectedItem = rowData;
+                        }
+                    }
+
+                    rowNumber++;
+                }
+
+                if (selectedItem != null)
+                {
+                    apiResponse.Items.Clear();
+
+                    apiResponse.Items.Add(selectedItem);
+                }
+            }
+
             pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
 
             pageView = BuildTableHeaders(pageView);
@@ -161,28 +193,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
 
-            int rowNumberToSelect = 0;
-
-            if (sessionData.Filters.ContainsKey("rowNumber"))
-            {
-                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
-            }
-
             foreach (var rowData in apiResponse.Items)
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
                 rowDict.Add("rowNumber", rowNumber.ToString());
 
-                if(rowNumberToSelect > 0)
-                {
-                    if(rowNumber == rowNumberToSelect)
-                    tableData.Add(rowDict);
-                }
-                else
-                {
-                    tableData.Add(rowDict);
-                }
+                tableData.Add(rowDict);
 
                 rowNumber++;
             }
@@ -234,17 +251,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             return pageView;
         }
-        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, TacFarmDashboardListModel apiResponse)
-        {
-            if (apiResponse == null ||
-                apiResponse.Items == null ||
-                apiResponse.Items.Count == 0)
-            {
-                return pageView;
-            }
 
-            return pageView;
-        }
         public PageView BuildAvailableCommandsForReportRowButtons(PageView pageView, TacFarmDashboardListModel apiResponse)
         {
             if (apiResponse == null ||
@@ -378,6 +385,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
             MergeProperties(apiRequestModel, postData);
 
             TacFarmDashboardListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+
+            if (sessionData.Filters.ContainsKey("rowNumber"))
+            {
+                int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
+
+                int rowNumberToSelect = 0;
+
+                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+
+                TacFarmDashboardListModelItem selectedItem = null;
+
+                foreach (var rowDataItem in apiResponse.Items)
+                {
+
+                    if (rowNumberToSelect > 0)
+                    {
+                        if (rowNumber == rowNumberToSelect)
+                        {
+                            selectedItem = rowDataItem;
+                        }
+                    }
+
+                    rowNumber++;
+                }
+
+                if (selectedItem != null)
+                {
+                    apiResponse.Items.Clear();
+
+                    apiResponse.Items.Add(selectedItem);
+                }
+            }
 
             if (apiResponse == null ||
                 apiResponse.Items == null ||

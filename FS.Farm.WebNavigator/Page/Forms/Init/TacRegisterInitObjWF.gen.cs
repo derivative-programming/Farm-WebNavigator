@@ -59,10 +59,10 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             public string FirstName { get; set; }
             [Newtonsoft.Json.JsonProperty("lastName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string LastName { get; set; }
-            public string CurrentDateTimeHeaderVal { get; set; }
+            public DateTime CurrentDateTimeHeaderVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("validationError", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public ICollection<ValidationError> ValidationError { get; set; }
+            [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public ICollection<ValidationError> ValidationErrors { get; set; }
 
         }
 

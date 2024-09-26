@@ -105,6 +105,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //  handle filter post
             PlantUserDetailsListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
+            if (sessionData.Filters.ContainsKey("rowNumber"))
+            {
+                int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
+
+                int rowNumberToSelect = 0;
+
+                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+
+                PlantUserDetailsListModelItem selectedItem = null;
+
+                foreach (var rowData in apiResponse.Items)
+                {
+
+                    if (rowNumberToSelect > 0)
+                    {
+                        if (rowNumber == rowNumberToSelect)
+                        {
+                            selectedItem = rowData;
+                        }
+                    }
+
+                    rowNumber++;
+                }
+
+                if (selectedItem != null)
+                {
+                    apiResponse.Items.Clear();
+
+                    apiResponse.Items.Add(selectedItem);
+                }
+            }
+
             pageView.PageHeaders = initReportProcessor.GetPageHeaders(apiInitResponse);
 
             pageView = BuildTableHeaders(pageView);
@@ -227,28 +259,13 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
 
-            int rowNumberToSelect = 0;
-
-            if (sessionData.Filters.ContainsKey("rowNumber"))
-            {
-                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
-            }
-
             foreach (var rowData in apiResponse.Items)
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
                 rowDict.Add("rowNumber", rowNumber.ToString());
 
-                if(rowNumberToSelect > 0)
-                {
-                    if(rowNumber == rowNumberToSelect)
-                    tableData.Add(rowDict);
-                }
-                else
-                {
-                    tableData.Add(rowDict);
-                }
+                tableData.Add(rowDict);
 
                 rowNumber++;
             }
@@ -283,7 +300,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     value: rowData.SomeBitVal.ToString());
                 keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someDateVal",
                     isVisible: true,
-                    value: rowData.SomeDateVal.ToString());
+                    value: rowData.SomeDateVal.ToString("yyyy-MM-ddTHH:mm:ss"));
                 keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someDecimalVal",
                     isVisible: true,
                     value: rowData.SomeDecimalVal.ToString());
@@ -311,7 +328,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 //SomeUniqueidentifierVal
                 keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someUTCDateTimeVal",
                     isVisible: true,
-                    value: rowData.SomeUTCDateTimeVal.ToString());
+                    value: rowData.SomeUTCDateTimeVal.ToString("yyyy-MM-ddTHH:mm:ss"));
                 keyValuePairs = BuildTableDataCellValue(keyValuePairs, "someVarCharVal",
                     isVisible: true,
                     value: rowData.SomeVarCharVal.ToString());
@@ -432,17 +449,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             return pageView;
         }
-        public PageView BuildAvailableCommandsForReportPaging(PageView pageView, PlantUserDetailsListModel apiResponse)
-        {
-            if (apiResponse == null ||
-                apiResponse.Items == null ||
-                apiResponse.Items.Count == 0)
-            {
-                return pageView;
-            }
 
-            return pageView;
-        }
         public PageView BuildAvailableCommandsForReportRowButtons(PageView pageView, PlantUserDetailsListModel apiResponse)
         {
             if (apiResponse == null ||
@@ -593,6 +600,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             PlantUserDetailsListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
 
+            if (sessionData.Filters.ContainsKey("rowNumber"))
+            {
+                int rowNumber = (apiResponse.ItemCountPerPage * (apiResponse.PageNumber - 1)) + 1;
+
+                int rowNumberToSelect = 0;
+
+                rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+
+                PlantUserDetailsListModelItem selectedItem = null;
+
+                foreach (var rowDataItem in apiResponse.Items)
+                {
+
+                    if (rowNumberToSelect > 0)
+                    {
+                        if (rowNumber == rowNumberToSelect)
+                        {
+                            selectedItem = rowDataItem;
+                        }
+                    }
+
+                    rowNumber++;
+                }
+
+                if (selectedItem != null)
+                {
+                    apiResponse.Items.Clear();
+
+                    apiResponse.Items.Add(selectedItem);
+                }
+            }
+
             if (apiResponse == null ||
                 apiResponse.Items == null ||
                 apiResponse.Items.Count == 0 ||
@@ -719,7 +758,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             public bool SomeBitVal { get; set; }
             [Newtonsoft.Json.JsonProperty("someDateVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeDateVal { get; set; }
+            public DateTime SomeDateVal { get; set; }
             [Newtonsoft.Json.JsonProperty("someDecimalVal", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
             public string SomeDecimalVal { get; set; }

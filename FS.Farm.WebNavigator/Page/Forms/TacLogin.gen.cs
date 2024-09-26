@@ -78,6 +78,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
+            pageView.ValidationErrors = sessionData.ValidationErrors;
+
             pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);
 
             pageView.AvailableCommands.Add(
@@ -184,7 +186,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
                 if (validationErrorObj != null)
                 {
-                    validationError += validationErrorObj.Property;
+                    validationError += validationErrorObj.Message;
                 }
             }
 
@@ -294,10 +296,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             sessionData.ValidationErrors.Clear();
 
-            if(apiResponse.ValidationError != null &&
-                apiResponse.ValidationError.Count > 0)
+            if(apiResponse.ValidationErrors != null &&
+                apiResponse.ValidationErrors.Count > 0)
             {
-                foreach(ValidationError validationError in apiResponse.ValidationError)
+                foreach(ValidationError validationError in apiResponse.ValidationErrors)
                 {
                     sessionData.ValidationErrors.Add(
                         new ValidationError()
@@ -332,22 +334,22 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Message { get; set; }
-            [Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid CustomerCode { get; set; }
-            [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Email { get; set; }
-            [Newtonsoft.Json.JsonProperty("userCodeValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("userCodeValue", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid UserCodeValue { get; set; }
-            [Newtonsoft.Json.JsonProperty("uTCOffsetInMinutes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("uTCOffsetInMinutes", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public int UTCOffsetInMinutes { get; set; }
-            [Newtonsoft.Json.JsonProperty("roleNameCSVList", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("roleNameCSVList", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string RoleNameCSVList { get; set; }
-            [Newtonsoft.Json.JsonProperty("apiKey", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("apiKey", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ApiKey { get; set; }
             public string OutputSomeEmailAddress { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("validationError", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Collections.Generic.ICollection<ValidationError> ValidationError { get; set; }
+            [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }
 
         }
 

@@ -78,6 +78,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
+            pageView.ValidationErrors = sessionData.ValidationErrors;
+
             pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);
              
 
@@ -193,7 +195,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
                 if (validationErrorObj != null)
                 {
-                    validationError += validationErrorObj.Property;
+                    validationError += validationErrorObj.Message;
                 }
             }
 
@@ -465,10 +467,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             sessionData.ValidationErrors.Clear();
 
-            if(apiResponse.ValidationError != null &&
-                apiResponse.ValidationError.Count > 0)
+            if(apiResponse.ValidationErrors != null &&
+                apiResponse.ValidationErrors.Count > 0)
             {
-                foreach(ValidationError validationError in apiResponse.ValidationError)
+                foreach(ValidationError validationError in apiResponse.ValidationErrors)
                 {
                     sessionData.ValidationErrors.Add(
                         new ValidationError()
@@ -504,65 +506,65 @@ namespace FS.Farm.WebNavigator.Page.Forms
             [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Message { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputFlavorCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputFlavorCode", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid OutputFlavorCode { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputOtherFlavor", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputOtherFlavor", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputOtherFlavor { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeIntVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeIntVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public int OutputSomeIntVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeBigIntVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeBigIntVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public long OutputSomeBigIntVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeBitVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeBitVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public bool OutputSomeBitVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputIsEditAllowed", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputIsEditAllowed", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public bool OutputIsEditAllowed { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputIsDeleteAllowed", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputIsDeleteAllowed", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public bool OutputIsDeleteAllowed { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeFloatVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeFloatVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeFloatVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeDecimalVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeDecimalVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeDecimalVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeUTCDateTimeVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeUTCDateTimeVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public DateTime OutputSomeUTCDateTimeVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeDateVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeDateVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public DateTime OutputSomeDateVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeMoneyVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeMoneyVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeMoneyVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeNVarCharVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeNVarCharVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeNVarCharVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeVarCharVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeVarCharVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeVarCharVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomePhoneNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomePhoneNumber", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomePhoneNumber { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("landCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("landCode", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid LandCode { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeTextVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeTextVal", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeTextVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("plantCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("plantCode", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid PlantCode { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("outputSomeEmailAddress", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [Newtonsoft.Json.JsonProperty("outputSomeEmailAddress", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string OutputSomeEmailAddress { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("validationError", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Collections.Generic.ICollection<ValidationError> ValidationError { get; set; } 
+            [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; } 
 
         }
          

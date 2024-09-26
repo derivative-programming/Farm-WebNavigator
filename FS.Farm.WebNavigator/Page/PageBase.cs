@@ -76,7 +76,7 @@ namespace FS.Farm.WebNavigator.Page
             {
                 foreach (var targetProp in targetProperties)
                 {
-                    if (targetProp.Name == sourceProp.Key && targetProp.CanWrite)
+                    if (targetProp.Name.Equals(sourceProp.Key,StringComparison.OrdinalIgnoreCase) && targetProp.CanWrite)
                     {
                         // Convert the JsonElement to the target property type and set the value
                         object? value = sourceProp.Value.Deserialize(targetProp.PropertyType);

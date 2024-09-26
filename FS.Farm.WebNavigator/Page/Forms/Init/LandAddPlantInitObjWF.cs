@@ -33,10 +33,10 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
                 result.Add(new PageHeader("Land Name", apiResponse.LandName));
 
             if(currentDateHeaderValHeaderIsVisible) //currentDateHeaderVal
-                result.Add(new PageHeader("Current Date", apiResponse.CurrentDateHeaderVal));
+                result.Add(new PageHeader("Current Date", apiResponse.CurrentDateHeaderVal.ToString("yyyy-MM-dd")));
 
             if (currentDateTimeHeaderValHeaderIsVisible) //currentDateTimeHeaderVal
-                result.Add(new PageHeader("Current Date/Time", apiResponse.CurrentDateTimeHeaderVal));
+                result.Add(new PageHeader("Current Date/Time", apiResponse.CurrentDateTimeHeaderVal.ToString("yyyy-MM-ddTHH:mm:ss")));
 
             return result;
         }
@@ -116,13 +116,13 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             public string RequestSomeLongNVarCharVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("currentDateHeaderVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string CurrentDateHeaderVal { get; set; }
+            public DateTime CurrentDateHeaderVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("currentDateTimeHeaderVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string CurrentDateTimeHeaderVal { get; set; }
+            public DateTime CurrentDateTimeHeaderVal { get; set; }
 
-            [Newtonsoft.Json.JsonProperty("validationError", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public ICollection<ValidationError> ValidationError { get; set; }
+            [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public ICollection<ValidationError> ValidationErrors { get; set; }
 
         }
 
