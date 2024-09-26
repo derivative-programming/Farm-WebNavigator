@@ -20,6 +20,7 @@ namespace FS.Farm.WebNavigator
             this.OrderByDescending = false;
             this.PageName = string.Empty;
             this.FormFieldProposedValues = new Dictionary<string, string>();
+            this.ValidationErrors = new List<ValidationError>();
         }
 
         [Newtonsoft.Json.JsonProperty("sessionCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -38,6 +39,9 @@ namespace FS.Farm.WebNavigator
 
         [Newtonsoft.Json.JsonProperty("filters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Dictionary<string, string> Filters { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public List<ValidationError> ValidationErrors { get; set; }
 
 
     }

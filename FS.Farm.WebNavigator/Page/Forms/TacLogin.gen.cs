@@ -9,6 +9,8 @@ using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using FS.Farm.WebNavigator.Page;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -24,11 +26,42 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             var pageView = new PageView();
 
+            if (!sessionData.PageName.Equals(_pageName, StringComparison.OrdinalIgnoreCase))
+            {
+                //new page, clear filters
+                sessionData.Filters.Clear();
+                sessionData.ValidationErrors.Clear();
+                sessionData.FormFieldProposedValues.Clear();
+            }
+
             pageView.PageTitleText = "Log In";
             pageView.PageIntroText = "Please enter your email and password.";
             pageView.PageFooterText = "";
 
             pageView = AddDefaultAvailableCommands(pageView);
+
+            if (commandText.StartsWith("setFormFieldProposedValue:", StringComparison.OrdinalIgnoreCase))
+            {
+                string formFieldName = commandText.Split(':')[1];
+                string formFieldProposedValue = commandText.Split(':')[2];
+
+                if (formFieldName.Trim().Length == 0)
+                {
+                    if (sessionData.FormFieldProposedValues.ContainsKey(formFieldName))
+                        sessionData.FormFieldProposedValues.Remove(formFieldName);
+                }
+                else
+                {
+                    if (sessionData.Filters.ContainsKey(formFieldName))
+                    {
+                        sessionData.Filters[formFieldName] = formFieldProposedValue;
+                    }
+                    else
+                    {
+                        sessionData.Filters.Add(formFieldName, formFieldProposedValue);
+                    }
+                }
+            }
 
             var initObjWFProcessor = new TacLoginInitObjWF();
 
@@ -44,9 +77,12 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
-            //  handle return of form
+            pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);
 
-            //TODO handle hidden controls
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "setFormFieldProposedValue:[field name]:[value (or empty to reset)]",
+                    Description = "Give a particular form field a proposed value." }
+                );
 
             // handle objwf buttons
             {
@@ -66,6 +102,71 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.TableHeaders = null;
 
+            return pageView;
+        }
+
+        public PageView BuildFormField(
+            SessionData sessionData,
+            PageView pageView,
+            string name,
+            string label,
+            string dataType,
+            bool isVisible = true,
+            bool isRequired = true,
+            string currentValue = "",
+            string proposedValue = "",
+            string detailText = "")
+        {
+            if(!isVisible)
+                return pageView;
+
+            if (dataType == "Password")
+                return pageView;
+
+            if ((dataType == "File"))
+                return pageView;
+
+            if (sessionData.FormFieldProposedValues.ContainsKey(name))
+                proposedValue = sessionData.FormFieldProposedValues[name];
+            else
+                proposedValue = currentValue;
+
+            FormField formField = new FormField
+            {
+                Name = name,
+                Label = label,
+                DataType = dataType,
+                DetailText = detailText,
+                CurrentValue = currentValue,
+                ProposedValue = proposedValue,
+                isRequiredField = isRequired,
+                ValidationErrorText = ""
+            };
+
+            pageView.FormFields.Add(formField);
+
+            return pageView;
+        }
+
+        public PageView BuildFormFields(SessionData sessionData,
+            PageView pageView,
+            TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse,
+            TacLoginPostModel apiRequestModel)
+        {
+            pageView = BuildFormField(sessionData, pageView, "email",
+                "Email",
+                "Text",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.Email,
+                detailText: "");
+            pageView = BuildFormField(sessionData, pageView, "password",
+                "Password",
+                "Password",
+                isVisible: true,
+                isRequired: true,
+                currentValue: apiRequestModel.Password,
+                detailText: "");
             return pageView;
         }
 
@@ -99,6 +200,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             //  handle objwf buttons
             pagePointer = new PagePointer(_pageName, contextCode);
+
+            if (commandText.StartsWith("setFormFieldProposedValue:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
             if (commandText.Equals("SubmitButton",StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(
                     "TacFarmDashboard",

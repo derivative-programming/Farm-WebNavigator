@@ -21,10 +21,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             var pageView = new PageView();
 
-            if(!sessionData.PageName.Equals("PacUserRoleList",StringComparison.OrdinalIgnoreCase))
+            if(!sessionData.PageName.Equals(_pageName, StringComparison.OrdinalIgnoreCase))
             {
                 //new page, clear filters
                 sessionData.Filters.Clear();
+                sessionData.ValidationErrors.Clear();
+                sessionData.FormFieldProposedValues.Clear();
             }
 
             pageView.PageTitleText = "Pac User Role List Report";

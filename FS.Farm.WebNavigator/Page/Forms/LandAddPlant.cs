@@ -26,11 +26,43 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             var pageView = new PageView();
 
+            if (!sessionData.PageName.Equals(_pageName, StringComparison.OrdinalIgnoreCase))
+            {
+                //new page, clear filters
+                sessionData.Filters.Clear();
+                sessionData.ValidationErrors.Clear();
+                sessionData.FormFieldProposedValues.Clear();
+            }
+
             pageView.PageTitleText = "Add PlantAdd plant form title text"; 
             pageView.PageIntroText = "Add plant intro text.Add plant form intro text";  
             pageView.PageFooterText = "Add plant form footer text";  
 
             pageView = AddDefaultAvailableCommands(pageView);
+
+
+            if (commandText.StartsWith("setFormFieldProposedValue:", StringComparison.OrdinalIgnoreCase))
+            {
+                string formFieldName = commandText.Split(':')[1];
+                string formFieldProposedValue = commandText.Split(':')[2];
+
+                if (formFieldName.Trim().Length == 0)
+                {
+                    if (sessionData.FormFieldProposedValues.ContainsKey(formFieldName))
+                        sessionData.FormFieldProposedValues.Remove(formFieldName);
+                }
+                else
+                {
+                    if (sessionData.Filters.ContainsKey(formFieldName))
+                    {
+                        sessionData.Filters[formFieldName] = formFieldProposedValue;
+                    }
+                    else
+                    {
+                        sessionData.Filters.Add(formFieldName, formFieldProposedValue);
+                    }
+                }
+            }
 
             var initObjWFProcessor = new LandAddPlantInitObjWF();
 
@@ -46,11 +78,14 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.PageHeaders = initObjWFProcessor.GetPageHeaders(apiInitResponse);
 
-            pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);    
+            pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);
+             
 
-            //  handle return of form  
+            pageView.AvailableCommands.Add(
+                new AvailableCommand { CommandText = "setFormFieldProposedValue:[field name]:[value (or empty to reset)]", 
+                    Description = "Give a particular form field a proposed value." }
+                );
 
-            //TODO handle hidden controls
 
             // handle objwf buttons 
             {
@@ -107,6 +142,18 @@ namespace FS.Farm.WebNavigator.Page.Forms
             else
                 proposedValue = currentValue;
 
+            string validationError = string.Empty;
+
+            if(sessionData.ValidationErrors != null)
+            {
+                var validationErrorObj = sessionData.ValidationErrors.Find(x => x.Property.Equals(name,StringComparison.OrdinalIgnoreCase));
+
+                if (validationErrorObj != null)
+                {
+                    validationError += validationErrorObj.Property;
+                }
+            }
+
             FormField formField = new FormField
             {
                 Name = name,
@@ -115,8 +162,12 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 DetailText = detailText,
                 CurrentValue = currentValue,
                 ProposedValue = proposedValue,
-                isRequiredField = isRequired
+                isRequiredField = isRequired,
+                ValidationErrorText = validationError
             };
+
+            pageView.FormFields.Add(formField);
+
             return pageView;
         }
 
@@ -325,7 +376,12 @@ namespace FS.Farm.WebNavigator.Page.Forms
             //TODO handle post of form - with val errors
 
             //  handle objwf buttons
-            pagePointer = new PagePointer(_pageName, contextCode);
+            pagePointer = new PagePointer(_pageName, contextCode); 
+
+            if (commandText.StartsWith("setFormFieldProposedValue:", StringComparison.OrdinalIgnoreCase))
+            {
+                return pagePointer;
+            }
 
             if (commandText.Equals("SubmitButton",StringComparison.OrdinalIgnoreCase))
                 pagePointer = new PagePointer(

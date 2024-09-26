@@ -21,10 +21,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             var pageView = new PageView();
 
-            if(!sessionData.PageName.Equals("PlantUserDetails",StringComparison.OrdinalIgnoreCase))
+            if(!sessionData.PageName.Equals(_pageName, StringComparison.OrdinalIgnoreCase))
             {
                 //new page, clear filters
                 sessionData.Filters.Clear();
+                sessionData.ValidationErrors.Clear();
+                sessionData.FormFieldProposedValues.Clear();
             }
 
             pageView.PageTitleText = "Plant Details";
