@@ -23,9 +23,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             _pageName = "LandAddPlant";
 
-            this.IsAutoSubmit = false;
-
-            this.AutoCommandText = "SubmitButton";
+            this.IsAutoSubmit = false; 
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

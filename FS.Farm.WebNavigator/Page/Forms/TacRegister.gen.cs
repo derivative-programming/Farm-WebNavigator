@@ -24,7 +24,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             _pageName = "TacRegister";
 
             this.IsAutoSubmit = false;
-            this.AutoCommandText = "SubmitButton";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

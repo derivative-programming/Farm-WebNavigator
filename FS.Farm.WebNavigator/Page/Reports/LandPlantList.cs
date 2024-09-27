@@ -18,9 +18,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
             _pageName = "LandPlantList";
 
-            this.IsAutoSubmit = false;
-
-            this.AutoCommandText = "";
+            this.IsAutoSubmit = false; 
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

@@ -19,8 +19,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             _pageName = "TacFarmDashboard";
 
             this.IsAutoSubmit = false;
-
-            this.AutoCommandText = "";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

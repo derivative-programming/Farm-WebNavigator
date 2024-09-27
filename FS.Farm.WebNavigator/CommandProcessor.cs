@@ -81,11 +81,13 @@ namespace FS.Farm.WebNavigator
             await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, sessionDataJson);
              
             //if page being viewed is auto submit, auto submit the preferred command
-            if(destinationPageProcessor.IsAutoSubmit && depth < 3)
+            if(destinationPageProcessor.IsAutoSubmit && 
+                result.AvailableCommands.Where(x => x.CommandText.Contains("submit",StringComparison.OrdinalIgnoreCase)).Count() > 0 &&
+                depth < 3 )
             {
                 PagePostModel autoSubmitModel = new PagePostModel();
 
-                autoSubmitModel.CommandText = destinationPageProcessor.AutoCommandText;
+                autoSubmitModel.CommandText = result.AvailableCommands.Where(x => x.CommandText.Contains("submit", StringComparison.OrdinalIgnoreCase)).ToList()[0].CommandText;
 
                 depth++;
 

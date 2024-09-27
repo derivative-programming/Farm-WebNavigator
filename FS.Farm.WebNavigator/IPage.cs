@@ -8,8 +8,7 @@ namespace FS.Farm.WebNavigator
 {
     public interface IPage
     {
-        public bool IsAutoSubmit { get; }
-        public string AutoCommandText {  get; }
+        public bool IsAutoSubmit { get; } 
         Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "");
 
          Task<PagePointer> ProcessCommand(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText);
