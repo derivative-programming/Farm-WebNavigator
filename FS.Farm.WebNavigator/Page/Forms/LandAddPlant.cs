@@ -85,7 +85,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.ValidationErrors = sessionData.ValidationErrors;
 
-            pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);
+            pageView = await BuildFormFields(apiClient, sessionData, pageView, apiInitResponse, apiRequestModel);
              
 
             pageView.AvailableCommands.Add(
@@ -139,7 +139,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
             return pageView;
         }
 
-        public PageView BuildFormField(
+        public async Task<PageView> BuildFormField(
+            APIClient apiClient,
             SessionData sessionData,
             PageView pageView,
             string name,
@@ -149,7 +150,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
             bool isRequired = true,
             string currentValue = "",
             string proposedValue = "",
-            string detailText = "")
+            string detailText = "",
+            bool isFKList = false,
+            bool isFKLookup = false,
+            string fkObjectName = "")
         {
             if(!isVisible)
                 return pageView;
@@ -230,28 +234,41 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 CurrentValue = currentValue,
                 ProposedValue = proposedValue,
                 isRequiredField = isRequired,
-                ValidationErrorText = validationError
+                ValidationErrorText = validationError,
+                LookupItems = null
             };
+
+            if (isFKLookup)
+            {
+                formField.LookupItems = new List<LookupItem>();
+
+                formField.LookupItems = await LookupFactory.GetLookupItems(apiClient, fkObjectName);
+            }
 
             pageView.FormFields.Add(formField);
 
             return pageView;
         }
 
-        public PageView BuildFormFields(SessionData sessionData, 
+        public async Task<PageView> BuildFormFields(
+            APIClient apiClient,
+            SessionData sessionData, 
             PageView pageView,
             LandAddPlantInitObjWF.LandAddPlantGetInitResponse apiInitResponse,
             LandAddPlantPostModel apiRequestModel)
         {
-            pageView = BuildFormField(sessionData,pageView, "requestFlavorCode",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestFlavorCode",
                 "Select A Flavor",
                 "Guid",
                 isVisible: true,
                 isRequired: true,
                 currentValue: apiRequestModel.RequestFlavorCode.ToString(),
-                detailText: "Sample Details Text");
+                detailText: "Sample Details Text",
+                isFKList: true,
+                isFKLookup: true,
+                fkObjectName: "Flavor");
 
-            pageView = BuildFormField(sessionData, pageView, "requestOtherFlavor",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestOtherFlavor",
                 "Other Flavor",
                 "Text",
                 isVisible: true,
@@ -259,7 +276,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestOtherFlavor,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeIntVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeIntVal",
                 "Some Int Val",
                 "Number",
                 isVisible: true,
@@ -267,7 +284,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeIntVal.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeBigIntVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeBigIntVal",
                 "Some Big Int Val",
                 "Number",
                 isVisible: true,
@@ -275,7 +292,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeBigIntVal.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeBitVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeBitVal",
                 "Some Bit Val",
                 "Boolean",
                 isVisible: true,
@@ -283,7 +300,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeBitVal.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestIsEditAllowed",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestIsEditAllowed",
                 "Is Edit Allowed",
                 "Boolean",
                 isVisible: true,
@@ -291,7 +308,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestIsEditAllowed.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestIsDeleteAllowed",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestIsDeleteAllowed",
                 "Is Delete Allowed",
                 "Boolean",
                 isVisible: true,
@@ -299,7 +316,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestIsDeleteAllowed.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeFloatVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeFloatVal",
                 "Some Float Val",
                 "Number",
                 isVisible: true,
@@ -307,7 +324,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeFloatVal.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeDecimalVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeDecimalVal",
                 "Some Decimal Val",
                 "Number",
                 isVisible: true,
@@ -315,7 +332,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeDecimalVal.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeUTCDateTimeVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeUTCDateTimeVal",
                 "Some UTC Date Time Val",
                 "DateTime",
                 isVisible: true,
@@ -323,7 +340,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeUTCDateTimeVal.ToString("yyyy-MM-ddTHH:mm:ss"),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeDateVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeDateVal",
                 "Some Date Val",
                 "Date",
                 isVisible: true,
@@ -331,7 +348,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeDateVal.ToString("yyyy-MM-ddTHH:mm:ss"),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeMoneyVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeMoneyVal",
                 "Some Money Val",
                 "Number",
                 isVisible: true,
@@ -339,7 +356,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeMoneyVal.ToString(),
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeNVarCharVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeNVarCharVal",
                 "Some N Var Char Val",
                 "Text",
                 isVisible: true,
@@ -347,7 +364,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeNVarCharVal,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeVarCharVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeVarCharVal",
                 "Some Secure Var Char Val",
                 "Password",
                 isVisible: true,
@@ -355,7 +372,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeVarCharVal,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeLongVarCharVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeLongVarCharVal",
                 "Some Long Var Char Val",
                 "Text",
                 isVisible: true,
@@ -363,7 +380,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeLongVarCharVal,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeLongNVarCharVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeLongNVarCharVal",
                 "Some Long N Var Char Val",
                 "Text",
                 isVisible: true,
@@ -371,7 +388,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeLongNVarCharVal,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeTextVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeTextVal",
                 "Some Text Val",
                 "Text",
                 isVisible: true,
@@ -379,7 +396,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeTextVal,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomePhoneNumber",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomePhoneNumber",
                 "Some Phone Number",
                 "Text",
                 isVisible: true,
@@ -387,7 +404,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomePhoneNumber,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSomeEmailAddress",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSomeEmailAddress",
                 "Some Email Address",
                 "Text",
                 isVisible: true,
@@ -395,7 +412,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: apiRequestModel.RequestSomeEmailAddress,
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "requestSampleImageUploadFile",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "requestSampleImageUploadFile",
                 "Sample Image Upload",
                 "File",
                 isVisible: true,
@@ -403,7 +420,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 currentValue: "",
                 detailText: "Sample Details Text");
 
-            pageView = BuildFormField(sessionData, pageView, "someImageUrlVal",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "someImageUrlVal",
                 "Some Image Url",
                 "Text",
                 isVisible: true,

@@ -35,7 +35,7 @@ namespace FS.Farm.WebNavigator.Page
                         result.Add(new LookupItem() { Label = item.DateGreaterThanFilterName, Value = item.DateGreaterThanFilterCode.ToString() });
                     }
                     break;
-                //GENLearn[modelType=object,name=DateGreaterThan,isLookup=true]End  
+                //GENLearn[modelType=object,name=DateGreaterThanFilter,isLookup=true]End  
                 case "Flavor":
                     PacUserFlavorList.PacUserFlavorListListRequest pacUserFlavorListListRequest =
                         new PacUserFlavorList.PacUserFlavorListListRequest();

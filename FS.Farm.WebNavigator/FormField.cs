@@ -33,6 +33,9 @@ namespace FS.Farm.WebNavigator
         [Newtonsoft.Json.JsonProperty("isRequiredField", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool isRequiredField { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("lookupItems", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public List<LookupItem> LookupItems { get; set; }
+
         [Newtonsoft.Json.JsonProperty("validationErrorText", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ValidationErrorText { get; set; }
 
