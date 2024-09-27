@@ -85,7 +85,7 @@ namespace FS.Farm.WebNavigator
             {
                 PagePostModel autoSubmitModel = new PagePostModel();
 
-                autoSubmitModel.CommandText = destinationPageProcessor.AutoSubmitCommand;
+                autoSubmitModel.CommandText = destinationPageProcessor.AutoCommandText;
 
                 depth++;
 

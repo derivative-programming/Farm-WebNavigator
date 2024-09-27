@@ -20,7 +20,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             this.IsAutoSubmit = false;
 
-            this.AutoSubmitCommand = "";
+            this.AutoCommandText = "";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

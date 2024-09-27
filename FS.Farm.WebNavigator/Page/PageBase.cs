@@ -15,7 +15,7 @@ namespace FS.Farm.WebNavigator.Page
         protected string _pageName = string.Empty; 
         public bool IsAutoSubmit { get; set; }
 
-        public string AutoSubmitCommand { get; set; }
+        public string AutoCommandText { get; set; }
 
         protected PageView AddDefaultAvailableCommands(PageView pageView)
         {
