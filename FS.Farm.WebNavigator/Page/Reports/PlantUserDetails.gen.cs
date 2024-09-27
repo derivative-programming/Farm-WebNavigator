@@ -708,7 +708,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 if (commandText.Equals("randomPropertyUpdatesLinkPlantCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PlantUserPropertyRandomUpdate.GetResponse(apiClient,rowData.RandomPropertyUpdatesLinkPlantCode)).Success)
                         pagePointer = new PagePointer(
-                            "PlantPlantList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("backToDashboardLinkTacCode", StringComparison.OrdinalIgnoreCase))
                     pagePointer = new PagePointer(
@@ -717,22 +717,22 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient,rowData.TestFileDownloadLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "PlantPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("testConditionalAsyncFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient,rowData.TestConditionalAsyncFileDownloadLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "PlantPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient,rowData.TestAsyncFlowReqLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "PlantPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient,rowData.TestConditionalAsyncFlowReqLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "PlantPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("conditionalBtnExampleLinkTacCode", StringComparison.OrdinalIgnoreCase))
                     pagePointer = new PagePointer(

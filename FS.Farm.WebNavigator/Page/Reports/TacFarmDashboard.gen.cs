@@ -498,22 +498,22 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 if (commandText.Equals("testFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient,rowData.TestFileDownloadLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "TacPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("testConditionalFileDownloadLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFileDownload.GetResponse(apiClient,rowData.TestConditionalFileDownloadLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "TacPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("testAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient,rowData.TestAsyncFlowReqLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "TacPacList",
+                            _pageName,
                             contextCode);
                 if (commandText.Equals("testConditionalAsyncFlowReqLinkPacCode", StringComparison.OrdinalIgnoreCase))
                     if((await Services.PacUserTestAsyncFlowReq.GetResponse(apiClient,rowData.TestConditionalAsyncFlowReqLinkPacCode)).Success)
                         pagePointer = new PagePointer(
-                            "TacPacList",
+                            _pageName,
                             contextCode);
             }
 
