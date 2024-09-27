@@ -85,7 +85,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             pageView.ValidationErrors = sessionData.ValidationErrors;
 
-            pageView = BuildFormFields(sessionData, pageView, apiInitResponse, apiRequestModel);
+            pageView = await BuildFormFields(apiClient, sessionData, pageView, apiInitResponse, apiRequestModel);
 
             pageView.AvailableCommands.Add(
                 new AvailableCommand { CommandText = "setFormFieldProposedValue:[field name]:[value (or empty to reset)]",
@@ -120,7 +120,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
             return pageView;
         }
 
-        public PageView BuildFormField(
+        public async Task<PageView> BuildFormField(
+            APIClient apiClient,
             SessionData sessionData,
             PageView pageView,
             string name,
@@ -130,7 +131,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
             bool isRequired = true,
             string currentValue = "",
             string proposedValue = "",
-            string detailText = "")
+            string detailText = "",
+            bool isFKList = false,
+            bool isFKLookup = false,
+            string fkObjectName = "")
         {
             if(!isVisible)
                 return pageView;
@@ -211,48 +215,58 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 CurrentValue = currentValue,
                 ProposedValue = proposedValue,
                 isRequiredField = isRequired,
-                ValidationErrorText = validationError
+                ValidationErrorText = validationError,
+                LookupItems = null
             };
+
+            if (isFKLookup)
+            {
+                formField.LookupItems = new List<LookupItem>();
+
+                formField.LookupItems = await LookupFactory.GetLookupItems(apiClient, fkObjectName);
+            }
 
             pageView.FormFields.Add(formField);
 
             return pageView;
         }
 
-        public PageView BuildFormFields(SessionData sessionData,
+        public async Task<PageView> BuildFormFields(
+            APIClient apiClient,
+            SessionData sessionData,
             PageView pageView,
             TacRegisterInitObjWF.TacRegisterGetInitResponse apiInitResponse,
             TacRegisterPostModel apiRequestModel)
         {
-            pageView = BuildFormField(sessionData, pageView, "email",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "email",
                 "Email",
                 "Text",
                 isVisible: true,
                 isRequired: true,
                 currentValue: apiRequestModel.Email,
                 detailText: "");
-            pageView = BuildFormField(sessionData, pageView, "password",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "password",
                 "Password",
                 "Password",
                 isVisible: true,
                 isRequired: true,
                 currentValue: apiRequestModel.Password,
                 detailText: "");
-            pageView = BuildFormField(sessionData, pageView, "confirmPassword",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "confirmPassword",
                 "Confirm Password",
                 "Password",
                 isVisible: true,
                 isRequired: true,
                 currentValue: apiRequestModel.ConfirmPassword,
                 detailText: "");
-            pageView = BuildFormField(sessionData, pageView, "firstName",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "firstName",
                 "First Name",
                 "Text",
                 isVisible: true,
                 isRequired: true,
                 currentValue: apiRequestModel.FirstName,
                 detailText: "");
-            pageView = BuildFormField(sessionData, pageView, "lastName",
+            pageView = await BuildFormField(apiClient, sessionData, pageView, "lastName",
                 "Last Name",
                 "Text",
                 isVisible: true,
