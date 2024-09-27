@@ -13,9 +13,14 @@ namespace FS.Farm.WebNavigator.Page.Reports
 {
     public class PacUserTriStateFilterList : PageBase, IPage
     {
+
         public PacUserTriStateFilterList()
         {
             _pageName = "PacUserTriStateFilterList";
+
+            this.IsAutoSubmit = false;
+
+            this.AutoSubmitCommand = "";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

@@ -22,6 +22,9 @@ namespace FS.Farm.WebNavigator.Page.Forms
         public TacRegister()
         {
             _pageName = "TacRegister";
+
+            this.IsAutoSubmit = false;
+            this.AutoSubmitCommand = "SubmitButton";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {
@@ -101,13 +104,15 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     "TacCode",
                     isVisible: true,
                     isEnabled: true,
-                    "Register");
+                    "Register"
+                    );
                 pageView = BuildAvailableCommandForObjWFButton(pageView, "CancelButton",
                     "TacLogin",
                     "TacCode",
                     isVisible: true,
                     isEnabled: true,
-                    "Back To Log In");
+                    "Back To Log In"
+                    );
 
             }
 

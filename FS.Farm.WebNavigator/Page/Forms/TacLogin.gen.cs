@@ -17,11 +17,14 @@ namespace FS.Farm.WebNavigator.Page.Forms
 {
     public class TacLogin : PageBase, IPage
     {
-        string _contextCodeName = "TacCode"; 
+        string _contextCodeName = "TacCode";
 
         public TacLogin()
         {
             _pageName = "TacLogin";
+
+            this.IsAutoSubmit = false;
+            this.AutoSubmitCommand = "SubmitButton";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {
@@ -101,13 +104,15 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     "TacCode",
                     isVisible: true,
                     isEnabled: true,
-                    "Log In");
+                    "Log In"
+                    );
                 pageView = BuildAvailableCommandForObjWFButton(pageView, "OtherButton",
                     "TacRegister",
                     "TacCode",
                     isVisible: true,
                     isEnabled: true,
-                    "Register");
+                    "Register"
+                    );
             }
 
             pageView.PageTable = null;

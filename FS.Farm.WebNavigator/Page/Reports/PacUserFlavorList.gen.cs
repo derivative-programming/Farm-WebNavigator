@@ -13,9 +13,14 @@ namespace FS.Farm.WebNavigator.Page.Reports
 {
     public class PacUserFlavorList : PageBase, IPage
     {
+
         public PacUserFlavorList()
         {
             _pageName = "PacUserFlavorList";
+
+            this.IsAutoSubmit = false;
+
+            this.AutoSubmitCommand = "";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

@@ -13,9 +13,14 @@ namespace FS.Farm.WebNavigator.Page.Reports
 {
     public class TacFarmDashboard : PageBase, IPage
     {
+
         public TacFarmDashboard()
         {
             _pageName = "TacFarmDashboard";
+
+            this.IsAutoSubmit = false;
+
+            this.AutoSubmitCommand = "";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {
