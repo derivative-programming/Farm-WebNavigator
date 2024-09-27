@@ -303,7 +303,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
                 return pagePointer;
             }
             if (commandText.Equals("SubmitButton",StringComparison.OrdinalIgnoreCase))
-                if(await TryFormSubmit(sessionData, apiClient, contextCode, apiInitResponse))
+                if(await TryFormSubmit(sessionData, apiClient, contextCode, apiInitResponse, navDictionary))
                     pagePointer = new PagePointer(
                         "TacFarmDashboard",
                         Guid.Parse(navDictionary["tacCode"].ToString()));
@@ -319,7 +319,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
             SessionData sessionData,
             APIClient apiClient,
             Guid contextCode,
-            TacRegisterInitObjWF.TacRegisterGetInitResponse apiInitResponse)
+            TacRegisterInitObjWF.TacRegisterGetInitResponse apiInitResponse,
+            Dictionary<string, object> navDictionary)
         {
             bool result = false;
 
@@ -347,6 +348,20 @@ namespace FS.Farm.WebNavigator.Page.Forms
                             Message = validationError.Message
                         }
                     );
+                }
+            }
+            else
+            {
+
+                // Convert apiResponse to a dictionary
+                string json = JsonConvert.SerializeObject(apiResponse);
+                JObject jsonObject = JObject.Parse(json);
+                var newItems = jsonObject.ToObject<Dictionary<string, object>>();
+
+                // Merge newItems into navDictionary
+                foreach (var kvp in newItems)
+                {
+                    navDictionary[kvp.Key] = kvp.Value;
                 }
             }
 
