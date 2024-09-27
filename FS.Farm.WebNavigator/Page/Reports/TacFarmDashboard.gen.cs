@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using FS.Farm.WebNavigator.Page.Reports.Init;
+using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -252,7 +253,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return keyValuePairs;
         }
 
-        public PageView BuildTableAvailableFilters(PageView pageView, TacFarmDashboardListModel apiResponse)
+        public async Task<PageView> BuildTableAvailableFilter(
+            APIClient apiClient,
+            PageView pageView,
+            string name,
+            bool isVisible,
+            string labelText,
+            string dataType,
+            bool isFKList,
+            string fkObjectName)
+        {
+            if (!isVisible)
+                return pageView;
+
+            var availableFilter = new TableAvailableFilter()
+            {
+                DataType = dataType,
+                Label = labelText,
+                Name = name,
+                LookupItems = null
+            };
+
+            if (isFKList)
+            {
+                availableFilter.LookupItems = await LookupFactory.GetLookupItems(apiClient, fkObjectName);
+            }
+
+            pageView.PageTable.tableAvailableFilters.Add(availableFilter);
+
+            return pageView;
+        }
+
+        public async Task<PageView> BuildTableAvailableFilters(APIClient apiClient, PageView pageView, TacFarmDashboardListModel apiResponse)
         {
             //if (apiResponse == null ||
             //    apiResponse.Items == null ||

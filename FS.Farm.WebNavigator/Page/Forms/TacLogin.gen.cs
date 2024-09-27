@@ -220,8 +220,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             if (isFKLookup)
             {
-                formField.LookupItems = new List<LookupItem>();
-
                 formField.LookupItems = await LookupFactory.GetLookupItems(apiClient, fkObjectName);
             }
 
