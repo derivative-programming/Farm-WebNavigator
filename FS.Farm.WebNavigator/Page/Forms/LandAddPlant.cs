@@ -573,8 +573,10 @@ namespace FS.Farm.WebNavigator.Page.Forms
             [Newtonsoft.Json.JsonProperty("plantCode", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid PlantCode { get; set; }
 
+
             [Newtonsoft.Json.JsonProperty("outputSomeEmailAddress", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OutputSomeEmailAddress { get; set; }
+            public string OutputSomeEmailAddress { get; set; } //outputSomeEmailAddress
+
 
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; } 
@@ -652,13 +654,14 @@ namespace FS.Farm.WebNavigator.Page.Forms
             public string SomeImageUrlVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("requestSomeLongNVarCharVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string RequestSomeLongNVarCharVal { get; set; }
+            public string RequestSomeLongNVarCharVal { get; set; } //requestSomeLongNVarCharVal
+
 
             [Newtonsoft.Json.JsonProperty("requestSomeLongVarCharVal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string RequestSomeLongVarCharVal { get; set; } 
 
-        }
-          
+
+        } 
          
     }
 }
