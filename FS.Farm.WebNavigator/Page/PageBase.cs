@@ -17,7 +17,10 @@ namespace FS.Farm.WebNavigator.Page
 
         protected PageView AddDefaultAvailableCommands(PageView pageView)
         {
-            pageView.AvailableCommands.Add(new AvailableCommand { CommandText = "MM", Description = "Go To Main Menu" });
+            if(_pageName != "MainMenu")
+            {
+                pageView.AvailableCommands.Add(new AvailableCommand { CommandText = "MM", Description = "Go To Main Menu" });
+            }
             pageView.AvailableCommands.Add(new AvailableCommand { CommandText = "RP", Description = "Refresh the current page" });
 
             return pageView;

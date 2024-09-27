@@ -239,9 +239,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             };
 
             if (isFKLookup)
-            {
-                formField.LookupItems = new List<LookupItem>();
-
+            { 
                 formField.LookupItems = await LookupFactory.GetLookupItems(apiClient, fkObjectName);
             }
 
@@ -259,7 +257,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
         {
             pageView = await BuildFormField(apiClient, sessionData, pageView, "requestFlavorCode",
                 "Select A Flavor",
-                "Guid",
+                "Lookup",
                 isVisible: true,
                 isRequired: true,
                 currentValue: apiRequestModel.RequestFlavorCode.ToString(),

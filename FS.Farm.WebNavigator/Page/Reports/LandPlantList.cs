@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using FS.Farm.WebNavigator.Page.Reports.Init;
+using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -216,7 +217,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             pageView = BuildTableData(sessionData, pageView, apiResponse);
 
             //GENIF[visualizationType=Grid]Start
-            pageView = BuildTableAvailableFilters(pageView, apiResponse);
+            pageView = await BuildTableAvailableFilters(apiClient, pageView, apiResponse);
 
             pageView = BuildAvailableCommandsForReportSort(pageView, apiResponse);
             //GENIF[visualizationType=Grid]End
@@ -627,7 +628,38 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
 
-        public PageView BuildTableAvailableFilters(PageView pageView, LandPlantListListModel apiResponse)
+        public async Task<PageView> BuildTableAvailableFilter(
+            APIClient apiClient, 
+            PageView pageView,
+            string name,
+            bool isVisible,
+            string labelText,
+            string dataType,
+            bool isFKList,
+            string fkObjectName)
+        {
+            if (!isVisible)
+                return pageView;
+
+            var availableFilter = new TableAvailableFilter()
+            {
+                DataType = dataType,
+                Label = labelText,
+                Name = name,
+                LookupItems = null
+            };
+
+            if (isFKList)
+            {  
+                availableFilter.LookupItems = await LookupFactory.GetLookupItems(apiClient, fkObjectName);
+            }
+
+            pageView.PageTable.tableAvailableFilters.Add(availableFilter);
+
+            return pageView;
+        }
+
+        public async Task<PageView> BuildTableAvailableFilters(APIClient apiClient, PageView pageView, LandPlantListListModel apiResponse)
         {
             //if (apiResponse == null ||
             //    apiResponse.Items == null ||
@@ -643,10 +675,12 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             { 
 
-                pageView = BuildTableAvailableFilter(pageView, "flavorFilterCode",
+                pageView = await BuildTableAvailableFilter(apiClient, pageView, "flavorFilterCode",
                     isVisible: true, 
                     labelText: "Select A Flavor",
-                    dataType:"Guid");
+                    dataType:"Lookup",
+                    isFKList: true,
+                    fkObjectName: "Flavor");
 
                 pageView = BuildTableAvailableFilter(pageView, "someFilterIntVal",
                     isVisible: true,
