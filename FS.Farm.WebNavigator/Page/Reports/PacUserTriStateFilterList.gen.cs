@@ -181,10 +181,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
-
                     apiResponse.Items.Add(selectedItem);
                 }
             }
@@ -251,7 +251,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
-                rowDict.Add("rowNumber", rowNumber.ToString());
+                if (sessionData.Filters.ContainsKey("rowNumber") && apiResponse.Items.Count == 1)
+                {
+                    int rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+                    rowDict.Add("rowNumber", rowNumberToSelect.ToString());
+                }
+                else
+                {
+                    rowDict.Add("rowNumber", rowNumber.ToString());
+                }
 
                 tableData.Add(rowDict);
 
@@ -375,15 +383,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "ClearFilters", Description = "Clear all filters" }
+                new AvailableCommand { CommandText = "clearFilters", Description = "Clear all filters" }
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "PageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
+                new AvailableCommand { CommandText = "pageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "RowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands may then be available for that row." }
+                new AvailableCommand { CommandText = "rowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands may then be available for that row." }
                 );
 
             {
@@ -484,9 +492,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
 
                     apiResponse.Items.Add(selectedItem);
                 }
@@ -578,32 +587,28 @@ namespace FS.Farm.WebNavigator.Page.Reports
         public class PacUserTriStateFilterListListModelItem
         {
             [Newtonsoft.Json.JsonProperty("triStateFilterCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterCode
             public System.Guid TriStateFilterCode { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterDescription", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterDescription
             public string TriStateFilterDescription { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterDisplayOrder", Required = Newtonsoft.Json.Required.Always)]
             public int TriStateFilterDisplayOrder { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterIsActive", Required = Newtonsoft.Json.Required.Always)]
             public bool TriStateFilterIsActive { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterLookupEnumName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterLookupEnumName
             public string TriStateFilterLookupEnumName { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterName
             public string TriStateFilterName { get; set; }
             [Newtonsoft.Json.JsonProperty("triStateFilterStateIntValue", Required = Newtonsoft.Json.Required.Always)]
             public int TriStateFilterStateIntValue { get; set; }
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeConditionalImageUrl { get; set; }
 
         }
 
         public class PacUserTriStateFilterListListRequest
         {
-
-            public System.Guid SomeFilterUniqueIdentifier { get; set; }
 
             [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.Always)]
             public int PageNumber { get; set; }

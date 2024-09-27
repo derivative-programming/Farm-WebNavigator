@@ -181,10 +181,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
-
                     apiResponse.Items.Add(selectedItem);
                 }
             }
@@ -251,7 +251,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
-                rowDict.Add("rowNumber", rowNumber.ToString());
+                if (sessionData.Filters.ContainsKey("rowNumber") && apiResponse.Items.Count == 1)
+                {
+                    int rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+                    rowDict.Add("rowNumber", rowNumberToSelect.ToString());
+                }
+                else
+                {
+                    rowDict.Add("rowNumber", rowNumber.ToString());
+                }
 
                 tableData.Add(rowDict);
 
@@ -375,15 +383,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "ClearFilters", Description = "Clear all filters" }
+                new AvailableCommand { CommandText = "clearFilters", Description = "Clear all filters" }
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "PageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
+                new AvailableCommand { CommandText = "pageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "RowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands may then be available for that row." }
+                new AvailableCommand { CommandText = "rowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands may then be available for that row." }
                 );
 
             {
@@ -484,9 +492,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
 
                     apiResponse.Items.Add(selectedItem);
                 }
@@ -578,33 +587,29 @@ namespace FS.Farm.WebNavigator.Page.Reports
         public class PacUserLandListListModelItem
         {
             [Newtonsoft.Json.JsonProperty("landCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //landCode
             public System.Guid LandCode { get; set; }
             [Newtonsoft.Json.JsonProperty("landDescription", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //landDescription
             public string LandDescription { get; set; }
             [Newtonsoft.Json.JsonProperty("landDisplayOrder", Required = Newtonsoft.Json.Required.Always)]
             public int LandDisplayOrder { get; set; }
             [Newtonsoft.Json.JsonProperty("landIsActive", Required = Newtonsoft.Json.Required.Always)]
             public bool LandIsActive { get; set; }
             [Newtonsoft.Json.JsonProperty("landLookupEnumName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //landLookupEnumName
             public string LandLookupEnumName { get; set; }
             [Newtonsoft.Json.JsonProperty("landName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //landName
             public string LandName { get; set; }
             [Newtonsoft.Json.JsonProperty("pacName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //pacName
             public string PacName { get; set; }
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeConditionalImageUrl { get; set; }
 
         }
 
         public class PacUserLandListListRequest
         {
-
-            public System.Guid SomeFilterUniqueIdentifier { get; set; }
 
             [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.Always)]
             public int PageNumber { get; set; }

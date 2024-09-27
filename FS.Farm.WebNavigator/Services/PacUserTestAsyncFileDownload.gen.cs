@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class PacUserTestAsyncFileDownloadModel
         {
 
-            public Guid PacCode { get; set; }
-
         }
     }
 }

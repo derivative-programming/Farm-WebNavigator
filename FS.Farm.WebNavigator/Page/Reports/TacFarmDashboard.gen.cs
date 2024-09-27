@@ -154,10 +154,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
-
                     apiResponse.Items.Add(selectedItem);
                 }
             }
@@ -210,7 +210,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
-                rowDict.Add("rowNumber", rowNumber.ToString());
+                if (sessionData.Filters.ContainsKey("rowNumber") && apiResponse.Items.Count == 1)
+                {
+                    int rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+                    rowDict.Add("rowNumber", rowNumberToSelect.ToString());
+                }
+                else
+                {
+                    rowDict.Add("rowNumber", rowNumber.ToString());
+                }
 
                 tableData.Add(rowDict);
 
@@ -452,9 +460,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
 
                     apiResponse.Items.Add(selectedItem);
                 }
@@ -573,34 +582,30 @@ namespace FS.Farm.WebNavigator.Page.Reports
         public class TacFarmDashboardListModelItem
         {
             [Newtonsoft.Json.JsonProperty("fieldOnePlantListLinkLandCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //fieldOnePlantListLinkLandCode
             public System.Guid FieldOnePlantListLinkLandCode { get; set; }
             [Newtonsoft.Json.JsonProperty("conditionalBtnExampleLinkLandCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //conditionalBtnExampleLinkLandCode
             public System.Guid ConditionalBtnExampleLinkLandCode { get; set; }
             [Newtonsoft.Json.JsonProperty("isConditionalBtnAvailable", Required = Newtonsoft.Json.Required.Always)]
             public bool IsConditionalBtnAvailable { get; set; }
             [Newtonsoft.Json.JsonProperty("testFileDownloadLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //testFileDownloadLinkPacCode
             public System.Guid TestFileDownloadLinkPacCode { get; set; }
             [Newtonsoft.Json.JsonProperty("testConditionalFileDownloadLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //testConditionalFileDownloadLinkPacCode
             public System.Guid TestConditionalFileDownloadLinkPacCode { get; set; }
             [Newtonsoft.Json.JsonProperty("testAsyncFlowReqLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //testAsyncFlowReqLinkPacCode
             public System.Guid TestAsyncFlowReqLinkPacCode { get; set; }
             [Newtonsoft.Json.JsonProperty("testConditionalAsyncFlowReqLinkPacCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //testConditionalAsyncFlowReqLinkPacCode
             public System.Guid TestConditionalAsyncFlowReqLinkPacCode { get; set; }
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeConditionalImageUrl { get; set; }
 
         }
 
         public class TacFarmDashboardListRequest
         {
-
-            public System.Guid SomeFilterUniqueIdentifier { get; set; }
 
             [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.Always)]
             public int PageNumber { get; set; }

@@ -7,7 +7,7 @@ namespace FS.Farm.WebNavigator
 {
     public class CommandProcessor
     {
-        public async Task<PageView> ProcessCommand(string apiKey, Guid sessionCode, PagePostModel requestModel)
+        public async Task<PageView> ProcessCommand(string apiKey, Guid sessionCode, PagePostModel requestModel, int depth = 0)
         {
             PageView result = new PageView();
 
@@ -80,7 +80,19 @@ namespace FS.Farm.WebNavigator
 
             await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, sessionDataJson);
              
-             
+            //if page being viewed is auto submit, auto submit the preferred command
+            if(destinationPageProcessor.IsAutoSubmit && depth < 3)
+            {
+                PagePostModel autoSubmitModel = new PagePostModel();
+
+                autoSubmitModel.CommandText = destinationPageProcessor.AutoSubmitCommand;
+
+                depth++;
+
+                return await ProcessCommand(apiKey, sessionCode, autoSubmitModel, depth);
+            }
+
+
 
             return result;
         }

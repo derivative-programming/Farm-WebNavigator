@@ -36,8 +36,6 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
             [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Message { get; set; }
 
-            public DateTime CurrentDateTimeHeaderVal { get; set; }
-
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }
 

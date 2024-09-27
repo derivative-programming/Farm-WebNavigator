@@ -40,7 +40,6 @@ namespace FS.Farm.WebNavigator.Services
         {
             [Newtonsoft.Json.JsonProperty("plantCodeListCsv", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string PlantCodeListCsv { get; set; }
-            public Guid LandCode { get; set; }
 
         }
     }

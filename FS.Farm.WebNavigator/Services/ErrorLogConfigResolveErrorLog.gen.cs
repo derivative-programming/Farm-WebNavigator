@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class ErrorLogConfigResolveErrorLogModel
         {
 
-            public Guid ErrorLogCode { get; set; }
-
         }
     }
 }

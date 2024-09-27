@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class PlantUserPropertyRandomUpdateModel
         {
 
-            public Guid PlantCode { get; set; }
-
         }
     }
 }

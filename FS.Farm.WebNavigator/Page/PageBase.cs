@@ -12,7 +12,10 @@ namespace FS.Farm.WebNavigator.Page
 {
     public class PageBase
     {
-        protected string _pageName = string.Empty;
+        protected string _pageName = string.Empty; 
+        public bool IsAutoSubmit { get; set; }
+
+        public string AutoSubmitCommand { get; set; }
 
         protected PageView AddDefaultAvailableCommands(PageView pageView)
         {

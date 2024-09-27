@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class CustomerBuildTempApiKeyModel
         {
 
-            public Guid CustomerCode { get; set; }
-
         }
     }
 }

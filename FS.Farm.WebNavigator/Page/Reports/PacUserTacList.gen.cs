@@ -181,10 +181,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
-
                     apiResponse.Items.Add(selectedItem);
                 }
             }
@@ -251,7 +251,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
             {
                 Dictionary<string, string> rowDict = BuildTableDataRow(rowData);
 
-                rowDict.Add("rowNumber", rowNumber.ToString());
+                if (sessionData.Filters.ContainsKey("rowNumber") && apiResponse.Items.Count == 1)
+                {
+                    int rowNumberToSelect = int.Parse(sessionData.Filters["rowNumber"]);
+                    rowDict.Add("rowNumber", rowNumberToSelect.ToString());
+                }
+                else
+                {
+                    rowDict.Add("rowNumber", rowNumber.ToString());
+                }
 
                 tableData.Add(rowDict);
 
@@ -375,15 +383,15 @@ namespace FS.Farm.WebNavigator.Page.Reports
         {
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "ClearFilters", Description = "Clear all filters" }
+                new AvailableCommand { CommandText = "clearFilters", Description = "Clear all filters" }
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "PageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
+                new AvailableCommand { CommandText = "pageNumber:[page number value (or empty to remove filter)]", Description = "View a particular page of the report results" }
                 );
 
             pageView.AvailableCommands.Add(
-                new AvailableCommand { CommandText = "RowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands may then be available for that row." }
+                new AvailableCommand { CommandText = "rowNumber:[row number value (or empty to remove filter)]", Description = "View a single row of the report results. More commands may then be available for that row." }
                 );
 
             {
@@ -484,9 +492,10 @@ namespace FS.Farm.WebNavigator.Page.Reports
                     rowNumber++;
                 }
 
+                apiResponse.Items.Clear();
+
                 if (selectedItem != null)
                 {
-                    apiResponse.Items.Clear();
 
                     apiResponse.Items.Add(selectedItem);
                 }
@@ -578,33 +587,29 @@ namespace FS.Farm.WebNavigator.Page.Reports
         public class PacUserTacListListModelItem
         {
             [Newtonsoft.Json.JsonProperty("tacCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //tacCode
             public System.Guid TacCode { get; set; }
             [Newtonsoft.Json.JsonProperty("tacDescription", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //tacDescription
             public string TacDescription { get; set; }
             [Newtonsoft.Json.JsonProperty("tacDisplayOrder", Required = Newtonsoft.Json.Required.Always)]
             public int TacDisplayOrder { get; set; }
             [Newtonsoft.Json.JsonProperty("tacIsActive", Required = Newtonsoft.Json.Required.Always)]
             public bool TacIsActive { get; set; }
             [Newtonsoft.Json.JsonProperty("tacLookupEnumName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //tacLookupEnumName
             public string TacLookupEnumName { get; set; }
             [Newtonsoft.Json.JsonProperty("tacName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //tacName
             public string TacName { get; set; }
             [Newtonsoft.Json.JsonProperty("pacName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //pacName
             public string PacName { get; set; }
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string SomeConditionalImageUrl { get; set; }
 
         }
 
         public class PacUserTacListListRequest
         {
-
-            public System.Guid SomeFilterUniqueIdentifier { get; set; }
 
             [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.Always)]
             public int PageNumber { get; set; }

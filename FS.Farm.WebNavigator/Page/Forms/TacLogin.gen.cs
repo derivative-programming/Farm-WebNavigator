@@ -17,7 +17,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 {
     public class TacLogin : PageBase, IPage
     {
-        string _contextCodeName = "TacCode";
+        string _contextCodeName = "TacCode"; 
 
         public TacLogin()
         {
@@ -358,7 +358,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             public string RoleNameCSVList { get; set; }
             [Newtonsoft.Json.JsonProperty("apiKey", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ApiKey { get; set; }
-            public string OutputSomeEmailAddress { get; set; }
 
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }
@@ -373,7 +372,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
             [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
             public string Password { get; set; }
-            public string RequestSomeLongVarCharVal { get; set; }
 
         }
 

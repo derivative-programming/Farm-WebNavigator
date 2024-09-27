@@ -37,7 +37,6 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
             public string Message { get; set; }
             [Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid CustomerCode { get; set; }
-            public DateTime CurrentDateTimeHeaderVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }

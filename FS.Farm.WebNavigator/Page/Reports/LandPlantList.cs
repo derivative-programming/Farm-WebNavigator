@@ -12,10 +12,15 @@ using Newtonsoft.Json.Serialization;
 namespace FS.Farm.WebNavigator.Page.Reports
 {
     public class LandPlantList : PageBase, IPage
-    {
+    { 
+
         public LandPlantList()
         {
             _pageName = "LandPlantList";
+
+            this.IsAutoSubmit = false;
+
+            this.AutoSubmitCommand = "";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {

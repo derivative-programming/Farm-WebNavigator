@@ -17,11 +17,15 @@ namespace FS.Farm.WebNavigator.Page.Forms
 {
     public class LandAddPlant : PageBase, IPage
     {
-        string _contextCodeName = "LandCode";
+        string _contextCodeName = "LandCode"; 
 
         public LandAddPlant()
         {
             _pageName = "LandAddPlant";
+
+            this.IsAutoSubmit = false;
+
+            this.AutoSubmitCommand = "SubmitButton";
         }
         public async Task<PageView> BuildPageView(APIClient apiClient, SessionData sessionData, Guid contextCode, string commandText = "")
         {
@@ -102,22 +106,35 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     "LandCode",
                     isVisible: true,
                     isEnabled: true,
-                    "OK Button Text");
+                    "OK Button Text"
+                    );
 
                 pageView = BuildAvailableCommandForObjWFButton(pageView, "CancelButton",
                     "LandPlantList",
                     "LandCode",
                     isVisible: true,
                     isEnabled: true,
-                    "Cancel Button Text");
+                    "Cancel Button Text"
+                    );
 
                 pageView = BuildAvailableCommandForObjWFButton(pageView, "OtherButton",
                     "TacFarmDashboard",
                     "TacCode",
                     isVisible: true,
                     isEnabled: true,
-                    "Go To Dashboard");
+                    "Go To Dashboard"
+                    );
             }
+
+            //GENLOOPobjectWorkflowButtonStart
+            //GENIF[buttonType=submit]Start 
+            //GENIF[calculatedIsConditionalVisible=true]Start
+            //GENREMOVECOMMENTif (!apiInitResponse.GENVALCamelconditionalVisiblePropertyName){
+            //GENREMOVECOMMENT    pageView.AvailableCommands = pageView.AvailableCommands.Where(x => x.Description != GENVALButtonText).ToList();
+            //GENREMOVECOMMENT}
+            //GENIF[calculatedIsConditionalVisible=true]End
+            //GENIF[buttonType=submit]End
+            //GENLOOPobjectWorkflowButtonEnd
 
             pageView.PageTable = null; 
 

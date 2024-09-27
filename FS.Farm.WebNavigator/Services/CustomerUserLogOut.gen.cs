@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class CustomerUserLogOutModel
         {
 
-            public Guid CustomerCode { get; set; }
-
         }
     }
 }

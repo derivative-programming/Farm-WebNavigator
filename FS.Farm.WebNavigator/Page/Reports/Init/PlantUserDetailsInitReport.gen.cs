@@ -39,7 +39,6 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
             public System.Guid LandCode { get; set; }
             [Newtonsoft.Json.JsonProperty("tacCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Guid TacCode { get; set; }
-            public DateTime CurrentDateTimeHeaderVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }

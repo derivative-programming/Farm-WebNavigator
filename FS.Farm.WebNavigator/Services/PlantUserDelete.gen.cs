@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class PlantUserDeleteModel
         {
 
-            public Guid PlantCode { get; set; }
-
         }
     }
 }

@@ -39,8 +39,6 @@ namespace FS.Farm.WebNavigator.Services
         private class PacUserTestAsyncFlowReqModel
         {
 
-            public Guid PacCode { get; set; }
-
         }
     }
 }

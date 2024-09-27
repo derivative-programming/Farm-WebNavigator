@@ -44,7 +44,6 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             public string Email { get; set; }
             [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string Password { get; set; }
-            public DateTime CurrentDateTimeHeaderVal { get; set; }
 
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public ICollection<ValidationError> ValidationErrors { get; set; }

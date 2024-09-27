@@ -381,7 +381,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             public string RoleNameCSVList { get; set; }
             [Newtonsoft.Json.JsonProperty("apiKey", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string ApiKey { get; set; }
-            public string OutputSomeEmailAddress { get; set; }
 
             [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }
@@ -403,7 +402,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             public string FirstName { get; set; }
             [Newtonsoft.Json.JsonProperty("lastName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public string LastName { get; set; }
-            public string RequestSomeLongVarCharVal { get; set; }
 
         }
 
