@@ -9,6 +9,6 @@
     <add key="ApplicationLog.AzureCloud.MaximumLoggableSeverity" value="13" />
     <add key="ApplicationLog.Broadcast.Enabled" value="true" />
     <add key="ApplicationLog.Broadcast.MaximumLoggableSeverity" value="13" />
-    <add key="Redis.Connection" value="derivative-programming-dev.redis.cache.windows.net:6380,password=lofJoMYStims6YaOMLKvhlcePgJASYuw6rrVZkqqpcE=,ssl=True,abortConnect=False" />
+    <add key="Redis.Connection" value="" />
   </appSettings>
 </configuration>
