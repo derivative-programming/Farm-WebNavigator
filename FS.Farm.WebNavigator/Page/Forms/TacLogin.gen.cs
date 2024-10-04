@@ -116,6 +116,12 @@ namespace FS.Farm.WebNavigator.Page.Forms
                     );
             }
 
+            string json = JsonConvert.SerializeObject(apiInitResponse);
+
+            JObject jsonObject = JObject.Parse(json);
+
+            Dictionary<string, object> apiInitResponseDictionary = jsonObject.ToObject<Dictionary<string, object>>();
+
             pageView.PageTable = null;
 
             return pageView;
