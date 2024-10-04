@@ -1102,6 +1102,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 navDictionary.Add("LandCode", contextCode);
             }
 
+            if (!navDictionary.ContainsKey("landCode"))
+            {
+                navDictionary.Add("landCode", contextCode);
+            }
+
             //  handle report buttons
             {
                 if (commandText.Equals("backButton", StringComparison.OrdinalIgnoreCase))

@@ -456,7 +456,11 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             Dictionary<string, object> navDictionary = jsonObject.ToObject<Dictionary<string, object>>(); 
 
-            if(!navDictionary.ContainsKey("landCode"))
+            if(!navDictionary.ContainsKey("LandCode"))
+            {
+                navDictionary.Add("LandCode", contextCode);
+            }
+            if (!navDictionary.ContainsKey("landCode"))
             {
                 navDictionary.Add("landCode", contextCode);
             }
