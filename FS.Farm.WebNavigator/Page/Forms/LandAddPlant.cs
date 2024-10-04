@@ -135,8 +135,8 @@ namespace FS.Farm.WebNavigator.Page.Forms
             //GENLOOPobjectWorkflowButtonStart
             //GENIF[buttonType=submit]Start 
             //GENIF[calculatedIsConditionalVisible=true]Start
-            //GENREMOVECOMMENTif (apiInitResponseDictionary.ContainsKey("GENVALCamelconditionalVisiblePropertyName") && !apiInitResponseDictionary["GENVALCamelconditionalVisiblePropertyName"]){
-            //GENREMOVECOMMENT    pageView.AvailableCommands = pageView.AvailableCommands.Where(x => x.Description != GENVALButtonText).ToList();
+            //GENREMOVECOMMENTif (apiInitResponseDictionary.ContainsKey("GENVALCamelconditionalVisiblePropertyName") && !(bool)apiInitResponseDictionary["GENVALCamelconditionalVisiblePropertyName"]){
+            //GENREMOVECOMMENT    pageView.AvailableCommands = pageView.AvailableCommands.Where(x => x.Description != "GENVALButtonText").ToList();
             //GENREMOVECOMMENT}
             //GENIF[calculatedIsConditionalVisible=true]End
             //GENIF[buttonType=submit]End

@@ -20,9 +20,10 @@
     "objectWorkflowParam.isTimeZoneDetermined",
     "objectWorkflowParam.isVisible",
     "objectWorkflowParam.isLabelVisible",
-    "objectWorkflowParam.isRequired", 
+    "objectWorkflowParam.isRequired",
     "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
     "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet",
+    "objectWorkflowButton.calculatedIsConditionalVisible",
     "objectWorkflowOutputVar.calculatedIsSourceObjectAvailable",
     "objectWorkflowOutputVar.calculatedIsConditionalVisible",
     "objectWorkflowOutputVar.isAutoRedirectURL"
