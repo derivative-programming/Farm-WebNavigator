@@ -42,7 +42,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var initReportProcessor = new LandPlantListInitReport();
 
             //  handle report init
-            LandPlantListInitReport.LandPlantListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            LandPlantListInitReport.GetInitResponse apiInitResponse = await initReportProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             LandPlantListListRequest apiRequestModel = new LandPlantListListRequest();
 
@@ -164,7 +164,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             //GENIF[visualizationType=Grid]End
 
             //  handle filter post
-            LandPlantListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+            LandPlantListListModel apiResponse = await RequestGetResponse(apiClient, apiRequestModel, contextCode);
 
             //GENIF[visualizationType=Grid]Start
             TableInfo tableInfo = new TableInfo();
@@ -1088,7 +1088,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new LandPlantListInitReport();
 
-            LandPlantListInitReport.LandPlantListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            LandPlantListInitReport.GetInitResponse apiInitResponse = await initReportProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             string json = JsonConvert.SerializeObject(apiInitResponse);
 
@@ -1156,7 +1156,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, apiInitResponse); 
              
-            LandPlantListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+            LandPlantListListModel apiResponse = await RequestGetResponse(apiClient, apiRequestModel, contextCode);
 
             if (sessionData.Filters.ContainsKey("rowNumber"))
             {
@@ -1267,7 +1267,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
         }
 
 
-        public async Task<LandPlantListListModel> GetResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
+        public async Task<LandPlantListListModel> RequestGetResponse(APIClient aPIClient, LandPlantListListRequest model, Guid contextCode)
         {
             string url = $"/land-plant-list/{contextCode.ToString()}";
 
