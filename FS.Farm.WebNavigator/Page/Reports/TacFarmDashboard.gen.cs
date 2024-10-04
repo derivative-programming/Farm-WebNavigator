@@ -429,6 +429,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 navDictionary.Add("TacCode", contextCode);
             }
 
+            if (!navDictionary.ContainsKey("tacCode"))
+            {
+                navDictionary.Add("tacCode", contextCode);
+            }
+
             //  handle report buttons
             {
 

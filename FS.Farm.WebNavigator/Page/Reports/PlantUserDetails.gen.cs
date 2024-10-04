@@ -639,6 +639,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 navDictionary.Add("PlantCode", contextCode);
             }
 
+            if (!navDictionary.ContainsKey("plantCode"))
+            {
+                navDictionary.Add("plantCode", contextCode);
+            }
+
             //  handle report buttons
             {
                 if (commandText.Equals("backButton", StringComparison.OrdinalIgnoreCase))

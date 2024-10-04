@@ -461,6 +461,11 @@ namespace FS.Farm.WebNavigator.Page.Reports
                 navDictionary.Add("PacCode", contextCode);
             }
 
+            if (!navDictionary.ContainsKey("pacCode"))
+            {
+                navDictionary.Add("pacCode", contextCode);
+            }
+
             //  handle report buttons
             {
 
