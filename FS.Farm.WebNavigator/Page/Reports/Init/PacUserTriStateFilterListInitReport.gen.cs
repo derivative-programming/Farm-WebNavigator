@@ -12,23 +12,23 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
         {
         }
 
-        public async Task<PacUserTriStateFilterListGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        public async Task<GetInitResponse> RequestGetInitResponse(APIClient aPIClient, Guid contextCode)
         {
             string url = $"/pac-user-tri-state-filter-list/{contextCode.ToString()}/init";
 
-            PacUserTriStateFilterListGetInitResponse result = await aPIClient.GetAsync<PacUserTriStateFilterListGetInitResponse>(url);
+            GetInitResponse result = await aPIClient.GetAsync<GetInitResponse>(url);
 
             return result;
         }
 
-        public List<PageHeader> GetPageHeaders(PacUserTriStateFilterListGetInitResponse apiResponse)
+        public List<PageHeader> GetPageHeaders(GetInitResponse apiResponse)
         {
             List<PageHeader> result = new List<PageHeader>();
 
             return result;
         }
 
-        public class PacUserTriStateFilterListGetInitResponse
+        public class GetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
@@ -41,7 +41,7 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
 
         }
 
-        private class PacUserTriStateFilterListGetInitModel
+        private class GetInitModel
         {
 
         }

@@ -12,23 +12,23 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
         {
         }
 
-        public async Task<CustomerUserLogOutGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        public async Task<GetInitResponse> RequestGetInitResponse(APIClient aPIClient, Guid contextCode)
         {
             string url = $"/customer-user-log-out/{contextCode.ToString()}/init";
 
-            CustomerUserLogOutGetInitResponse result = await aPIClient.GetAsync<CustomerUserLogOutGetInitResponse>(url);
+            GetInitResponse result = await aPIClient.GetAsync<GetInitResponse>(url);
 
             return result;
         }
 
-        public List<PageHeader> GetPageHeaders(CustomerUserLogOutGetInitResponse apiResponse)
+        public List<PageHeader> GetPageHeaders(GetInitResponse apiResponse)
         {
             List<PageHeader> result = new List<PageHeader>();
 
             return result;
         }
 
-        public class CustomerUserLogOutGetInitResponse
+        public class GetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
@@ -43,7 +43,7 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
 
         }
 
-        private class CustomerUserLogOutGetInitModel
+        private class GetInitModel
         {
 
         }

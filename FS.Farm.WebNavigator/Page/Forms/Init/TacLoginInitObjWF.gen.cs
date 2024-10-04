@@ -12,16 +12,16 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
         {
         }
 
-        public async Task<TacLoginGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        public async Task<GetInitResponse> RequestGetInitResponse(APIClient aPIClient, Guid contextCode)
         {
             string url = $"/tac-login/{contextCode.ToString()}/init";
 
-            TacLoginGetInitResponse result = await aPIClient.GetAsync<TacLoginGetInitResponse>(url);
+            GetInitResponse result = await aPIClient.GetAsync<GetInitResponse>(url);
 
             return result;
         }
 
-        public List<PageHeader> GetPageHeaders(TacLoginGetInitResponse apiResponse)
+        public List<PageHeader> GetPageHeaders(GetInitResponse apiResponse)
         {
             List<PageHeader> result = new List<PageHeader>();
             var emailHeaderIsVisible = false;
@@ -33,7 +33,7 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
             return result;
         }
 
-        public class TacLoginGetInitResponse
+        public class GetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
@@ -50,7 +50,7 @@ namespace FS.Farm.WebNavigator.Page.Forms.Init
 
         }
 
-        private class TacLoginGetInitModel
+        private class GetInitModel
         {
 
         }

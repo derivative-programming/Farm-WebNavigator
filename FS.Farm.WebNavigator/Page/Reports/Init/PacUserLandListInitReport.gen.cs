@@ -12,23 +12,23 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
         {
         }
 
-        public async Task<PacUserLandListGetInitResponse> GetInitResponse(APIClient aPIClient, Guid contextCode)
+        public async Task<GetInitResponse> RequestGetInitResponse(APIClient aPIClient, Guid contextCode)
         {
             string url = $"/pac-user-land-list/{contextCode.ToString()}/init";
 
-            PacUserLandListGetInitResponse result = await aPIClient.GetAsync<PacUserLandListGetInitResponse>(url);
+            GetInitResponse result = await aPIClient.GetAsync<GetInitResponse>(url);
 
             return result;
         }
 
-        public List<PageHeader> GetPageHeaders(PacUserLandListGetInitResponse apiResponse)
+        public List<PageHeader> GetPageHeaders(GetInitResponse apiResponse)
         {
             List<PageHeader> result = new List<PageHeader>();
 
             return result;
         }
 
-        public class PacUserLandListGetInitResponse
+        public class GetInitResponse
         {
             [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
             public bool Success { get; set; }
@@ -41,7 +41,7 @@ namespace FS.Farm.WebNavigator.Page.Reports.Init
 
         }
 
-        private class PacUserLandListGetInitModel
+        private class GetInitModel
         {
 
         }

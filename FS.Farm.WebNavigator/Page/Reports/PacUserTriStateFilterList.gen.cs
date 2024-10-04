@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using FS.Farm.WebNavigator.Page.Reports.Models;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -42,7 +43,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var initReportProcessor = new PacUserTriStateFilterListInitReport();
 
             //  handle report init
-            PacUserTriStateFilterListInitReport.PacUserTriStateFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            PacUserTriStateFilterListInitReport.GetInitResponse apiInitResponse = await initReportProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             PacUserTriStateFilterListListRequest apiRequestModel = new PacUserTriStateFilterListListRequest();
 
@@ -150,7 +151,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             //  handle filter post
-            PacUserTriStateFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+            PacUserTriStateFilterListListModel apiResponse = await RequestGetResponse(apiClient, apiRequestModel, contextCode);
 
             TableInfo tableInfo = new TableInfo();
             tableInfo.OrderByColumnName = apiResponse.OrderByColumnName;
@@ -447,7 +448,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new PacUserTriStateFilterListInitReport();
 
-            PacUserTriStateFilterListInitReport.PacUserTriStateFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            PacUserTriStateFilterListInitReport.GetInitResponse apiInitResponse = await initReportProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             string json = JsonConvert.SerializeObject(apiInitResponse);
 
@@ -501,7 +502,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, apiInitResponse);
 
-            PacUserTriStateFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+            PacUserTriStateFilterListListModel apiResponse = await RequestGetResponse(apiClient, apiRequestModel, contextCode);
 
             if (sessionData.Filters.ContainsKey("rowNumber"))
             {
@@ -567,7 +568,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return result;
         }
 
-        public async Task<PacUserTriStateFilterListListModel> GetResponse(APIClient aPIClient, PacUserTriStateFilterListListRequest model, Guid contextCode)
+        public async Task<PacUserTriStateFilterListListModel> RequestGetResponse(APIClient aPIClient, PacUserTriStateFilterListListRequest model, Guid contextCode)
         {
             string url = $"/pac-user-tri-state-filter-list/{contextCode.ToString()}";
 
@@ -580,86 +581,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PacUserTriStateFilterListListModel result = await aPIClient.GetAsync<PacUserTriStateFilterListListModel>(url);
 
             return result;
-        }
-
-        public class PacUserTriStateFilterListListModel
-        {
-            [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public int PageNumber { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Collections.Generic.ICollection<PacUserTriStateFilterListListModelItem> Items { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("itemCountPerPage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public int ItemCountPerPage { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByColumnName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OrderByColumnName { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public bool OrderByDescending { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
-            public bool Success { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("recordsTotal", Required = Newtonsoft.Json.Required.Always)]
-            public int RecordsTotal { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("recordsFiltered", Required = Newtonsoft.Json.Required.Always)]
-            public int RecordsFiltered { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("appVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string AppVersion { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("request", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public PacUserTriStateFilterListListRequest Request { get; set; }
-
-        }
-
-        public class PacUserTriStateFilterListListModelItem
-        {
-            [Newtonsoft.Json.JsonProperty("triStateFilterCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterCode
-            public System.Guid TriStateFilterCode { get; set; }
-            [Newtonsoft.Json.JsonProperty("triStateFilterDescription", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterDescription
-            public string TriStateFilterDescription { get; set; }
-            [Newtonsoft.Json.JsonProperty("triStateFilterDisplayOrder", Required = Newtonsoft.Json.Required.Always)]
-            public int TriStateFilterDisplayOrder { get; set; }
-            [Newtonsoft.Json.JsonProperty("triStateFilterIsActive", Required = Newtonsoft.Json.Required.Always)]
-            public bool TriStateFilterIsActive { get; set; }
-            [Newtonsoft.Json.JsonProperty("triStateFilterLookupEnumName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterLookupEnumName
-            public string TriStateFilterLookupEnumName { get; set; }
-            [Newtonsoft.Json.JsonProperty("triStateFilterName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //triStateFilterName
-            public string TriStateFilterName { get; set; }
-            [Newtonsoft.Json.JsonProperty("triStateFilterStateIntValue", Required = Newtonsoft.Json.Required.Always)]
-            public int TriStateFilterStateIntValue { get; set; }
-
-        }
-
-        public class PacUserTriStateFilterListListRequest
-        {
-
-            [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.Always)]
-            public int PageNumber { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("itemCountPerPage", Required = Newtonsoft.Json.Required.Always)]
-            public int ItemCountPerPage { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByColumnName", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OrderByColumnName { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.Always)]
-            public bool OrderByDescending { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string ForceErrorMessage { get; set; }
-
         }
 
     }

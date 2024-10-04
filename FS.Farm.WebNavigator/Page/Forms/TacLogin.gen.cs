@@ -12,6 +12,8 @@ using FS.Farm.WebNavigator.Page;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Http.Internal;
 using System.Globalization;
+using FS.Farm.WebNavigator.Page.Forms.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace FS.Farm.WebNavigator.Page.Forms
 {
@@ -73,7 +75,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             var initObjWFProcessor = new TacLoginInitObjWF();
 
-            TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
+            TacLoginInitObjWF.GetInitResponse apiInitResponse = await initObjWFProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             TacLoginPostModel apiRequestModel = new TacLoginPostModel();
 
@@ -125,7 +127,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             PageView pageView,
             string name,
             string label,
-            string dataType,
+            string fieldType,
             bool isVisible = true,
             bool isRequired = true,
             string currentValue = "",
@@ -138,13 +140,13 @@ namespace FS.Farm.WebNavigator.Page.Forms
             if(!isVisible)
                 return pageView;
 
-            if (dataType == "Password")
+            if (fieldType == "Password")
                 return pageView;
 
-            if ((dataType == "File"))
+            if ((fieldType == "File"))
                 return pageView;
 
-            if(dataType.Equals("date",StringComparison.OrdinalIgnoreCase))
+            if(fieldType.Equals("date",StringComparison.OrdinalIgnoreCase))
             {
                 DateTime dateTime = DateTime.UtcNow;
                 if(System.DateTime.TryParse(currentValue,out dateTime))
@@ -166,7 +168,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             }
 
-            if (dataType.Equals("datetime", StringComparison.OrdinalIgnoreCase))
+            if (fieldType.Equals("datetime", StringComparison.OrdinalIgnoreCase))
             {
                 DateTime dateTime = DateTime.UtcNow;
                 if (System.DateTime.TryParse(currentValue, out dateTime))
@@ -209,7 +211,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             {
                 Name = name,
                 Label = label,
-                DataType = dataType,
+                FieldType = fieldType,
                 DetailText = detailText,
                 CurrentValue = currentValue,
                 ProposedValue = proposedValue,
@@ -232,7 +234,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             APIClient apiClient,
             SessionData sessionData,
             PageView pageView,
-            TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse,
+            TacLoginInitObjWF.GetInitResponse apiInitResponse,
             TacLoginPostModel apiRequestModel)
         {
             pageView = await BuildFormField(apiClient, sessionData, pageView, "email",
@@ -263,7 +265,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
 
             var initObjWFProcessor = new TacLoginInitObjWF();
 
-            TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse = await initObjWFProcessor.GetInitResponse(apiClient, contextCode);
+            TacLoginInitObjWF.GetInitResponse apiInitResponse = await initObjWFProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             string json = JsonConvert.SerializeObject(apiInitResponse);
 
@@ -308,7 +310,7 @@ namespace FS.Farm.WebNavigator.Page.Forms
             SessionData sessionData,
             APIClient apiClient,
             Guid contextCode,
-            TacLoginInitObjWF.TacLoginGetInitResponse apiInitResponse,
+            TacLoginInitObjWF.GetInitResponse apiInitResponse,
             Dictionary<string, object> navDictionary)
         {
             bool result = false;
@@ -368,42 +370,6 @@ namespace FS.Farm.WebNavigator.Page.Forms
             TacLoginPostResponse result = await aPIClient.PostAsync<TacLoginPostModel, TacLoginPostResponse>(url, model);
 
             return result;
-        }
-
-        public class TacLoginPostResponse
-        {
-            [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
-            public bool Success { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
-            [Newtonsoft.Json.JsonProperty("customerCode", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Guid CustomerCode { get; set; }
-            [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Email { get; set; }
-            [Newtonsoft.Json.JsonProperty("userCodeValue", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Guid UserCodeValue { get; set; }
-            [Newtonsoft.Json.JsonProperty("uTCOffsetInMinutes", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public int UTCOffsetInMinutes { get; set; }
-            [Newtonsoft.Json.JsonProperty("roleNameCSVList", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string RoleNameCSVList { get; set; }
-            [Newtonsoft.Json.JsonProperty("apiKey", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string ApiKey { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("validationErrors", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Collections.Generic.ICollection<ValidationError> ValidationErrors { get; set; }
-
-        }
-
-        public class TacLoginPostModel
-        {
-            [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string Email { get; set; }
-            [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-            public string Password { get; set; }
-
         }
 
     }

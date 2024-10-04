@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using FS.Farm.WebNavigator.Page.Reports.Models;
 
 namespace FS.Farm.WebNavigator.Page.Reports
 {
@@ -42,7 +43,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             var initReportProcessor = new PacUserDateGreaterThanFilterListInitReport();
 
             //  handle report init
-            PacUserDateGreaterThanFilterListInitReport.PacUserDateGreaterThanFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            PacUserDateGreaterThanFilterListInitReport.GetInitResponse apiInitResponse = await initReportProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             PacUserDateGreaterThanFilterListListRequest apiRequestModel = new PacUserDateGreaterThanFilterListListRequest();
 
@@ -150,7 +151,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             }
 
             //  handle filter post
-            PacUserDateGreaterThanFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+            PacUserDateGreaterThanFilterListListModel apiResponse = await RequestGetResponse(apiClient, apiRequestModel, contextCode);
 
             TableInfo tableInfo = new TableInfo();
             tableInfo.OrderByColumnName = apiResponse.OrderByColumnName;
@@ -447,7 +448,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             var initReportProcessor = new PacUserDateGreaterThanFilterListInitReport();
 
-            PacUserDateGreaterThanFilterListInitReport.PacUserDateGreaterThanFilterListGetInitResponse apiInitResponse = await initReportProcessor.GetInitResponse(apiClient, contextCode);
+            PacUserDateGreaterThanFilterListInitReport.GetInitResponse apiInitResponse = await initReportProcessor.RequestGetInitResponse(apiClient, contextCode);
 
             string json = JsonConvert.SerializeObject(apiInitResponse);
 
@@ -501,7 +502,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
 
             MergeProperties(apiRequestModel, apiInitResponse);
 
-            PacUserDateGreaterThanFilterListListModel apiResponse = await GetResponse(apiClient, apiRequestModel, contextCode);
+            PacUserDateGreaterThanFilterListListModel apiResponse = await RequestGetResponse(apiClient, apiRequestModel, contextCode);
 
             if (sessionData.Filters.ContainsKey("rowNumber"))
             {
@@ -567,7 +568,7 @@ namespace FS.Farm.WebNavigator.Page.Reports
             return result;
         }
 
-        public async Task<PacUserDateGreaterThanFilterListListModel> GetResponse(APIClient aPIClient, PacUserDateGreaterThanFilterListListRequest model, Guid contextCode)
+        public async Task<PacUserDateGreaterThanFilterListListModel> RequestGetResponse(APIClient aPIClient, PacUserDateGreaterThanFilterListListRequest model, Guid contextCode)
         {
             string url = $"/pac-user-date-greater-than-filter-list/{contextCode.ToString()}";
 
@@ -580,86 +581,6 @@ namespace FS.Farm.WebNavigator.Page.Reports
             PacUserDateGreaterThanFilterListListModel result = await aPIClient.GetAsync<PacUserDateGreaterThanFilterListListModel>(url);
 
             return result;
-        }
-
-        public class PacUserDateGreaterThanFilterListListModel
-        {
-            [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public int PageNumber { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public System.Collections.Generic.ICollection<PacUserDateGreaterThanFilterListListModelItem> Items { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("itemCountPerPage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public int ItemCountPerPage { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByColumnName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OrderByColumnName { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public bool OrderByDescending { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
-            public bool Success { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("recordsTotal", Required = Newtonsoft.Json.Required.Always)]
-            public int RecordsTotal { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("recordsFiltered", Required = Newtonsoft.Json.Required.Always)]
-            public int RecordsFiltered { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string Message { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("appVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string AppVersion { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("request", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public PacUserDateGreaterThanFilterListListRequest Request { get; set; }
-
-        }
-
-        public class PacUserDateGreaterThanFilterListListModelItem
-        {
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterCode", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //dateGreaterThanFilterCode
-            public System.Guid DateGreaterThanFilterCode { get; set; }
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterDayCount", Required = Newtonsoft.Json.Required.Always)]
-            public int DateGreaterThanFilterDayCount { get; set; }
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterDescription", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //dateGreaterThanFilterDescription
-            public string DateGreaterThanFilterDescription { get; set; }
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterDisplayOrder", Required = Newtonsoft.Json.Required.Always)]
-            public int DateGreaterThanFilterDisplayOrder { get; set; }
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterIsActive", Required = Newtonsoft.Json.Required.Always)]
-            public bool DateGreaterThanFilterIsActive { get; set; }
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterLookupEnumName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //dateGreaterThanFilterLookupEnumName
-            public string DateGreaterThanFilterLookupEnumName { get; set; }
-            [Newtonsoft.Json.JsonProperty("dateGreaterThanFilterName", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)] //dateGreaterThanFilterName
-            public string DateGreaterThanFilterName { get; set; }
-
-        }
-
-        public class PacUserDateGreaterThanFilterListListRequest
-        {
-
-            [Newtonsoft.Json.JsonProperty("pageNumber", Required = Newtonsoft.Json.Required.Always)]
-            public int PageNumber { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("itemCountPerPage", Required = Newtonsoft.Json.Required.Always)]
-            public int ItemCountPerPage { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByColumnName", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string OrderByColumnName { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("orderByDescending", Required = Newtonsoft.Json.Required.Always)]
-            public bool OrderByDescending { get; set; }
-
-            [Newtonsoft.Json.JsonProperty("forceErrorMessage", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-            public string ForceErrorMessage { get; set; }
-
         }
 
     }
