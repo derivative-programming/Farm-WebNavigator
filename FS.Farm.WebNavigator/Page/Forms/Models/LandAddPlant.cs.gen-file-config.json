@@ -24,6 +24,8 @@
     "objectWorkflowParam.isFKLookup",
     "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
     "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet",
+    "objectWorkflowButton.calculatedIsIntroTextAvailable",
+    "objectWorkflowButton.isButtonCallToAction",
     "objectWorkflowOutputVar.calculatedIsSourceObjectAvailable",
     "objectWorkflowOutputVar.calculatedIsConditionalVisible",
     "objectWorkflowOutputVar.isAutoRedirectURL"

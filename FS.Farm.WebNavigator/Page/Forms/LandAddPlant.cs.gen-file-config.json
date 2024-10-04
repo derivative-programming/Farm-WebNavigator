@@ -24,6 +24,8 @@
     "objectWorkflowButton.calculatedIsDestinationContextObjectTheOwnerObject",
     "objectWorkflowButton.calculatedIsDestinationContextObjectNameSet",
     "objectWorkflowButton.calculatedIsConditionalVisible",
+    "objectWorkflowButton.calculatedIsIntroTextAvailable",
+    "objectWorkflowButton.isButtonCallToAction",
     "objectWorkflowOutputVar.calculatedIsSourceObjectAvailable",
     "objectWorkflowOutputVar.calculatedIsConditionalVisible",
     "objectWorkflowOutputVar.isAutoRedirectURL"
