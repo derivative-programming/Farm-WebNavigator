@@ -23,7 +23,7 @@ namespace FS.Farm.FSFarmAPI.Controllers.API.V1_0
     public class PageController : FS.Farm.FSFarmAPI.Controllers.API.BaseApiController
     {
 
-        [Route("{sessionCode?}")]
+        [Route("{sessionCode}")]
         [HttpPost]
         public async Task<PageView> Post(Guid? sessionCode, [FromBody] PagePostModel model)
         {
