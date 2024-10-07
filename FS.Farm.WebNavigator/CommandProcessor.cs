@@ -19,7 +19,7 @@ namespace FS.Farm.WebNavigator
 
             string destinationPage = "";
 
-            string baseUrl = FS.Common.Configuration.ApplicationSetting.ReadApplicationSetting("apiBaseUrl", "");
+            string baseUrl = ApplicationSetting.ReadApplicationSetting("apiBaseUrl", "");
 
             APIClient apiClient = new APIClient(apiKey, baseUrl);
 
@@ -36,13 +36,13 @@ namespace FS.Farm.WebNavigator
 
             string cacheKey = "WebNavigatorSession-" + sessionCode.ToString();
 
-            bool isSessionAvailable = await FS.Common.Caches.StringCache.ExistsAsync(cacheKey);
+            bool isSessionAvailable = await Caches.StringCache.ExistsAsync(cacheKey);
 
             SessionData sessionData = new SessionData();
 
             if(isSessionAvailable)
             {
-                string sessionDataVal = await FS.Common.Caches.StringCache.GetDataAsync(cacheKey); 
+                string sessionDataVal = await Caches.StringCache.GetDataAsync(cacheKey); 
 
                 sessionData = JsonConvert.DeserializeObject<SessionData>(sessionDataVal); 
             }
@@ -78,7 +78,7 @@ namespace FS.Farm.WebNavigator
 
             string sessionDataJson = JsonConvert.SerializeObject(sessionData);
 
-            await FS.Common.Caches.StringCache.SetDataAsync(cacheKey, sessionDataJson);
+            await Caches.StringCache.SetDataAsync(cacheKey, sessionDataJson);
              
             //if page being viewed is auto submit, auto submit the preferred command
             if(destinationPageProcessor.IsAutoSubmit && 

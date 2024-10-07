@@ -47,7 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FS.Common\FS.Common\FS.Common.csproj" />
     <ProjectReference Include="..\FS.Farm.WebNavigator\FS.Farm.WebNavigator.csproj" />
   </ItemGroup>
 

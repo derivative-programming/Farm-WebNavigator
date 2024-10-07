@@ -5,18 +5,7 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FS.Farm.WebNavigatorApi", "FS.Farm.WebNavigatorApi\FS.Farm.WebNavigatorApi.csproj", "{013CA708-342C-46B6-924D-48F949303818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FS.Farm.WebNavigator", "FS.Farm.WebNavigator\FS.Farm.WebNavigator.csproj", "{AE0665FF-E21E-4BF5-B798-6483391AD6D2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FS.Common", "FS.Common\FS.Common\FS.Common.csproj", "{45B4B88D-B47C-4FE8-97D9-85EAC3296D78}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47E22247-242D-4AF9-9A21-B9950C8F33CE}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		gen-config.json = gen-config.json
-		gen-folder-config.json = gen-folder-config.json
-		gen-model.json = gen-model.json
-		LICENSE = LICENSE
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FS.Farm.WebNavigator", "FS.Farm.WebNavigator\FS.Farm.WebNavigator.csproj", "{AE0665FF-E21E-4BF5-B798-6483391AD6D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +21,6 @@ Global
 		{AE0665FF-E21E-4BF5-B798-6483391AD6D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE0665FF-E21E-4BF5-B798-6483391AD6D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE0665FF-E21E-4BF5-B798-6483391AD6D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45B4B88D-B47C-4FE8-97D9-85EAC3296D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45B4B88D-B47C-4FE8-97D9-85EAC3296D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45B4B88D-B47C-4FE8-97D9-85EAC3296D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45B4B88D-B47C-4FE8-97D9-85EAC3296D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

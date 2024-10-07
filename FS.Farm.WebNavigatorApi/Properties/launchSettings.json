@@ -17,7 +17,7 @@
       },
       "ancmHostingModel": "OutOfProcess"
     },
-    "FS.Farm.FSFarmAPI": {
+    "FS.Farm.WebNavigatorApi": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
